@@ -12,7 +12,7 @@ class Startscreen extends StatelessWidget {
         children: [
              Center(
                child: SizedBox(
-                 height: 8000000,
+                 height: 500,
                  child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   decoration: const BoxDecoration(
