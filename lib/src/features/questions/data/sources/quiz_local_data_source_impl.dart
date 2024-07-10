@@ -18,7 +18,17 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource{
  }
  return Future.value(Isar.getInstance());
  }
- Future<void>  saveUserName(String userName) async{
-    final isar= await db;
+ @override
+  Future<void>  saveUserName(String name) async{
+   try{
+     final isar= await db;
+     final userName=UserNameLocal(userName: name);
+     await isar.writeTxn(() async {
+       isar.userNameLocals.put(userName);
+     });
+   } catch (err) {
+     return Future.error(Exception(err));
+   }
+
  }
 }
