@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/user_name_local.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/user_info_local.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_local_data_source.dart';
 
 class QuizLocalDataSourceImpl implements QuizLocalDataSource{
@@ -12,7 +12,7 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource{
  final dir= await getApplicationDocumentsDirectory();
  if(Isar.instanceNames.isEmpty){
   return await Isar.open(
-      [UserNameLocalSchema],
+      [UserInfoLocalSchema],
       directory: dir.path,
   );
  }
