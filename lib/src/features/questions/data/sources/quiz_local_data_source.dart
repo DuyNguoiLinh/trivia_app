@@ -2,6 +2,8 @@ import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz
 
 abstract class  QuizLocalDataSource{
   Future<void>  saveUserName(String name);
+  Future<String>  getInfoUser();
+  Future<void> deleteInfoUser();
    factory QuizLocalDataSource.create() {
      return QuizLocalDataSourceImpl();
    }

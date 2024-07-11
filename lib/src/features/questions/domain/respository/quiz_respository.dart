@@ -4,6 +4,8 @@ import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz
 
 abstract class QuizRespository{
   Future<void> saveUserName(String name);
+  Future<String> getInfoUser();
+  Future<void> deleteInfo();
    factory QuizRespository.create() {
      return QuizRespositoryimpl();
    }

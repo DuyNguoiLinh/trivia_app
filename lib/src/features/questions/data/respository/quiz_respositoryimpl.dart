@@ -8,4 +8,20 @@ class QuizRespositoryimpl implements QuizRespository{
   Future<void> saveUserName(String name) async{
       await localDataSource.saveUserName(name);
     }
+  @override
+  Future<String> getInfoUser() async{
+      try{
+        final userNameInfo = await localDataSource.getInfoUser();
+        return userNameInfo;
+      }catch (err) {
+        return Future.error(err);
+      }
+  }
+  Future<void> deleteInfo() async{
+    try{
+     await localDataSource.deleteInfoUser();
+    }catch (err) {
+      return Future.error(err);
+    }
+  }
 }
