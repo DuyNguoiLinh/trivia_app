@@ -29,6 +29,6 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource{
    } catch (err) {
      return Future.error(Exception(err));
    }
-
  }
+
 }

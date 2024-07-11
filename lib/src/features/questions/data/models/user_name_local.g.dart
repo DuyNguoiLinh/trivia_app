@@ -28,7 +28,21 @@ const UserNameLocalSchema = CollectionSchema(
   deserialize: _userNameLocalDeserialize,
   deserializeProp: _userNameLocalDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'userName': IndexSchema(
+      id: -1677712070637581736,
+      name: r'userName',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'userName',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _userNameLocalGetId,
@@ -94,6 +108,61 @@ List<IsarLinkBase<dynamic>> _userNameLocalGetLinks(UserNameLocal object) {
 void _userNameLocalAttach(
     IsarCollection<dynamic> col, Id id, UserNameLocal object) {
   object.id = id;
+}
+
+extension UserNameLocalByIndex on IsarCollection<UserNameLocal> {
+  Future<UserNameLocal?> getByUserName(String userName) {
+    return getByIndex(r'userName', [userName]);
+  }
+
+  UserNameLocal? getByUserNameSync(String userName) {
+    return getByIndexSync(r'userName', [userName]);
+  }
+
+  Future<bool> deleteByUserName(String userName) {
+    return deleteByIndex(r'userName', [userName]);
+  }
+
+  bool deleteByUserNameSync(String userName) {
+    return deleteByIndexSync(r'userName', [userName]);
+  }
+
+  Future<List<UserNameLocal?>> getAllByUserName(List<String> userNameValues) {
+    final values = userNameValues.map((e) => [e]).toList();
+    return getAllByIndex(r'userName', values);
+  }
+
+  List<UserNameLocal?> getAllByUserNameSync(List<String> userNameValues) {
+    final values = userNameValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'userName', values);
+  }
+
+  Future<int> deleteAllByUserName(List<String> userNameValues) {
+    final values = userNameValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'userName', values);
+  }
+
+  int deleteAllByUserNameSync(List<String> userNameValues) {
+    final values = userNameValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'userName', values);
+  }
+
+  Future<Id> putByUserName(UserNameLocal object) {
+    return putByIndex(r'userName', object);
+  }
+
+  Id putByUserNameSync(UserNameLocal object, {bool saveLinks = true}) {
+    return putByIndexSync(r'userName', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByUserName(List<UserNameLocal> objects) {
+    return putAllByIndex(r'userName', objects);
+  }
+
+  List<Id> putAllByUserNameSync(List<UserNameLocal> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'userName', objects, saveLinks: saveLinks);
+  }
 }
 
 extension UserNameLocalQueryWhereSort
@@ -173,6 +242,51 @@ extension UserNameLocalQueryWhere
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<UserNameLocal, UserNameLocal, QAfterWhereClause> userNameEqualTo(
+      String userName) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'userName',
+        value: [userName],
+      ));
+    });
+  }
+
+  QueryBuilder<UserNameLocal, UserNameLocal, QAfterWhereClause>
+      userNameNotEqualTo(String userName) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userName',
+              lower: [],
+              upper: [userName],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userName',
+              lower: [userName],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userName',
+              lower: [userName],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userName',
+              lower: [],
+              upper: [userName],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }
