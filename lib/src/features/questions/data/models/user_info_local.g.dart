@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'info_local.dart';
+part of 'user_info_local.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,13 @@ part of 'info_local.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetUserNameLocalCollection on Isar {
-  IsarCollection<InfoLocal> get userNameLocals => this.collection();
+extension GetUserInfoLocalCollection on Isar {
+  IsarCollection<UserInfoLocal> get userInfoLocals => this.collection();
 }
 
-const UserNameLocalSchema = CollectionSchema(
-  name: r'UserNameLocal',
-  id: -128997210457491163,
+const UserInfoLocalSchema = CollectionSchema(
+  name: r'UserInfoLocal',
+  id: 4546886641457929965,
   properties: {
     r'userName': PropertySchema(
       id: 0,
@@ -23,22 +23,22 @@ const UserNameLocalSchema = CollectionSchema(
       type: IsarType.string,
     )
   },
-  estimateSize: _userNameLocalEstimateSize,
-  serialize: _userNameLocalSerialize,
-  deserialize: _userNameLocalDeserialize,
-  deserializeProp: _userNameLocalDeserializeProp,
+  estimateSize: _userInfoLocalEstimateSize,
+  serialize: _userInfoLocalSerialize,
+  deserialize: _userInfoLocalDeserialize,
+  deserializeProp: _userInfoLocalDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {},
   embeddedSchemas: {},
-  getId: _userNameLocalGetId,
-  getLinks: _userNameLocalGetLinks,
-  attach: _userNameLocalAttach,
+  getId: _userInfoLocalGetId,
+  getLinks: _userInfoLocalGetLinks,
+  attach: _userInfoLocalAttach,
   version: '3.1.0+1',
 );
 
-int _userNameLocalEstimateSize(
-  InfoLocal object,
+int _userInfoLocalEstimateSize(
+  UserInfoLocal object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -47,8 +47,8 @@ int _userNameLocalEstimateSize(
   return bytesCount;
 }
 
-void _userNameLocalSerialize(
-  InfoLocal object,
+void _userInfoLocalSerialize(
+  UserInfoLocal object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -56,20 +56,20 @@ void _userNameLocalSerialize(
   writer.writeString(offsets[0], object.userName);
 }
 
-InfoLocal _userNameLocalDeserialize(
+UserInfoLocal _userInfoLocalDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = InfoLocal(
+  final object = UserInfoLocal(
     userName: reader.readString(offsets[0]),
   );
   object.id = id;
   return object;
 }
 
-P _userNameLocalDeserializeProp<P>(
+P _userInfoLocalDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -83,31 +83,31 @@ P _userNameLocalDeserializeProp<P>(
   }
 }
 
-Id _userNameLocalGetId(InfoLocal object) {
+Id _userInfoLocalGetId(UserInfoLocal object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _userNameLocalGetLinks(InfoLocal object) {
+List<IsarLinkBase<dynamic>> _userInfoLocalGetLinks(UserInfoLocal object) {
   return [];
 }
 
-void _userNameLocalAttach(
-    IsarCollection<dynamic> col, Id id, InfoLocal object) {
+void _userInfoLocalAttach(
+    IsarCollection<dynamic> col, Id id, UserInfoLocal object) {
   object.id = id;
 }
 
-extension UserNameLocalQueryWhereSort
-    on QueryBuilder<InfoLocal, InfoLocal, QWhere> {
-  QueryBuilder<InfoLocal, InfoLocal, QAfterWhere> anyId() {
+extension UserInfoLocalQueryWhereSort
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QWhere> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension UserNameLocalQueryWhere
-    on QueryBuilder<InfoLocal, InfoLocal, QWhereClause> {
-  QueryBuilder<InfoLocal, InfoLocal, QAfterWhereClause> idEqualTo(
+extension UserInfoLocalQueryWhere
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QWhereClause> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause> idEqualTo(
       Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
@@ -117,7 +117,7 @@ extension UserNameLocalQueryWhere
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterWhereClause> idNotEqualTo(
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause> idNotEqualTo(
       Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -140,7 +140,7 @@ extension UserNameLocalQueryWhere
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterWhereClause> idGreaterThan(
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause> idGreaterThan(
       Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
@@ -150,7 +150,7 @@ extension UserNameLocalQueryWhere
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterWhereClause> idLessThan(
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause> idLessThan(
       Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
@@ -160,7 +160,7 @@ extension UserNameLocalQueryWhere
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterWhereClause> idBetween(
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -177,9 +177,9 @@ extension UserNameLocalQueryWhere
   }
 }
 
-extension UserNameLocalQueryFilter
-    on QueryBuilder<InfoLocal, InfoLocal, QFilterCondition> {
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition> idEqualTo(
+extension UserInfoLocalQueryFilter
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -189,7 +189,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       idGreaterThan(
     Id value, {
     bool include = false,
@@ -203,7 +203,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition> idLessThan(
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -216,7 +216,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition> idBetween(
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -233,7 +233,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       userNameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -247,7 +247,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       userNameGreaterThan(
     String value, {
     bool include = false,
@@ -263,7 +263,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       userNameLessThan(
     String value, {
     bool include = false,
@@ -279,7 +279,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       userNameBetween(
     String lower,
     String upper, {
@@ -299,7 +299,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       userNameStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -313,7 +313,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       userNameEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -327,7 +327,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       userNameContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -338,7 +338,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       userNameMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -349,7 +349,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       userNameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -359,7 +359,7 @@ extension UserNameLocalQueryFilter
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterFilterCondition>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
       userNameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -370,21 +370,21 @@ extension UserNameLocalQueryFilter
   }
 }
 
-extension UserNameLocalQueryObject
-    on QueryBuilder<InfoLocal, InfoLocal, QFilterCondition> {}
+extension UserInfoLocalQueryObject
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {}
 
-extension UserNameLocalQueryLinks
-    on QueryBuilder<InfoLocal, InfoLocal, QFilterCondition> {}
+extension UserInfoLocalQueryLinks
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {}
 
-extension UserNameLocalQuerySortBy
-    on QueryBuilder<InfoLocal, InfoLocal, QSortBy> {
-  QueryBuilder<InfoLocal, InfoLocal, QAfterSortBy> sortByUserName() {
+extension UserInfoLocalQuerySortBy
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QSortBy> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByUserName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'userName', Sort.asc);
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterSortBy>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy>
       sortByUserNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'userName', Sort.desc);
@@ -392,27 +392,27 @@ extension UserNameLocalQuerySortBy
   }
 }
 
-extension UserNameLocalQuerySortThenBy
-    on QueryBuilder<InfoLocal, InfoLocal, QSortThenBy> {
-  QueryBuilder<InfoLocal, InfoLocal, QAfterSortBy> thenById() {
+extension UserInfoLocalQuerySortThenBy
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QSortThenBy> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterSortBy> thenByUserName() {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByUserName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'userName', Sort.asc);
     });
   }
 
-  QueryBuilder<InfoLocal, InfoLocal, QAfterSortBy>
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy>
       thenByUserNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'userName', Sort.desc);
@@ -420,9 +420,9 @@ extension UserNameLocalQuerySortThenBy
   }
 }
 
-extension UserNameLocalQueryWhereDistinct
-    on QueryBuilder<InfoLocal, InfoLocal, QDistinct> {
-  QueryBuilder<InfoLocal, InfoLocal, QDistinct> distinctByUserName(
+extension UserInfoLocalQueryWhereDistinct
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> distinctByUserName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'userName', caseSensitive: caseSensitive);
@@ -430,15 +430,15 @@ extension UserNameLocalQueryWhereDistinct
   }
 }
 
-extension UserNameLocalQueryProperty
-    on QueryBuilder<InfoLocal, InfoLocal, QQueryProperty> {
-  QueryBuilder<InfoLocal, int, QQueryOperations> idProperty() {
+extension UserInfoLocalQueryProperty
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QQueryProperty> {
+  QueryBuilder<UserInfoLocal, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<InfoLocal, String, QQueryOperations> userNameProperty() {
+  QueryBuilder<UserInfoLocal, String, QQueryOperations> userNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'userName');
     });

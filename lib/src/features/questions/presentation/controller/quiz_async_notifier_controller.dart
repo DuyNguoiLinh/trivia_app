@@ -2,23 +2,29 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/quiz_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/respository/quiz_respository.dart';
 
-class AsyncQuizNotifier extends AsyncNotifier<List<QuizEntity>> {
+class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
   final quizRespository= QuizRespository.create();
   @override
-  FutureOr<List<QuizEntity>> build() {
+  FutureOr<List<QuestionEntity>> build() {
     return List.empty(growable: true);
   }
-  Future<List<QuizEntity>> _initTodoData() async{
-      return List.empty(growable: true);
+  Future<List<QuestionEntity>> initQuestionsData(int amount , int idCategory, String? difficulty) async{
+       try{
+         final questionsData= await quizRespository.fetchQuestions(amount, idCategory, difficulty);
+         return questionsData;
+       } catch(err){
+         return List.empty(growable: true);
+       }
+
     }
   Future<void> saveUseName(String name) async {
       quizRespository.saveUserName(name);
   }
 }
 
-final asyncQuizProvider=AsyncNotifierProvider<AsyncQuizNotifier,List<QuizEntity>> (() {
+final asyncQuizProvider=AsyncNotifierProvider<AsyncQuizNotifier,List<QuestionEntity>> (() {
   return AsyncQuizNotifier();
 });
