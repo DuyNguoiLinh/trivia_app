@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/categories_response.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/category_model.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/question_model.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/questions_response.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_remote_data_source.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
 const _baseUrl="https://opentdb.com/api.php";
 const _baseUrlToken="https://opentdb.com/api_token.php";
+const _baseUrlCategory='https://opentdb.com/api_category.php';
 class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   final Dio _dio = Dio();
   QuizRemoteDataSourceImpl();
@@ -83,6 +87,17 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
       }
     } catch (err){
       return Future.error(err);
+    }
+  }
+  // fetch Api Category
+  @override
+  Future<List<CategoryModel>> getCategories() async{
+    try{
+       final response = await _dio.get('https://opentdb.com/api_category.php');
+       final categoriesResponse=CategoriesResponse.fromJson(response.data);
+       return categoriesResponse.triviaCategories;
+    } on DioException catch (e) {
+      return Future.error(Exception(e));
     }
   }
 }

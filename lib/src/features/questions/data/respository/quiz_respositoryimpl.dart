@@ -1,5 +1,6 @@
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_local_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_remote_data_source.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/respository/quiz_respository.dart';
 
@@ -24,5 +25,18 @@ class QuizRespositoryImpl implements QuizRespository{
         return Future.error(err);
       }
   }
-
+  @override
+  Future<List<CategoryEntity>> fetchCategories() async{
+      try{
+           final categories= await remoteDataSourse.getCategories();
+           if(categories.isNotEmpty) {
+             final listCategories=categories.map((e) => CategoryEntity.fromCategoryResponse(e)).toList();
+             return listCategories;
+           } else{
+             return List.empty(growable: true);
+           }
+      } catch (err){
+        return Future.error(err);
+      }
+  }
 }
