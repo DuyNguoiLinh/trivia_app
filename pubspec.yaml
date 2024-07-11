@@ -37,8 +37,10 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
+  riverpod: ^2.5.1
   dio: ^5.5.0+1
   isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
   path_provider: ^2.0.15
   json_annotation: ^4.9.0
 

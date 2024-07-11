@@ -62,9 +62,10 @@ UserNameLocal _userNameLocalDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = UserNameLocal();
+  final object = UserNameLocal(
+    userName: reader.readString(offsets[0]),
+  );
   object.id = id;
-  object.userName = reader.readString(offsets[0]);
   return object;
 }
 
