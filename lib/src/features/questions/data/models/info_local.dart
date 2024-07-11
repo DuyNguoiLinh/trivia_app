@@ -1,11 +1,11 @@
 import 'package:isar/isar.dart';
 
-part 'user_name_local.g.dart';
+part 'info_local.g.dart';
 @Collection()
-class UserNameLocal{
+class InfoLocal{
   Id id=Isar.autoIncrement;
   late String userName;
-  UserNameLocal({
+  InfoLocal({
     required this.userName
 });
 }
