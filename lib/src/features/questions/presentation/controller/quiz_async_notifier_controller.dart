@@ -9,9 +9,10 @@ class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
   final quizRespository= QuizRespository.create();
   @override
   FutureOr<List<QuestionEntity>> build() {
-    return List.empty(growable: true);
+    // return List.empty(growable: true);
+    return _initQuestionsData(10, 12 , 'medium');
   }
-  Future<List<QuestionEntity>> initQuestionsData(int amount , int idCategory, String? difficulty) async{
+  Future<List<QuestionEntity>> _initQuestionsData(int amount , int idCategory, String? difficulty) async{
        try{
          final questionsData= await quizRespository.fetchQuestions(amount, idCategory, difficulty);
          return questionsData;

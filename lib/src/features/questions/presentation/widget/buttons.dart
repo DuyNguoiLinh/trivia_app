@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_async_notifier_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/home-screen.dart';
 
 class Buttons extends ConsumerWidget{
   final  nameController =TextEditingController();
@@ -46,6 +47,10 @@ class Buttons extends ConsumerWidget{
               if( name.isNotEmpty ){
                 ref.read(asyncQuizProvider.notifier).saveUseName(name);
               }
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+              );
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 80,vertical: 10),

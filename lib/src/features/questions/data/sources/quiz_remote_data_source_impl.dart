@@ -4,16 +4,15 @@ import 'package:trivia_app_with_flutter/src/features/questions/data/models/quest
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/questions_response.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_remote_data_source.dart';
 const _baseUrl="https://opentdb.com/api.php";
+const _baseUrlToken="https://opentdb.com/api_token.php";
 class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   final Dio _dio = Dio();
-  QuizRemoteDataSourceImpl(){
-    _dio.options.baseUrl=_baseUrl;
-  }
+  QuizRemoteDataSourceImpl();
   @override
   Future<List<QuestionModel>> getQuestions(int amount, int idCategory, String? difficulty) async{
     try{
       final token=await _checkToken();
-      final response=await _dio.get('',queryParameters:{
+      final response=await _dio.get('$_baseUrl',queryParameters:{
        'amount' : amount,
         'category' : idCategory,
         'difficulty' : difficulty,
@@ -58,9 +57,9 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   }
   Future<String> _getToken() async {
     try{
-      final response= await _dio.get('?command=request');
-      if(response.statusCode==200){
-        final jsonResponse=response.data;
+      final response= await _dio.get('$_baseUrlToken?command=request');
+      final jsonResponse=response.data;
+      if(jsonResponse['response_code'] == 0){
         return jsonResponse['token'];
       } else{
         throw Exception('Failed to retrieve session token');
@@ -72,7 +71,7 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   Future<String> _resetToken() async {
     try{
       final currentToken=await _getToken();
-      final response= await _dio.get('',queryParameters: {
+      final response= await _dio.get('$_baseUrlToken',queryParameters: {
         'command': 'reset',
         'token': currentToken,
       });

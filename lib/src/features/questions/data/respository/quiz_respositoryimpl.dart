@@ -14,7 +14,7 @@ class QuizRespositoryImpl implements QuizRespository{
   Future<List<QuestionEntity>> fetchQuestions(int amount, int idCategory, String? difficulty) async{
       try{
         final questionsResponse= await remoteDataSourse.getQuestions(amount, idCategory, difficulty);
-       if(questionsResponse.isEmpty){
+       if(questionsResponse.isNotEmpty){
          final listQuestions=questionsResponse.map((e) => QuestionEntity.fromQuestionModel(e)).toList();
          return listQuestions;
        } else{
