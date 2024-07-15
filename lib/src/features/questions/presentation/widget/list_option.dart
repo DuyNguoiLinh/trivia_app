@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/parametter_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/question_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/buttons/button_option.dart';
 
@@ -55,9 +56,9 @@ class ListOptions extends ConsumerWidget {
        const Row(
          children: [
            SizedBox(width: 10,),
-           Expanded(child: ButtonOption(nameDifficutly: '10 Question',typeOptions: 'amount')),
+           Expanded(child: ButtonOption(nameDifficutly: '5 Question',typeOptions: 'amount')),
            SizedBox(width: 10,),
-           Expanded(child: ButtonOption(nameDifficutly: '15 Question',typeOptions: 'amount')),
+           Expanded(child: ButtonOption(nameDifficutly: '10 Question',typeOptions: 'amount')),
            SizedBox(width: 10,),
          ],
        ),
@@ -69,10 +70,29 @@ class ListOptions extends ConsumerWidget {
        const SizedBox(height: 15),
        InkWell(
          onTap: () {
-           Navigator.push(
-             context,
-             MaterialPageRoute(builder: (context) => const QuestionScreen()),
-           );
+           // check pick options
+           final options=ref.read(parameterProvider.notifier).checkParameter();
+           if(options == false){
+             showDialog(
+                 context: context,
+                 builder: (ctx) => AlertDialog(
+                   title: const Text('Check your options'),
+                   content: const Text(
+                       'Please pick all options to get started'),
+                   actions: [
+                     TextButton(
+                         onPressed: () {
+                           Navigator.pop(ctx);
+                         },
+                         child: const Text('Okay'))
+                   ],
+                 ));
+           } else {
+             Navigator.push(
+               context,
+               MaterialPageRoute(builder: (context) => const QuestionScreen()),
+             );
+           }
            },
          child: Container(
            // margin: EdgeInsets.only(left: 150),
