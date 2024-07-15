@@ -13,15 +13,16 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   final Dio _dio = Dio();
   QuizRemoteDataSourceImpl();
   @override
-  Future<List<QuestionModel>> getQuestions(int amount, int idCategory, String? difficulty) async{
+  Future<List<QuestionModel>> getQuestions(int amount, int idCategory, String? difficulty, String? type) async{
     try{
       final token=await _checkToken();
-      final response=await _dio.get('$_baseUrl',queryParameters:{
-       'amount' : amount,
-        'category' : idCategory,
-        'difficulty' : difficulty,
-        'token' :  token
-      });
+      final queryParameters = <String, dynamic>{
+        'amount': amount,
+        'category': idCategory,
+        if (difficulty != null) 'difficulty': difficulty.toLowerCase(),
+        if (type != null) 'type': type,
+      };
+      final response=await _dio.get('$_baseUrl',queryParameters: queryParameters);
       final questionsResponse=QuestionsResponse.fromJson(response.data);
       if(questionsResponse.responseCode==0){
         return questionsResponse.results;

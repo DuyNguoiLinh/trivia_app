@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/home_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/startscreen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/list_categories.dart';
 class Quiz extends StatelessWidget {
@@ -10,7 +11,7 @@ class Quiz extends StatelessWidget {
     // Do something
     return  const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Startscreen(),
+      home: HomeScreen(),
     );
   }
 }

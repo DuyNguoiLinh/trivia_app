@@ -5,7 +5,7 @@ import '../models/category_model.dart';
 import '../models/question_model.dart';
 
 abstract class QuizRemoteDataSource{
-  Future<List<QuestionModel>> getQuestions(int amount, int idCategory, String? difficulty);
+  Future<List<QuestionModel>> getQuestions(int amount,int idCategory, String? difficulty ,String? type);
   Future<List<CategoryModel>> getCategories();
   factory QuizRemoteDataSource.create() {
    return QuizRemoteDataSourceImpl();

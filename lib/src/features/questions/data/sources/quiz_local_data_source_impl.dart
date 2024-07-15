@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/category_local.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/user_info_local.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_local_data_source.dart';
 
@@ -12,7 +13,7 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource{
  final dir= await getApplicationDocumentsDirectory();
  if(Isar.instanceNames.isEmpty){
   return await Isar.open(
-      [UserInfoLocalSchema],
+      [UserInfoLocalSchema,CategoryLocalSchema],
       directory: dir.path,
   );
  }
@@ -29,6 +30,24 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource{
    } catch (err) {
      return Future.error(Exception(err));
    }
-
+ }
+ @override
+  Future<void>  saveCategory(List<CategoryLocal> listCategoryLocal) async{
+   try{
+       final isar = await db;
+        await isar.writeTxn(() async => isar.categoryLocals.putAll(listCategoryLocal));
+   } catch (err) {
+     return Future.error(Exception(err));
+   }
+ }
+ @override
+ Future<List<CategoryLocal>>  getCategory() async{
+   try{
+     final isar = await db;
+     final dataCategories = await isar.categoryLocals.where().findAll();
+     return dataCategories;
+   } catch (err) {
+     return Future.error(Exception(err));
+   }
  }
 }

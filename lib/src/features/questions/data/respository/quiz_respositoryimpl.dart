@@ -1,3 +1,4 @@
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/category_local.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_local_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_remote_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
@@ -12,9 +13,9 @@ class QuizRespositoryImpl implements QuizRespository{
       await localDataSource.saveUserName(name);
     }
   @override
-  Future<List<QuestionEntity>> fetchQuestions(int amount, int idCategory, String? difficulty) async{
+  Future<List<QuestionEntity>> fetchQuestions(int amount,int idCategory, String? difficulty,String? type) async{
       try{
-        final questionsResponse= await remoteDataSourse.getQuestions(amount, idCategory, difficulty);
+        final questionsResponse= await remoteDataSourse.getQuestions(amount, idCategory, difficulty,type);
        if(questionsResponse.isNotEmpty){
          final listQuestions=questionsResponse.map((e) => QuestionEntity.fromQuestionModel(e)).toList();
          return listQuestions;
@@ -27,10 +28,26 @@ class QuizRespositoryImpl implements QuizRespository{
   }
   @override
   Future<List<CategoryEntity>> fetchCategories() async{
+  try{
+      final categoriesLocal= await localDataSource.getCategory();
+      if(categoriesLocal.isNotEmpty) {
+        final dataCategories=categoriesLocal.map((e) => CategoryEntity.fromCategoryLocal(e)).toList();
+        return dataCategories;
+      } else {
+        final dataCategories= await _fetchAndSaveCategories();
+        return dataCategories;
+      }
+  } catch(err){
+    return Future.error(err);
+  }
+  }
+  Future<List<CategoryEntity>> _fetchAndSaveCategories() async{
       try{
            final categories= await remoteDataSourse.getCategories();
            if(categories.isNotEmpty) {
              final listCategories=categories.map((e) => CategoryEntity.fromCategoryResponse(e)).toList();
+             final categoryLocal=listCategories.map((e) => CategoryLocal(idCategory: e.id, nameCategory: e.nameCategory,filterCategory: e.filterCategory)).toList();
+             await localDataSource.saveCategory(categoryLocal);
              return listCategories;
            } else{
              return List.empty(growable: true);

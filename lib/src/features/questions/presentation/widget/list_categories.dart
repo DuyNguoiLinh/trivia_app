@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/category_future_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/category_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/fliters_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/category_item.dart';
 
 class ListCategories extends ConsumerWidget {
@@ -10,9 +11,7 @@ class ListCategories extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final listCategoriesResponse=ref.watch(categoryProvider);
-     final categories=listCategoriesResponse.maybeMap(data: (asyncData) => asyncData.value,
-           orElse: () => List<CategoryEntity>.empty(),);
+     final categories= ref.watch(categoryFilterProvider);
        return Scaffold(
          body: ListView.builder(
              itemCount: categories.length,

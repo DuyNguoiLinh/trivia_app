@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/bottom_navigationbar.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/filters.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/list_categories.dart';
 
@@ -66,6 +67,8 @@ class HomeScreen extends ConsumerWidget {
             const Expanded(child: ListCategories())
           ],
         ),
+          bottomNavigationBar: const QuizBottomNavigationbar(),
+
     );
   }
 }
