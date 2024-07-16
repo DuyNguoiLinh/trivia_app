@@ -4,7 +4,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/user_info_future_rovider.dart';
 
 class Buttons extends ConsumerWidget{
-  final  nameController =TextEditingController();
+  final  userNameController =TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userNameAsync= ref.watch(getInfoProvider);
@@ -34,7 +34,7 @@ class Buttons extends ConsumerWidget{
                   width: 2,
                 )),
             child:  TextField(
-              controller: nameController,
+              controller: userNameController,
               decoration:
               const InputDecoration(label: Text('Enter your usename'),
                   border: InputBorder.none
@@ -58,7 +58,7 @@ class Buttons extends ConsumerWidget{
           ),
           InkWell(
             onTap: () {
-              final name=nameController.text;
+              final name=userNameController.text;
               if( name.isNotEmpty ){
                 ref.read(asyncQuizProvider.notifier).saveUseName(name);
               //   navigator.push
