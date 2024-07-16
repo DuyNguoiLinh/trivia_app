@@ -17,15 +17,16 @@ class ListOptions extends ConsumerWidget {
            child: const Text("Select Difficulty" , style: TextStyle(fontSize: 20),)),
       const SizedBox(height: 15,),
       const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(width: 10,),
-          Expanded(child: ButtonOption(nameDifficutly: 'Random',typeOptions: 'difficulty')),
+          Expanded(child: ButtonOption(nameOption: 'Random',typeOption: 'difficulty')),
           SizedBox(width: 10,),
-          Expanded(child: ButtonOption(nameDifficutly: 'Easy',typeOptions: 'difficulty')),
+          Expanded(child: ButtonOption(nameOption: 'Easy',typeOption: 'difficulty')),
           SizedBox(width: 10,),
-          Expanded(child: ButtonOption(nameDifficutly: 'Medium',typeOptions: 'difficulty')),
+          Expanded(child: ButtonOption(nameOption: 'Medium',typeOption: 'difficulty')),
           SizedBox(width: 10,),
-          Expanded(child: ButtonOption(nameDifficutly: 'Hard',typeOptions: 'difficulty')),
+          Expanded(child: ButtonOption(nameOption: 'Hard',typeOption: 'difficulty')),
           SizedBox(width: 10,),
         ],
       ),
@@ -40,11 +41,11 @@ class ListOptions extends ConsumerWidget {
           child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
            children: [
-             SizedBox( width:double.infinity  ,child: ButtonOption(nameDifficutly: 'True/False',typeOptions: 'type',)),
+             SizedBox( width:double.infinity  ,child: ButtonOption(nameOption: 'True/False',typeOption: 'type',)),
              SizedBox(height: 15,),
-             SizedBox(width:double.infinity  ,child: ButtonOption(nameDifficutly: 'Multiple choice',typeOptions: 'type')),
+             SizedBox(width:double.infinity  ,child: ButtonOption(nameOption: 'Multiple choice',typeOption: 'type')),
              SizedBox(height: 15,),
-             SizedBox(width:double.infinity  ,child: ButtonOption(nameDifficutly: 'Any Type',typeOptions: 'type')),
+             SizedBox(width:double.infinity  ,child: ButtonOption(nameOption: 'Any Type',typeOption: 'type')),
              SizedBox(height: 15,),
            ],),
         ),
@@ -56,9 +57,9 @@ class ListOptions extends ConsumerWidget {
        const Row(
          children: [
            SizedBox(width: 10,),
-           Expanded(child: ButtonOption(nameDifficutly: '5 Question',typeOptions: 'amount')),
+           Expanded(child: ButtonOption(nameOption: '5 Question',typeOption: 'amount')),
            SizedBox(width: 10,),
-           Expanded(child: ButtonOption(nameDifficutly: '10 Question',typeOptions: 'amount')),
+           Expanded(child: ButtonOption(nameOption: '10 Question',typeOption: 'amount')),
            SizedBox(width: 10,),
          ],
        ),
@@ -104,7 +105,7 @@ class ListOptions extends ConsumerWidget {
            child: const Text(
              'Next',
              style:
-             TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+             TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.white),
            ),
          ),
        )

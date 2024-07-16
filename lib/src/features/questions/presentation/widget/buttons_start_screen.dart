@@ -48,11 +48,11 @@ class ButtonStartScreen extends ConsumerWidget{
               final name=nameController.text;
               if( name.isNotEmpty ){
                 ref.read(asyncQuizProvider.notifier).saveUseName(name);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                );
               }
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 80,vertical: 10),

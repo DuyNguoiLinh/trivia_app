@@ -4,18 +4,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final parameterProvider =
     StateNotifierProvider<ParameterNotifier, Map<String, dynamic>>((ref) {
-  return ParameterNotifier();
+     return ParameterNotifier();
 });
 
 class ParameterNotifier extends StateNotifier<Map<String, dynamic>> {
   ParameterNotifier() : super({});
   final Map<String, dynamic> parameter = {};
-
   // Use map
   void addParameter(String key, dynamic value) {
     parameter[key] = value;
+    state={...parameter};
     print(parameter);
   }
+  // Map<String,dynamic> isPickOption() {
+  //   return parameter;
+  // }
 
   Map<String, dynamic> getParameter() {
     if (parameter['amount'] == '10 Question') {

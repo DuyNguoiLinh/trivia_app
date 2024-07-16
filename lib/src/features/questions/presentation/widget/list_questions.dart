@@ -10,7 +10,7 @@ class ListQuestions extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncQuestion= ref.watch(asyncQuizProvider);
-    final listQuestion = asyncQuestion.maybeMap(data: (asyncData) => asyncData.value ,orElse: () => List<QuestionEntity>.empty());
+    final listQuestion = asyncQuestion.maybeMap(data: (asyncData) => asyncData.value,orElse: () => List<QuestionEntity>.empty());
    return  ListView.builder(
      itemCount: listQuestion.length,
        itemBuilder:(context, index) {

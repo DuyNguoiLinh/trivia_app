@@ -11,7 +11,7 @@ class Quiz extends StatelessWidget {
     // Do something
     return  const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StartScreen(),
+      home: HomeScreen(),
     );
   }
 }
