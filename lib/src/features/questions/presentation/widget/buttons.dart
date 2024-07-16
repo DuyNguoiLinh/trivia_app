@@ -51,7 +51,7 @@ class Buttons extends ConsumerWidget{
                     color: Colors.blue,
                     width: 2,
                   )),
-              child:  Text(userName.toString(),style: TextStyle(fontSize: 24),)
+              child:  Text(userName.toString(),style: const TextStyle(fontSize: 24),)
             ),
           const SizedBox(
               height: 100
@@ -61,6 +61,24 @@ class Buttons extends ConsumerWidget{
               final name=nameController.text;
               if( name.isNotEmpty ){
                 ref.read(asyncQuizProvider.notifier).saveUseName(name);
+              //   navigator.push
+              } else if(userName?.isNotEmpty == true){
+              // navigator.push
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Enter a name to get started',style: TextStyle(fontSize: 20),),
+                      content: const Text(
+                          'You have not entered a username'),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(ctx);
+                            },
+                            child: const Text('Okay'))
+                      ],
+                    ));
               }
             },
             child: Container(
