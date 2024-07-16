@@ -9,7 +9,7 @@ part of 'categories_response.dart';
 CategoriesResponse _$CategoriesResponseFromJson(Map<String, dynamic> json) =>
     CategoriesResponse(
       triviaCategories: (json['trivia_categories'] as List<dynamic>)
-          .map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
+          .map((e) => CategoryResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

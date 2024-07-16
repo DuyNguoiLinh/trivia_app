@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/buttons.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/buttons_start_screen.dart';
 
-class Startscreen extends StatelessWidget {
-  const Startscreen({super.key});
+class StartScreen extends StatelessWidget {
+  const StartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class Startscreen extends StatelessWidget {
                ),
                
              ),
-             Buttons(),
+             ButtonStartScreen(),
         ],
       ),
     ));

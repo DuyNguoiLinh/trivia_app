@@ -4,7 +4,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 
 class ButtonOption extends ConsumerWidget {
   const ButtonOption({super.key, required this.nameDifficutly, required this.typeOptions});
-  final String nameDifficutly;
+  final String nameDifficutly; //
   final String typeOptions;
   @override
   Widget build(BuildContext context, WidgetRef ref) {

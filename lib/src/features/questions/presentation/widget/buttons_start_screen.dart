@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_async_notifier_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/home_screen.dart';
 
-class Buttons extends ConsumerWidget{
+class ButtonStartScreen extends ConsumerWidget{
   final  nameController =TextEditingController();
+
+  ButtonStartScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(

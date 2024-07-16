@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/categories_response.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/category_model.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/category_response.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/question_model.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/questions_response.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_remote_data_source.dart';
@@ -21,6 +21,7 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
         'category': idCategory,
         if (difficulty != null) 'difficulty': difficulty.toLowerCase(),
         if (type != null) 'type': type,
+        'token' : token,
       };
       final response=await _dio.get('$_baseUrl',queryParameters: queryParameters);
       final questionsResponse=QuestionsResponse.fromJson(response.data);
@@ -92,7 +93,7 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   }
   // fetch Api Category
   @override
-  Future<List<CategoryModel>> getCategories() async{
+  Future<List<CategoryResponse>> getCategories() async{
     try{
        final response = await _dio.get('https://opentdb.com/api_category.php');
        final categoriesResponse=CategoriesResponse.fromJson(response.data);

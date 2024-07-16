@@ -24,7 +24,7 @@ class CategoryItem extends ConsumerWidget {
            ref.read(parameterProvider.notifier).addParameter('idCategory', categoryEntity.id);
            Navigator.push(
              context,
-             MaterialPageRoute(builder: (context) => const OptionScreen()),
+             MaterialPageRoute(builder: (context) => OptionScreen(nameCategory: categoryEntity.nameCategory,)),
            );
          },
          child: Row(

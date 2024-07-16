@@ -4,18 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/list_option.dart';
 
 class OptionScreen extends ConsumerWidget {
-  const OptionScreen({super.key});
-
+  const OptionScreen({super.key,required this.nameCategory});
+  final String nameCategory;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
      return Scaffold(
        appBar:  AppBar(
          title: const Text('Options'),
        ),
-       body: const Column(
+       body:  Column(
          children: [
-           ListOptions(),
-           SizedBox(height: 20,)
+           ListOptions(nameCategory: nameCategory,),
+           const SizedBox(height: 20,)
          ],
        ),
      );

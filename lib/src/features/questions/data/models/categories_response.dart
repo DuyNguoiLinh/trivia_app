@@ -1,11 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'category_model.dart';
+import 'category_response.dart';
 part 'categories_response.g.dart';
 @JsonSerializable()
 class CategoriesResponse {
   @JsonKey(name: 'trivia_categories')
-  final List<CategoryModel> triviaCategories;
+  final List<CategoryResponse> triviaCategories;
 
   CategoriesResponse({required this.triviaCategories});
 

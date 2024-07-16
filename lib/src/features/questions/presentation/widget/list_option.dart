@@ -5,8 +5,8 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/scre
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/buttons/button_option.dart';
 
 class ListOptions extends ConsumerWidget {
-  const ListOptions({super.key});
-
+  const ListOptions({super.key,required this.nameCategory});
+  final String nameCategory;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
    return Column(
@@ -70,7 +70,7 @@ class ListOptions extends ConsumerWidget {
        const SizedBox(height: 15),
        InkWell(
          onTap: () {
-           // check pick options
+           // check pick options"
            final options=ref.read(parameterProvider.notifier).checkParameter();
            if(options == false){
              showDialog(
@@ -90,7 +90,7 @@ class ListOptions extends ConsumerWidget {
            } else {
              Navigator.push(
                context,
-               MaterialPageRoute(builder: (context) => const QuestionScreen()),
+               MaterialPageRoute(builder: (context) =>  QuestionScreen(nameCategory: nameCategory,)),
              );
            }
            },
