@@ -17,7 +17,7 @@ class CategoryItem extends ConsumerWidget {
      child: OutlinedButton(
          style: OutlinedButton.styleFrom(
            backgroundColor: isPickOption ? Colors.blueAccent : Colors.white,
-           foregroundColor: isPickOption ? Colors.white.withOpacity(0.8) : Colors.blueAccent.withOpacity(0.8),
+           foregroundColor: isPickOption ? Colors.white : Colors.blueAccent.withOpacity(0.8),
            side: const BorderSide(width: 2.0,color: Colors.blueAccent),
            padding: const EdgeInsets.symmetric(vertical: 20),
            shape: RoundedRectangleBorder(
@@ -36,7 +36,7 @@ class CategoryItem extends ConsumerWidget {
            children: [
              //  Images
              const SizedBox(width: 150,),
-             Expanded(child: Text(categoryEntity.nameCategory.toString()))
+             Expanded(child: Text(categoryEntity.nameCategory.toString(),style: const TextStyle(fontSize: 22,),))
            ],
          )
      ),

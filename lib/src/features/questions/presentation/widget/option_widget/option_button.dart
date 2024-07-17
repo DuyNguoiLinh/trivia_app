@@ -3,13 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/parametter_controller.dart';
 
 class ButtonOption extends ConsumerWidget {
-  const ButtonOption({super.key, required this.nameOption, required this.typeOption});
+  const ButtonOption({super.key, required this.nameOption, required this.typeOption,this.nameParameter});
   final String nameOption;
   final String typeOption;
+  final dynamic nameParameter;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapOptions=ref.watch(parameterProvider);
-    final isPickOption= (mapOptions[typeOption] == nameOption);
+     bool isPickOption= false;
+    if(mapOptions.containsKey(typeOption)){
+      isPickOption= (mapOptions[typeOption] == nameParameter);
+    }
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
           backgroundColor: isPickOption ? Colors.blueAccent : Colors.white,
@@ -21,7 +25,7 @@ class ButtonOption extends ConsumerWidget {
           ),
         ),
         onPressed: () {
-          ref.read(parameterProvider.notifier).addParameter(typeOption,nameOption);
+          ref.read(parameterProvider.notifier).addParameter(typeOption,nameParameter);
         },
         child:  Text(nameOption.toString(), style: const TextStyle(fontSize: 20),),
       );

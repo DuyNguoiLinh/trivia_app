@@ -14,28 +14,25 @@ class ParameterNotifier extends StateNotifier<Map<String, dynamic>> {
     state={...parameter};
     print(parameter);
   }
-  // Map<String,dynamic> isPickOption() {
-  //   return parameter;
-  // }
-
   Map<String, dynamic> getParameter() {
-    if (parameter['amount'] == '10 Question') {
-      parameter['amount'] = 10;
-    } else {
-      parameter['amount'] = 5;
-    }
-    if (parameter['type'] == 'Multiple choice') {
-      parameter['type'] = 'multiple';
-    } else if (parameter['type'] == 'True/False') {
-      parameter['type'] = 'boolean';
-    } else {
-      parameter['type'] = null;
-    }
-    if (parameter['difficulty'] == 'Random') {
-      parameter['difficulty'] = null;
-    }
-    print(parameter);
-    return parameter;
+     return parameter;
+    // if (parameter['amount'] == '10 Question') {
+    //   parameter['amount'] = 10;
+    // } else {
+    //   parameter['amount'] = 5;
+    // }
+    // if (parameter['type'] == 'Multiple choice') {
+    //   parameter['type'] = 'multiple';
+    // } else if (parameter['type'] == 'True/False') {
+    //   parameter['type'] = 'boolean';
+    // } else {
+    //   parameter['type'] = null;
+    // }
+    // if (parameter['difficulty'] == 'Random') {
+    //   parameter['difficulty'] = null;
+    // }
+    // print(parameter);
+    // return parameter;
   }
   //  check option
   bool checkParameter() {

@@ -35,7 +35,7 @@ class AnswerButton extends ConsumerWidget {
                   child:  Row(
                     children: [
                       const SizedBox(width: 50,),
-                      Text(answer, style: const TextStyle(fontSize: 20),),
+                      Text(answer, style: const TextStyle(fontSize: 20),maxLines: null, overflow: TextOverflow.visible,),
                     ],
                   ),
             ),

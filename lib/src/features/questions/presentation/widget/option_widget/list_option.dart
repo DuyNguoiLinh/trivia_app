@@ -24,11 +24,11 @@ class ListOptions extends ConsumerWidget {
           SizedBox(width: 10,),
           Expanded(child: ButtonOption(nameOption: 'Random',typeOption: 'difficulty')),
           SizedBox(width: 10,),
-          Expanded(child: ButtonOption(nameOption: 'Easy',typeOption: 'difficulty')),
+          Expanded(child: ButtonOption(nameOption: 'Easy',typeOption: 'difficulty',nameParameter: 'easy',)),
           SizedBox(width: 10,),
-          Expanded(child: ButtonOption(nameOption: 'Medium',typeOption: 'difficulty')),
+          Expanded(child: ButtonOption(nameOption: 'Medium',typeOption: 'difficulty',nameParameter: 'medium',)),
           SizedBox(width: 10,),
-          Expanded(child: ButtonOption(nameOption: 'Hard',typeOption: 'difficulty')),
+          Expanded(child: ButtonOption(nameOption: 'Hard',typeOption: 'difficulty',nameParameter: 'hard',)),
           SizedBox(width: 10,),
         ],
       ),
@@ -43,9 +43,9 @@ class ListOptions extends ConsumerWidget {
           child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
            children: [
-             SizedBox( width:double.infinity  ,child: ButtonOption(nameOption: 'True/False',typeOption: 'type',)),
+             SizedBox( width:double.infinity  ,child: ButtonOption(nameOption: 'True/False',typeOption: 'type',nameParameter: 'boolean',)),
              SizedBox(height: 15,),
-             SizedBox(width:double.infinity  ,child: ButtonOption(nameOption: 'Multiple choice',typeOption: 'type')),
+             SizedBox(width:double.infinity  ,child: ButtonOption(nameOption: 'Multiple choice',typeOption: 'type',nameParameter: 'multiple',)),
              SizedBox(height: 15,),
              SizedBox(width:double.infinity  ,child: ButtonOption(nameOption: 'Any Type',typeOption: 'type')),
              SizedBox(height: 15,),
@@ -59,9 +59,9 @@ class ListOptions extends ConsumerWidget {
        const Row(
          children: [
            SizedBox(width: 10,),
-           Expanded(child: ButtonOption(nameOption: '5 Question',typeOption: 'amount')),
+           Expanded(child: ButtonOption(nameOption: '5 Question',typeOption: 'amount',nameParameter:5,)),
            SizedBox(width: 10,),
-           Expanded(child: ButtonOption(nameOption: '10 Question',typeOption: 'amount')),
+           Expanded(child: ButtonOption(nameOption: '10 Question',typeOption: 'amount',nameParameter:10,)),
            SizedBox(width: 10,),
          ],
        ),

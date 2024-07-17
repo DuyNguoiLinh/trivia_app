@@ -13,7 +13,7 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   final Dio _dio = Dio();
   QuizRemoteDataSourceImpl();
   @override
-  Future<List<QuestionModel>> getQuestions(int amount, int idCategory, String? difficulty, String? type) async{
+  Future<List<QuestionModel>> getQuestions(int amount,int idCategory, String? difficulty, String? type) async{
     try{
       final token=await _checkToken();
       final queryParameters = <String, dynamic>{
