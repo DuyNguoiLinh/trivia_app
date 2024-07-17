@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller.dart';
 // final answerProvider =AsyncNotifierProvider<AsyncAnswerNotifier,String>( () {
 //   return AsyncAnswerNotifier();
 // });
@@ -10,15 +12,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 //     throw UnimplementedError();
 //   }
 // }
-
-final answerProvider =StateNotifierProvider<AnswerNotifier,Map<String,dynamic>>( (ref) {
-  return AnswerNotifier();
-});
-class AnswerNotifier extends StateNotifier<Map<String,dynamic>> {
-  final Map<String, dynamic> listAnswer = {};
-  AnswerNotifier() : super({});
-  void addAnswer(List<String> listAnswerRandom) {
-
-  }
-
-}
+//
+// final answerProvider =StateNotifierProvider<AnswerNotifier,Map<String,dynamic>>( (ref) {
+//   final asyncQuestion =ref.watch(asyncQuestionProvider);
+//   // final question =asyncQuestion.maybeMap(data: (data) => data.value , orElse: ()  =>  );
+//   return AnswerNotifier(questionEntity: question);
+// });
+// class AnswerNotifier extends StateNotifier<Map<String,dynamic>> {
+//   final Map<String, dynamic> listAnswer = {};
+//   AnswerNotifier({this.questionEntity}) : super({});
+//   final QuestionEntity? questionEntity;
+//   void addAnswer(List<String> listAnswerRandom) {
+//
+//   }
+//
+// }

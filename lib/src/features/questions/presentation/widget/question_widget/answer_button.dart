@@ -5,11 +5,12 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/parametter_controller.dart';
 
 class AnswerButton extends ConsumerWidget {
-  const AnswerButton({super.key, required this.answer});
+  const AnswerButton({super.key, required this.answer,required this.title});
   final String answer;
+  final String title;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final answerCurrent=ref.watch(answerProvider);
+    // final answerCurrent=ref.watch(answerProvider);
     // final isPickAnswer = (answerCurrent == answer);
     // final mapOptions=ref.watch(parameterProvider);
     // final isPickOption= (mapOptions[typeOption] == nameOption);
@@ -32,11 +33,16 @@ class AnswerButton extends ConsumerWidget {
                   onPressed: () {
                     // ref.read(answerProvider.notifier).addUserAnswer(answer);
                   },
-                  child:  Row(
-                    children: [
-                      const SizedBox(width: 50,),
-                      Text(answer, style: const TextStyle(fontSize: 20),maxLines: null, overflow: TextOverflow.visible,),
-                    ],
+                  child:  Padding(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(title,style: const TextStyle(fontSize: 20,color: Colors.deepOrange)),
+                        const SizedBox(width: 50,),
+                        Text(answer, style: const TextStyle(fontSize: 20),maxLines: null, overflow: TextOverflow.visible,),
+                      ],
+                    ),
                   ),
             ),
           ),

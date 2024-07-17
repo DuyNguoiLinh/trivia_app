@@ -10,13 +10,26 @@ class ListAnswer extends ConsumerWidget{
   final List<String>? listAnswer;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        const SizedBox(height: 1,),
-        ...listAnswer!.map((e) => AnswerButton(answer: e))
-        // ...questionCurrent.getShuffledAnswers().map((e) => AnswerButton(answer: e)),
-      ],
-    );
+    if(listAnswer != null){
+      final int typeQuestion=listAnswer!.length;
+      return Column(
+        children: [
+          const SizedBox(height: 1,),
+          AnswerButton(answer: listAnswer![0] ,title: 'A',),
+          AnswerButton(answer: listAnswer![1], title: 'B',),
+          if(typeQuestion>2)
+            AnswerButton(answer: listAnswer![2], title: 'C',),
+          if(typeQuestion>3)
+            AnswerButton(answer: listAnswer![3], title: 'D',),
+
+          // ...listAnswer!.map((e) => AnswerButton(answer: e))
+          // ...questionCurrent.getShuffledAnswers().map((e) => AnswerButton(answer: e)),
+        ],
+      );
+    } else {
+      return const Center(child: Text('Data null . Please check'),);
+    }
+
   }
 
 }

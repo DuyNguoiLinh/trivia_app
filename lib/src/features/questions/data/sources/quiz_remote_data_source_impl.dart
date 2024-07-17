@@ -11,11 +11,18 @@ const _baseUrlToken="https://opentdb.com/api_token.php";
 const _baseUrlCategory='https://opentdb.com/api_category.php';
 class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   final Dio _dio = Dio();
-  QuizRemoteDataSourceImpl();
+  late String _token;
+  QuizRemoteDataSourceImpl() {
+    _initToken();
+  }
+
+  Future<void> _initToken() async {
+    _token = await _getToken();
+  }
   @override
   Future<List<QuestionModel>> getQuestions(int amount,int idCategory, String? difficulty, String? type) async{
     try{
-      final token=await _checkToken();
+      final token =await _checkToken(_token);
       final queryParameters = <String, dynamic>{
         'amount': amount,
         'category': idCategory,
@@ -52,13 +59,12 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
       return Future.error(Exception(e));
     }
   }
-  Future<String>  _checkToken() async{
-    String token= await _getToken();
+  Future<String>  _checkToken(String token) async{
     if(token.isNotEmpty){
       return token;
     } else{
-      token = await _resetToken();
-      return token;
+     final newToken = await _resetToken(token);
+      return newToken;
     }
   }
   Future<String> _getToken() async {
@@ -74,12 +80,11 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
       return Future.error(err);
     }
   }
-  Future<String> _resetToken() async {
+  Future<String> _resetToken(String tokenCurrent) async {
     try{
-      final currentToken=await _getToken();
       final response= await _dio.get('$_baseUrlToken',queryParameters: {
         'command': 'reset',
-        'token': currentToken,
+        'token': tokenCurrent,
       });
       if(response.statusCode==200){
         final jsonResponse=response.data;
