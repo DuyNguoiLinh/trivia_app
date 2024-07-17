@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/category_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/fliters_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/category_item.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/category_item.dart';
 
 class ListCategories extends ConsumerWidget {
   const ListCategories({super.key});

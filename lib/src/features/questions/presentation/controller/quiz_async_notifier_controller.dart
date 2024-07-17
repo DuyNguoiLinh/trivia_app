@@ -15,7 +15,6 @@ class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
      print(parameter['idCategory']);
      print(parameter['difficulty']);
      print(parameter['type']);
-
     return  _initQuestionsData(parameter['amount'], parameter['idCategory'], parameter['difficulty'], parameter['type']);
   }
   Future<List<QuestionEntity>> _initQuestionsData(int amount ,int idCategory, String? difficulty,String? type ) async{

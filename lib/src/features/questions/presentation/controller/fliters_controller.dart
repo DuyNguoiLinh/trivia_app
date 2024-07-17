@@ -15,14 +15,6 @@ final categoryFilterProvider = Provider<List<CategoryEntity>>((ref) {
       orElse: () => List<CategoryEntity>.empty());
 
   if (listCategory.isNotEmpty) {
-    // list entertainment category
-    // final entertainmentCategory = listCategory
-    //     .where((e) => e.filterCategory=='entertainment').toList();
-    //  list science Category
-    // final scienceCategory = listCategory.where((e) => e.filterCategory=='science').toList();
-    // list popular Category
-    // final popularCategory = listCategory
-    //       .where((e) => e.filterCategory=='popular').toList();
       switch (filter) {
         case ListFilter.popular:
           final popularCategory = listCategory

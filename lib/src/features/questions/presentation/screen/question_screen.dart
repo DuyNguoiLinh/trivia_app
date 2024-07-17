@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/list_questions.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/question_item.dart';
+
+import '../../domain/entity/question_entity.dart';
 
 class QuestionScreen extends ConsumerWidget {
   const QuestionScreen({super.key,required this.nameCategory});
@@ -10,10 +12,10 @@ class QuestionScreen extends ConsumerWidget {
    return Scaffold(
      appBar: AppBar(
        title: Container(
-         padding: const EdgeInsets.only(left: 80),
+         margin: const EdgeInsets.only(left: 60),
            child: Text(nameCategory)),
      ),
-     body:  const ListQuestions(),
+     body:   const QuestionItem(),
    );
   }
 

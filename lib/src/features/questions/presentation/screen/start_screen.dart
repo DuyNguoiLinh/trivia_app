@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/buttons_start_screen.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/start_widget/buttons_start_screen.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
