@@ -11,17 +11,15 @@ const _baseUrlToken="https://opentdb.com/api_token.php";
 const _baseUrlCategory='https://opentdb.com/api_category.php';
 class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   final Dio _dio = Dio();
-  late String _token;
-  QuizRemoteDataSourceImpl() {
-    _initToken();
-  }
-
-  Future<void> _initToken() async {
-    _token = await _getToken();
-  }
+  late String _token ;
+  QuizRemoteDataSourceImpl();
+  // Future<void> _initToken() async {
+  //   _token = await _getToken();
+  // }
   @override
   Future<List<QuestionModel>> getQuestions(int amount,int idCategory, String? difficulty, String? type) async{
     try{
+      _token=await _getToken();
       final token =await _checkToken(_token);
       final queryParameters = <String, dynamic>{
         'amount': amount,
@@ -60,7 +58,7 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
     }
   }
   Future<String>  _checkToken(String token) async{
-    if(token.isNotEmpty){
+    if(token.isNotEmpty == true){
       return token;
     } else{
      final newToken = await _resetToken(token);

@@ -15,12 +15,18 @@ class QuestionItem extends ConsumerWidget{
          data: (questionCurrent) {
            if(questionCurrent != null) {
               return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                children: [
+                 const SizedBox(height: 50,),
                  Container(
                      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-                     child: Text(questionCurrent.question.toString(),style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold),)),
-                 // ...questionCurrent.getShuffledAnswers().map((e) => AnswerButton(answer: e)),
-                 ListAnswer(listAnswer: questionCurrent.answers,),
+                   child: Text(
+                     questionCurrent.question,
+                     style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                   ),
+           ),
+                 ListAnswer(listAnswer: questionCurrent.answers,correctAnswer: questionCurrent.correctAnswer,question: questionCurrent.question,),
+                 const SizedBox(height: 20,),
                  NavigationButton(questionEntity: questionCurrent,),
                ],
              );

@@ -13,17 +13,23 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 //   }
 // }
 //
-// final answerProvider =StateNotifierProvider<AnswerNotifier,Map<String,dynamic>>( (ref) {
-//   final asyncQuestion =ref.watch(asyncQuestionProvider);
-//   // final question =asyncQuestion.maybeMap(data: (data) => data.value , orElse: ()  =>  );
-//   return AnswerNotifier(questionEntity: question);
-// });
-// class AnswerNotifier extends StateNotifier<Map<String,dynamic>> {
-//   final Map<String, dynamic> listAnswer = {};
-//   AnswerNotifier({this.questionEntity}) : super({});
-//   final QuestionEntity? questionEntity;
-//   void addAnswer(List<String> listAnswerRandom) {
-//
-//   }
-//
-// }
+final answerProvider =
+StateNotifierProvider<AnswerNotifier, Map<String, String>>((ref) {
+  return AnswerNotifier();
+});
+
+class AnswerNotifier extends StateNotifier<Map<String, String>> {
+  AnswerNotifier() : super({});
+  final Map<String, String> listAnswer = {};
+
+  // Use map
+  void addAnswer(String key, String value) {
+    listAnswer[key] = value;
+    state = {...listAnswer};
+    print(listAnswer);
+  }
+  void clearAnswerInMap() {
+    listAnswer.clear();
+    state={...listAnswer};
+  }
+}

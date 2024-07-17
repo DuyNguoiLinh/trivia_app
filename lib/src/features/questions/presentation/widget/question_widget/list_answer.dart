@@ -6,26 +6,33 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 import 'answer_button.dart';
 
 class ListAnswer extends ConsumerWidget{
-  const ListAnswer({super.key,required this.listAnswer});
+  const ListAnswer({super.key,required this.listAnswer,required this.correctAnswer,required this.question});
   final List<String>? listAnswer;
+  final String correctAnswer;
+  final String question;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if(listAnswer != null){
       final int typeQuestion=listAnswer!.length;
-      return Column(
+      if(typeQuestion>2) {
+        return Column(
         children: [
           const SizedBox(height: 1,),
-          AnswerButton(answer: listAnswer![0] ,title: 'A',),
-          AnswerButton(answer: listAnswer![1], title: 'B',),
-          if(typeQuestion>2)
-            AnswerButton(answer: listAnswer![2], title: 'C',),
-          if(typeQuestion>3)
-            AnswerButton(answer: listAnswer![3], title: 'D',),
-
-          // ...listAnswer!.map((e) => AnswerButton(answer: e))
-          // ...questionCurrent.getShuffledAnswers().map((e) => AnswerButton(answer: e)),
+          AnswerButton(answer: listAnswer![0] ,title: 'A',correctKey: correctAnswer,),
+          AnswerButton(answer: listAnswer![1], title: 'B',correctKey: correctAnswer,),
+          AnswerButton(answer: listAnswer![2], title: 'C',correctKey: correctAnswer),
+          AnswerButton(answer: listAnswer![3], title: 'D',correctKey: correctAnswer),
         ],
       );
+      } else {
+        return Column(
+          children: [
+            const SizedBox(height: 1,),
+            AnswerButton(answer: listAnswer![0] ,title: 'A',correctKey: question,),
+            AnswerButton(answer: listAnswer![1], title: 'B',correctKey: question,),
+          ],
+        );
+      }
     } else {
       return const Center(child: Text('Data null . Please check'),);
     }
