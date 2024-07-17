@@ -10,12 +10,14 @@ class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
   final quizRespository= QuizRespository.create();
   @override
   FutureOr<List<QuestionEntity>> build() {
-     final parameter=ref.read(parameterProvider.notifier).getParameter();
-     print(parameter['amount']);
-     print(parameter['idCategory']);
-     print(parameter['difficulty']);
-     print(parameter['type']);
-    return  _initQuestionsData(parameter['amount'], parameter['idCategory'], parameter['difficulty'], parameter['type']);
+     // final parameter=ref.read(parameterProvider.notifier).getParameter();
+     // print(parameter['amount']);
+     // print(parameter['idCategory']);
+     // print(parameter['difficulty']);
+     // print(parameter['type']);
+     // final asyncQuestion=await _initQuestionsData(parameter['amount'], parameter['idCategory'], parameter['difficulty'], parameter['type']) ;
+     // state=AsyncValue.data([...asyncQuestion]);
+     return List<QuestionEntity>.empty(growable: true);
   }
   Future<List<QuestionEntity>> _initQuestionsData(int amount ,int idCategory, String? difficulty,String? type ) async{
        try{
@@ -26,6 +28,22 @@ class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
          return List.empty(growable: true);
        }
     }
+  Future<void> fetchNewQuiz() async {
+    final parameter = ref.read(parameterProvider.notifier).getParameter();
+    state = const AsyncValue.loading();
+    try {
+      final questions = await _initQuestionsData(
+          parameter['amount'],
+          parameter['idCategory'],
+          parameter['difficulty'],
+          parameter['type']
+      );
+      state = AsyncValue.data([...questions]);
+    } catch (e, stackTr) {
+      state = AsyncValue.error(e, stackTr);
+    }
+  }
+
   Future<void> saveUseName(String name) async {
       quizRespository.saveUserName(name);
   }

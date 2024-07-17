@@ -15,7 +15,6 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
         listQuestion = await ref.watch(asyncQuizProvider.future);
         return listQuestion.firstOrNull;
     } catch(err,stackTr){
-
       return Future.error(err,stackTr);
     }
  }

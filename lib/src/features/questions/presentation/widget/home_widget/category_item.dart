@@ -10,10 +10,14 @@ class CategoryItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final mapOptions=ref.watch(parameterProvider);
+    final isPickOption= (mapOptions['idCategory'] == categoryEntity.id);
     return Padding(
      padding: const EdgeInsets.symmetric(horizontal: 10),
      child: OutlinedButton(
          style: OutlinedButton.styleFrom(
+           backgroundColor: isPickOption ? Colors.blueAccent : Colors.white,
+           foregroundColor: isPickOption ? Colors.white.withOpacity(0.8) : Colors.blueAccent.withOpacity(0.8),
            side: const BorderSide(width: 2.0,color: Colors.blueAccent),
            padding: const EdgeInsets.symmetric(vertical: 20),
            shape: RoundedRectangleBorder(
