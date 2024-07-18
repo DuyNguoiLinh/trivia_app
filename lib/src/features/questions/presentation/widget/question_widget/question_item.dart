@@ -17,19 +17,17 @@ class QuestionItem extends ConsumerWidget{
                 mainAxisAlignment: MainAxisAlignment.start,
                children: [
                  const ListIdentifier(),
-                 const Spacer(),
                  Container(
-                     padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+                   padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
                    child: Text(
                      questionCurrent.question,
                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                    ),
            ),
                  ListAnswer(listAnswer: questionCurrent.answers,id: questionCurrent.id,),
-                 const SizedBox(height: 20,),
                  const Spacer(),
-                 NavigationButton(questionEntity: questionCurrent,),
-                 const SizedBox(height: 10,)
+                 Expanded(child: NavigationButton(questionEntity: questionCurrent,)),
+                 const SizedBox(height: 20,)
                ],
              );
            } else {

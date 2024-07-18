@@ -13,6 +13,7 @@ class AsyncIdentifierNotifier extends AsyncNotifier<int> {
     try{
       final asyncQuestion=await ref.watch(asyncQuestionProvider.future);
         if(asyncQuestion != null){
+          print(asyncQuestion.id);
           state=AsyncValue.data(asyncQuestion.id);
         }
         } catch(err,stackTr){

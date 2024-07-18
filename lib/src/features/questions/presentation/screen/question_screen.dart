@@ -15,7 +15,7 @@ class QuestionScreen extends ConsumerWidget {
          margin: const EdgeInsets.only(left: 60),
            child: Text(nameCategory)),
      ),
-     body:   const QuestionItem(),
+     body:   const Expanded(child: QuestionItem()),
    );
   }
 

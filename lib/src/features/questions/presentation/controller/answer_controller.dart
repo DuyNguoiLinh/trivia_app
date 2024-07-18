@@ -23,13 +23,6 @@ class AnswerNotifier extends StateNotifier<Map<int, String>> {
       print(listAnswer);
     }
   }
-  bool answered(int id) {
-    if(listAnswer.containsKey(id)){
-      return true;
-    } else {
-      return false;
-    }
-  }
   void clearAnswerInMap() {
     listAnswer.clear();
     state={...listAnswer};

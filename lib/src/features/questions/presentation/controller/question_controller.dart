@@ -29,6 +29,9 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
        state=AsyncValue.data(listQuestion[--i]);
      }
    }
+   Future<void> clickIdentifier(int id) async{
+     state=AsyncValue.data(listQuestion[--id]);
+   }
    String  checkButton() {
      for( int index=0; index<listQuestion.length;index++){
        if(listQuestion[index] == state.value){
