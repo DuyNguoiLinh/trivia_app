@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/identifier_controller.dart';
 
 import '../../controller/question_controller.dart';
 
@@ -19,6 +20,7 @@ class NavigationButton extends ConsumerWidget{
             TextButton(
              onPressed:() {
                ref.read(asyncQuestionProvider.notifier).backQuestion();
+               ref.read(asyncIdentifierProvider.notifier).updateIdentifier();
              },
              child: const Row(
                children: [
@@ -32,6 +34,8 @@ class NavigationButton extends ConsumerWidget{
            TextButton(
              onPressed:() {
                ref.read(asyncQuestionProvider.notifier).nextQuestion();
+               ref.read(asyncIdentifierProvider.notifier).updateIdentifier();
+
              },
              child: const Row(
                children: [

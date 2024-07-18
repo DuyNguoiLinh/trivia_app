@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 part 'question_model.g.dart';
 @JsonSerializable()
 class QuestionModel{
-  static int _currentId = 1;
   final String type;
   final String difficulty;
   final String category;

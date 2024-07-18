@@ -5,6 +5,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 
 class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
    int i=0;
+   int index=0;
    List<QuestionEntity> listQuestion=List<QuestionEntity>.empty(growable: true);
   @override
   FutureOr<QuestionEntity?> build() {
@@ -18,12 +19,12 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
       return Future.error(err,stackTr);
     }
  }
- Future<void> nextQuestion() async {
+ Future<void> nextQuestion() async{
      if(i<listQuestion.length){
        state=AsyncValue.data(listQuestion[++i]);
      }
  }
-   Future<void> backQuestion() async {
+   Future<void>  backQuestion() async {
      if(i>0){
        state=AsyncValue.data(listQuestion[--i]);
      }

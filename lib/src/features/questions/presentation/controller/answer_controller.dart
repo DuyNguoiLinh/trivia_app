@@ -2,17 +2,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller.dart';
-// final answerProvider =AsyncNotifierProvider<AsyncAnswerNotifier,String>( () {
-//   return AsyncAnswerNotifier();
-// });
-// class AsyncAnswerNotifier extends AsyncNotifier<String> {
-//   @override
-//   FutureOr<String> build() {
-//     // TODO: implement build
-//     throw UnimplementedError();
-//   }
-// }
-//
+
 final answerProvider =
 StateNotifierProvider<AnswerNotifier, Map<String, String>>((ref) {
   return AnswerNotifier();
@@ -32,4 +22,5 @@ class AnswerNotifier extends StateNotifier<Map<String, String>> {
     listAnswer.clear();
     state={...listAnswer};
   }
+
 }
