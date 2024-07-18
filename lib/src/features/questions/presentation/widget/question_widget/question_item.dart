@@ -25,7 +25,7 @@ class QuestionItem extends ConsumerWidget{
                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                    ),
            ),
-                 ListAnswer(listAnswer: questionCurrent.answers,question: questionCurrent.question,),
+                 ListAnswer(listAnswer: questionCurrent.answers,id: questionCurrent.id,),
                  const SizedBox(height: 20,),
                  const Spacer(),
                  NavigationButton(questionEntity: questionCurrent,),

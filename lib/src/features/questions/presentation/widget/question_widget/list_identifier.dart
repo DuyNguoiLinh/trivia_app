@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/parametter_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/identifier_question.dart';
+
+import '../../controller/answer_controller.dart';
 
 class ListIdentifier extends ConsumerWidget {
   const ListIdentifier({super.key});
@@ -25,35 +26,17 @@ class ListIdentifier extends ConsumerWidget {
           if(amount == 5){
             return Column(
               children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      // bottom: BorderSide(width: 2,color: Colors.blueAccent)
-                    )
-                  ),
-                  child: IdentifierQuestion(id: ++index,),
-                ),
-                const SizedBox(height: 10,)
+                  IdentifierQuestion(id: ++index,),
+                   const SizedBox(height: 10,)
               ],
             );
           } else {
             return Column(
               children: [
-                Container(
-                    decoration: const BoxDecoration(
-                        border: Border(
-                            // bottom: BorderSide(width: 2,color: Colors.blueAccent)
-                        )
-                    ),
-                    child: IdentifierQuestion(id: ++index,)),
+                IdentifierQuestion(id: ++index,),
                 const SizedBox(height: 5,),
-                Container(
-                    decoration: const BoxDecoration(
-                        border: Border(
-                            // bottom: BorderSide(width: 2,color: Colors.blueAccent)
-                        )
-                    ),
-                    child: IdentifierQuestion(id: index+=5)),
+                IdentifierQuestion(id: index+=5),
+                const SizedBox(height: 5,),
               ],
             );
           }
