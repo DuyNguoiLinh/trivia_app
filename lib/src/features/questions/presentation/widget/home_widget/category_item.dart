@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/parametter_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/option_screen.dart';
 
 class CategoryItem extends ConsumerWidget {

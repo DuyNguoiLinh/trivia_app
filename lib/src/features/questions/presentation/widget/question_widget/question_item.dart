@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/question_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/list_identifier.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/navigation_button.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/list_answer.dart';
@@ -17,6 +17,7 @@ class QuestionItem extends ConsumerWidget{
                 mainAxisAlignment: MainAxisAlignment.start,
                children: [
                  const ListIdentifier(),
+                 // const SizedBox(height: 30,),
                  Container(
                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
                    child: Text(
@@ -26,7 +27,7 @@ class QuestionItem extends ConsumerWidget{
            ),
                  ListAnswer(listAnswer: questionCurrent.answers,id: questionCurrent.id,),
                  const Spacer(),
-                 Expanded(child: NavigationButton(questionEntity: questionCurrent,)),
+                 NavigationButton(questionEntity: questionCurrent,),
                  const SizedBox(height: 20,)
                ],
              );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/parametter_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
 
 class ButtonOption extends ConsumerWidget {
   const ButtonOption({super.key, required this.nameOption, required this.typeOption,this.nameParameter});

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/category_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/home_controller/category_controller.dart';
 
 enum ListFilter { popular, entertainment, science }
 

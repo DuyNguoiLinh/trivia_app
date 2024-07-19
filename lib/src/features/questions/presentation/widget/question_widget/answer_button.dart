@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/answer_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/answer_controller.dart';
 
 class AnswerButton extends ConsumerWidget {
   const AnswerButton({super.key, required this.answer,required this.title,required this.idKey,});

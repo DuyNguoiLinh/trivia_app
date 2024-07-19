@@ -45,6 +45,13 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
      }
      return 'submit';
    }
+   Map<int,String> getCorrectAnswer() {
+     final Map<int, String> listCorrectAnswer = {};
+     for(final question in listQuestion){
+       listCorrectAnswer[question.id]=question.correctAnswer;
+     }
+     return listCorrectAnswer;
+   }
 }
 final asyncQuestionProvider = AsyncNotifierProvider<AsyncQuestionNotifier,QuestionEntity?>(() {
   return AsyncQuestionNotifier();

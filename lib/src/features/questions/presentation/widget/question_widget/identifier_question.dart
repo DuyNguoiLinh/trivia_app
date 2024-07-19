@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/answer_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/identifier_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/answer_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/identifier_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/question_controller.dart';
 
 class IdentifierQuestion extends ConsumerWidget {
   const IdentifierQuestion({super.key, required this.id});
@@ -11,7 +11,6 @@ class IdentifierQuestion extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncIndex=ref.watch(asyncIdentifierProvider);
     final index=asyncIndex.maybeMap(data: (data) => data.value ,orElse: () => 0);
-    print(index);
     final mapAnswered = ref.watch(answerProvider);
     final answered = mapAnswered.containsKey(id);
     return Container(

@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/respository/quiz_respository.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/parametter_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
 
 class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
   final quizRespository= QuizRespository.create();

@@ -11,6 +11,14 @@ class Quiz extends StatelessWidget {
     // Do something
     return  const MaterialApp(
       debugShowCheckedModeBanner: false,
+      // initialRoute: '/',
+      // routes: {
+      //   '/sa': (context) => StartScreen(),
+      //   '/home': (context) => const HomeScreen(),
+      //   '/option': (context) => OptionScreen(),
+      //   '/answer': (context) => QuestionScreen(),
+      //   '/result': (context) => ResultScreen(),
+      // },
       home: HomeScreen(),
     );
   }
