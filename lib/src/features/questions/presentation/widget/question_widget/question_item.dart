@@ -10,6 +10,7 @@ class QuestionItem extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncQuestion=ref.watch(asyncQuestionProvider);
+
      return asyncQuestion.when(
          data: (questionCurrent) {
            if(questionCurrent != null) {
