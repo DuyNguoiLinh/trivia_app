@@ -110,8 +110,6 @@ void _userInfoLocalAttach(
   object.id = id;
 }
 
-<<<<<<< HEAD
-=======
 extension UserInfoLocalByIndex on IsarCollection<UserInfoLocal> {
   Future<UserInfoLocal?> getByUserName(String userName) {
     return getByIndex(r'userName', [userName]);
@@ -167,7 +165,7 @@ extension UserInfoLocalByIndex on IsarCollection<UserInfoLocal> {
   }
 }
 
->>>>>>> main
+
 extension UserInfoLocalQueryWhereSort
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QWhere> {
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhere> anyId() {
