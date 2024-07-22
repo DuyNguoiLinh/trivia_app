@@ -35,7 +35,8 @@ class PartDetail extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const SizedBox(height: 10,),
-          Text(title ,style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, shadows: [
+          Text(title ,style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20,
+            shadows: [
             Shadow(
               offset: Offset(2.0, 2.0),
               blurRadius: 5.0,

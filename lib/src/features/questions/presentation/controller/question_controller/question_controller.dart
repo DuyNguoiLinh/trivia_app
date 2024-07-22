@@ -52,6 +52,9 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
      }
      return listCorrectAnswer;
    }
+   List<QuestionEntity> getListQuestion() {
+    return listQuestion;
+   }
 }
 final asyncQuestionProvider = AsyncNotifierProvider<AsyncQuestionNotifier,QuestionEntity?>(() {
   return AsyncQuestionNotifier();

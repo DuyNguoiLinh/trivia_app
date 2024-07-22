@@ -27,7 +27,7 @@ class QuestionItem extends ConsumerWidget{
            ),
                  ListAnswer(listAnswer: questionCurrent.answers,id: questionCurrent.id,),
                  const Spacer(),
-                 NavigationButton(questionEntity: questionCurrent,),
+                 Expanded(child: NavigationButton(questionEntity: questionCurrent,)),
                  const SizedBox(height: 20,)
                ],
              );

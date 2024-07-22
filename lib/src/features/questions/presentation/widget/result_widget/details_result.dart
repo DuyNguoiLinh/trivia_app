@@ -45,7 +45,8 @@ class DetailsResult extends ConsumerWidget {
                 child:  Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(width: 10,),
+                    const SizedBox(width: 8,),
+                    const Text('+ ' , style: TextStyle(fontSize: 28 ,fontWeight: FontWeight.bold)),
                     Text(mapData['Coin'], style: const TextStyle(fontSize: 35 ,fontWeight: FontWeight.bold),),
                     const SizedBox(width: 4,),
                     Image.asset('assets/images/bitcoin.png', width: 35, height: 35),

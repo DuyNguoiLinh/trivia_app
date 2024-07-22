@@ -9,10 +9,12 @@ class IdentifierQuestion extends ConsumerWidget {
   final int id;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final asyncIndex=ref.watch(asyncIdentifierProvider);
     final index=asyncIndex.maybeMap(data: (data) => data.value ,orElse: () => 0);
     final mapAnswered = ref.watch(answerProvider);
     final answered = mapAnswered.containsKey(id);
+
     return Container(
       decoration:  BoxDecoration(
           border: Border(
@@ -21,8 +23,10 @@ class IdentifierQuestion extends ConsumerWidget {
       ),
       child: ElevatedButton(
         onPressed: () {
+
           ref.read(asyncQuestionProvider.notifier).clickIdentifier(id);
           ref.read(asyncIdentifierProvider.notifier).updateIdentifier();
+
         },
         style: ElevatedButton.styleFrom(
             padding: EdgeInsets.zero,

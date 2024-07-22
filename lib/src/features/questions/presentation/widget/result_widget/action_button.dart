@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/result_controller/action_controller.dart';
 
 import '../../screen/home_screen.dart';
+import '../../screen/review_screen.dart';
 
 class ActionButton extends ConsumerWidget {
   const ActionButton({super.key, required this.nameAction});
@@ -21,7 +22,17 @@ class ActionButton extends ConsumerWidget {
        children: [
          ElevatedButton(
            onPressed: () {
-             if(nameAction == "Home"){
+             if(nameAction == 'Review Answer')
+             {
+               Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (context) =>  const ReviewScreen() ),
+               );
+             }
+
+             if(nameAction == "Home")
+
+             {
                Navigator.pushAndRemoveUntil(
                  context,
                  MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -29,6 +40,7 @@ class ActionButton extends ConsumerWidget {
                  // (Route<dynamic> route) => route.isFirst,
                );
              }
+
            },
            style: ElevatedButton.styleFrom(
              padding: EdgeInsets.zero,
