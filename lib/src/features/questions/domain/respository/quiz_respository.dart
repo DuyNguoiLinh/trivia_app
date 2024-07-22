@@ -9,6 +9,8 @@ abstract class QuizRespository{
   Future<void> saveUserName(String name);
   Future<List<QuestionEntity>> fetchQuestions(int amount,int idCategory, String? difficulty,String? type);
   Future<List<CategoryEntity>> fetchCategories();
+  Future<String> getInfoUser();
+  Future<void> deleteInfo();
    factory QuizRespository.create() {
      return QuizRespositoryImpl();
    }

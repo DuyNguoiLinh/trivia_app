@@ -28,7 +28,21 @@ const UserInfoLocalSchema = CollectionSchema(
   deserialize: _userInfoLocalDeserialize,
   deserializeProp: _userInfoLocalDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'userName': IndexSchema(
+      id: -1677712070637581736,
+      name: r'userName',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'userName',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _userInfoLocalGetId,
@@ -96,6 +110,64 @@ void _userInfoLocalAttach(
   object.id = id;
 }
 
+<<<<<<< HEAD
+=======
+extension UserInfoLocalByIndex on IsarCollection<UserInfoLocal> {
+  Future<UserInfoLocal?> getByUserName(String userName) {
+    return getByIndex(r'userName', [userName]);
+  }
+
+  UserInfoLocal? getByUserNameSync(String userName) {
+    return getByIndexSync(r'userName', [userName]);
+  }
+
+  Future<bool> deleteByUserName(String userName) {
+    return deleteByIndex(r'userName', [userName]);
+  }
+
+  bool deleteByUserNameSync(String userName) {
+    return deleteByIndexSync(r'userName', [userName]);
+  }
+
+  Future<List<UserInfoLocal?>> getAllByUserName(List<String> userNameValues) {
+    final values = userNameValues.map((e) => [e]).toList();
+    return getAllByIndex(r'userName', values);
+  }
+
+  List<UserInfoLocal?> getAllByUserNameSync(List<String> userNameValues) {
+    final values = userNameValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'userName', values);
+  }
+
+  Future<int> deleteAllByUserName(List<String> userNameValues) {
+    final values = userNameValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'userName', values);
+  }
+
+  int deleteAllByUserNameSync(List<String> userNameValues) {
+    final values = userNameValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'userName', values);
+  }
+
+  Future<Id> putByUserName(UserInfoLocal object) {
+    return putByIndex(r'userName', object);
+  }
+
+  Id putByUserNameSync(UserInfoLocal object, {bool saveLinks = true}) {
+    return putByIndexSync(r'userName', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByUserName(List<UserInfoLocal> objects) {
+    return putAllByIndex(r'userName', objects);
+  }
+
+  List<Id> putAllByUserNameSync(List<UserInfoLocal> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'userName', objects, saveLinks: saveLinks);
+  }
+}
+
+>>>>>>> main
 extension UserInfoLocalQueryWhereSort
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QWhere> {
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhere> anyId() {
@@ -173,6 +245,51 @@ extension UserInfoLocalQueryWhere
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause> userNameEqualTo(
+      String userName) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'userName',
+        value: [userName],
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause>
+      userNameNotEqualTo(String userName) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userName',
+              lower: [],
+              upper: [userName],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userName',
+              lower: [userName],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userName',
+              lower: [userName],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'userName',
+              lower: [],
+              upper: [userName],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }
