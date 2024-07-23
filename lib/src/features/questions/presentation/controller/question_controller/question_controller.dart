@@ -23,14 +23,15 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
     }
  }
 
- Future<void> nextQuestion() async{
+   // update question when next
+    Future<void> nextQuestion() async{
      if(i<listQuestion.length){
        final nextQuestion =listQuestion[++i];
        ref.read(currentIdSelectedProvider.notifier).state = nextQuestion.id;
        state=AsyncValue.data(nextQuestion);
      }
  }
-
+   // update question when back
    Future<void>  backQuestion() async {
      if(i>0){
        final backQuestion=listQuestion[--i];
@@ -38,8 +39,8 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
        state=AsyncValue.data(backQuestion);
      }
    }
-
-   Future<void> getQuestionByIdentifier(String id) async{
+   //  update question by click identifier
+   Future<void> updateQuestionByIdentifier(String id) async{
       for(final question in listQuestion){
         if(question.id == id) {
           state=AsyncValue.data(question);
@@ -47,7 +48,7 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
         }
       }
    }
-
+   // add answerUser
    Future<void>  addAnsweredUser(String answer) async{
      final questionCurrent=state.value;
      if(questionCurrent?.answerUser != null && questionCurrent?.answerUser == answer) {
@@ -58,6 +59,7 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
      state=AsyncValue.data(questionCurrent);
    }
 
+   // check button next or back or submit
    String  checkButton() {
      for( int index=0; index<listQuestion.length;index++){
        if(listQuestion[index] == state.value){
@@ -82,7 +84,14 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
      }
      return true;
    }
-
+   Future<void> playAgainQuiz() async {
+     i=0;
+     for(final question in listQuestion){
+       question.answerUser =null;
+     }
+     state=AsyncValue.data(listQuestion.first);
+   }
+   // get listQuestion
    List<QuestionEntity> getListQuestion() {
     return listQuestion;
    }

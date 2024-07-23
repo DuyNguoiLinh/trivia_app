@@ -55,11 +55,11 @@ class NavigationButton extends ConsumerWidget{
                    ],
                  )
                ),
-             if(checkButton == "notNext" && !answeredAll)
+             if(checkButton == "notNext" )
                SubmitButton(answeredAll: answeredAll),
            ],
          ),
-         if(answeredAll)
+         if(answeredAll && checkButton != 'notNext')
            Center(
               child: SubmitButton(answeredAll: answeredAll),
            ),

@@ -18,7 +18,7 @@ class AsyncDataStatisticNotifier extends AsyncNotifier<Map<String,String>> {
     final listQuestion =ref.read(questionProvider.notifier).getListQuestion();
      for(final question in listQuestion){
        print(question.correctAnswer);
-       print(question.correctAnswer);
+       print(question.answerUser);
        if(question.answerUser == question.correctAnswer){
          correctCount++;
        }

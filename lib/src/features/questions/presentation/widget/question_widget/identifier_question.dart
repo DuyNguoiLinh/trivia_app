@@ -31,7 +31,7 @@ class IdentifierQuestion extends ConsumerWidget {
         onPressed: () {
 
           ref.read(currentIdSelectedProvider.notifier).state = questionEntity.id;
-          ref.read(questionProvider.notifier).getQuestionByIdentifier(questionEntity.id);
+          ref.read(questionProvider.notifier).updateQuestionByIdentifier(questionEntity.id);
 
         },
         style: ElevatedButton.styleFrom(

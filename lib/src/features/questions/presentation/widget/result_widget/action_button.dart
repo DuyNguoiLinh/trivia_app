@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/question_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/result_controller/action_controller.dart';
 
 import '../../screen/home_screen.dart';
+import '../../screen/question_screen.dart';
 import '../../screen/review_screen.dart';
 
 class ActionButton extends ConsumerWidget {
@@ -29,9 +31,13 @@ class ActionButton extends ConsumerWidget {
                  MaterialPageRoute(builder: (context) =>  const ReviewScreen() ),
                );
              }
+             if(nameAction == 'Play again'){
+               ref.refresh(questionProvider.notifier).playAgainQuiz();
+               Navigator.pop(context);
+
+             }
 
              if(nameAction == "Home")
-
              {
                Navigator.pushAndRemoveUntil(
                  context,
