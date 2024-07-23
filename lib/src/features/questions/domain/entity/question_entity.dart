@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:uuid/uuid.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/question_model.dart';
-const uuid=Uuid();
+
+const uuid = Uuid();
+
 class QuestionEntity {
   final String id;
   final String question;
@@ -11,8 +13,11 @@ class QuestionEntity {
   List<String>? shuffleAnswer;
 
   QuestionEntity(
-      {required this.question, required this.correctAnswer, required this.incorrectAnswers,this.answerUser})
-      : id=uuid.v4();
+      {required this.question,
+      required this.correctAnswer,
+      required this.incorrectAnswers,
+      this.answerUser})
+      : id = uuid.v4();
 
   factory QuestionEntity.fromQuestionModel(QuestionModel questionModel) {
     return QuestionEntity(
@@ -24,16 +29,8 @@ class QuestionEntity {
   List<String>? get answers {
     if (shuffleAnswer == null) {
       final List<String> listRandom = [...incorrectAnswers, correctAnswer];
-      shuffleAnswer = List.from(listRandom)
-        ..shuffle();
+      shuffleAnswer = List.from(listRandom)..shuffle();
     }
     return shuffleAnswer;
   }
-  // void addAnswerUser (String answer){
-  //   if(answerUser != null && answerUser == answer) {
-  //     answerUser = null;
-  //   } else {
-  //     answerUser = answer;
-  //   }
-  // }
 }
