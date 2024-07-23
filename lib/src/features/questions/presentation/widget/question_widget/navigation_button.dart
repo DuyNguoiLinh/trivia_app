@@ -11,11 +11,8 @@ class NavigationButton extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    //  get list question
-    final listQuestion =ref.read(questionProvider.notifier).getListQuestion();
-    final mapAnswered=ref.watch(answerProvider);
     // check answered all or not
-    final answeredAll= mapAnswered.length == listQuestion.length;
+    final answeredAll= ref.read(questionProvider.notifier).checkAnsweredAll();
       // check show back or next
     final checkButton=ref.read(questionProvider.notifier).checkButton();
 

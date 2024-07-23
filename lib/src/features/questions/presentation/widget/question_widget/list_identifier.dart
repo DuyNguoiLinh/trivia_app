@@ -29,7 +29,7 @@ class ListIdentifier extends ConsumerWidget {
         itemBuilder: (context, index) {
           return IdentifierQuestion(
             id: index + 1,
-            questionCurrent: questions[index],
+            questionEntity: questions[index],
           );
         },
       ),

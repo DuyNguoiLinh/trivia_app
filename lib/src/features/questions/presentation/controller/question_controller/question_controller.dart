@@ -7,26 +7,22 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/widg
 class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
    late int i;
    List<QuestionEntity> listQuestion=List<QuestionEntity>.empty(growable: true);
-   final Map<String, String> listCorrectAnswer = {};
    @override
   FutureOr<QuestionEntity?> build() {
    return _initQuestion();
   }
+
  Future<QuestionEntity?> _initQuestion() async{
     try{
       listQuestion = await ref.watch(asyncQuizProvider.future);
-      ref.read(currentIdSelectedProvider.notifier).state = listQuestion.first.id;
       i=0;
-        listCorrectAnswer.clear();
-        for(final question in listQuestion){
-          listCorrectAnswer[question.id]=question.correctAnswer;
-        }
-        final initQuestion =listQuestion.firstOrNull;
-        return initQuestion;
+      final initQuestion =listQuestion.firstOrNull;
+      return initQuestion;
     } catch(err,stackTr){
       return Future.error(err,stackTr);
     }
  }
+
  Future<void> nextQuestion() async{
      if(i<listQuestion.length){
        final nextQuestion =listQuestion[++i];
@@ -51,10 +47,15 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
         }
       }
    }
+
    Future<void>  addAnsweredUser(String answer) async{
      final questionCurrent=state.value;
-     questionCurrent!.addAnswerUser(answer);
-     print(questionCurrent.answerUser);
+     if(questionCurrent?.answerUser != null && questionCurrent?.answerUser == answer) {
+       questionCurrent?.answerUser = null;
+     } else {
+       questionCurrent?.answerUser = answer;
+     }
+     state=AsyncValue.data(questionCurrent);
    }
 
    String  checkButton() {
@@ -71,9 +72,17 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
      return 'submit';
    }
 
-   Map<String,String> getCorrectAnswer() {
-     return listCorrectAnswer;
+   //  check answered all or not
+   bool checkAnsweredAll() {
+     for(final question in listQuestion){
+       if(question.answerUser == null) {
+         return false;
+         break;
+       }
+     }
+     return true;
    }
+
    List<QuestionEntity> getListQuestion() {
     return listQuestion;
    }

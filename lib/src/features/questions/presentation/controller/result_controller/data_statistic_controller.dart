@@ -10,22 +10,22 @@ class AsyncDataStatisticNotifier extends AsyncNotifier<Map<String,String>> {
   FutureOr<Map<String,String>> build() {
     return _analysisQuiz();
   }
-  // analysis Quiz include : completion , Total , Correct, Wrong
-  Future<Map<String,String>>  _analysisQuiz() async{
-    int correctCount = 0;
-    final mapCorrectAnswer=ref.read(questionProvider.notifier).getCorrectAnswer();
-     final mapUserAnswer =ref.watch(answerProvider);
-     print(mapCorrectAnswer);
-     print(mapUserAnswer);
-     mapUserAnswer.forEach((key,value) {
 
-       if(mapUserAnswer[key] == mapCorrectAnswer[key]){
+  Future<Map<String,String>>
+  // analysis Quiz include : completion , Total , Correct, Wrong
+  _analysisQuiz() async{
+    int correctCount = 0;
+    final listQuestion =ref.read(questionProvider.notifier).getListQuestion();
+     for(final question in listQuestion){
+       print(question.correctAnswer);
+       print(question.correctAnswer);
+       if(question.answerUser == question.correctAnswer){
          correctCount++;
        }
+     }
 
-     });
-     final int wrongCount = mapUserAnswer.length-correctCount;
-     final int total = mapUserAnswer.length;
+     final int wrongCount = listQuestion.length-correctCount;
+     final int total = listQuestion.length;
      final double completion = (correctCount/total)*100;
      final double coin=(correctCount/total)*10;
      // add data in map

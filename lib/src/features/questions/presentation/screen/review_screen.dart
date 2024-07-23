@@ -10,7 +10,6 @@ class ReviewScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
     final mapData=ref.watch(asyncDataStatisticProvider);
-    // final correctCount= mapData['Correct'];
 
     return Scaffold(
       backgroundColor: Colors.purple.withOpacity(0.7),

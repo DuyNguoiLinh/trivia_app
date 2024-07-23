@@ -5,21 +5,20 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/question_controller.dart';
 
 class IdentifierQuestion extends ConsumerWidget {
-  const IdentifierQuestion({super.key, required this.id,required this.questionCurrent});
+  const IdentifierQuestion({super.key, required this.id,required this.questionEntity});
 
-  final QuestionEntity questionCurrent;
+  final QuestionEntity questionEntity;
   final int id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Is question current
-    final currentIdSelected = ref.watch(currentIdSelectedProvider);
-    final isQuestionCurrent= currentIdSelected  == questionCurrent.id;
-    print(isQuestionCurrent);
+    final currentQuestion = ref.watch(questionProvider).valueOrNull;
+    final isQuestionCurrent= currentQuestion?.id  == questionEntity.id;
     //  answered or no
-    final mapAnswered = ref.watch(answerProvider);
-    final answered = mapAnswered.containsKey(questionCurrent.id);
-
+    // final mapAnswered = ref.watch(answerProvider);
+    // final answered = mapAnswered.containsKey(questionCurrent.id)
+     final answered = questionEntity.answerUser != null ;
 
     return Container(
       padding: const EdgeInsets.only(bottom: 3),
@@ -31,8 +30,8 @@ class IdentifierQuestion extends ConsumerWidget {
       child: ElevatedButton(
         onPressed: () {
 
-          ref.read(currentIdSelectedProvider.notifier).state = questionCurrent.id;
-          ref.read(questionProvider.notifier).getQuestionByIdentifier(questionCurrent.id);
+          ref.read(currentIdSelectedProvider.notifier).state = questionEntity.id;
+          ref.read(questionProvider.notifier).getQuestionByIdentifier(questionEntity.id);
 
         },
         style: ElevatedButton.styleFrom(

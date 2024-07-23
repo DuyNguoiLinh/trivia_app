@@ -29,7 +29,11 @@ class QuestionEntity {
     }
     return shuffleAnswer;
   }
-  void addAnswerUser (String answer){
-    answerUser =answer;
-  }
+  // void addAnswerUser (String answer){
+  //   if(answerUser != null && answerUser == answer) {
+  //     answerUser = null;
+  //   } else {
+  //     answerUser = answer;
+  //   }
+  // }
 }
