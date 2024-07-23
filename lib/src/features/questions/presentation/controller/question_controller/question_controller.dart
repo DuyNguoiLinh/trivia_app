@@ -2,60 +2,92 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_async_notifier_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/identifier_question.dart';
 
 class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
-   int i=0;
-   int index=0;
+   late int i;
    List<QuestionEntity> listQuestion=List<QuestionEntity>.empty(growable: true);
-  @override
+   @override
   FutureOr<QuestionEntity?> build() {
    return _initQuestion();
   }
+
  Future<QuestionEntity?> _initQuestion() async{
     try{
-        listQuestion = await ref.watch(asyncQuizProvider.future);
-        return listQuestion.firstOrNull;
+      listQuestion = await ref.watch(asyncQuizProvider.future);
+      i=0;
+      final initQuestion =listQuestion.firstOrNull;
+      return initQuestion;
     } catch(err,stackTr){
       return Future.error(err,stackTr);
     }
  }
+
  Future<void> nextQuestion() async{
      if(i<listQuestion.length){
-       state=AsyncValue.data(listQuestion[++i]);
+       final nextQuestion =listQuestion[++i];
+       ref.read(currentIdSelectedProvider.notifier).state = nextQuestion.id;
+       state=AsyncValue.data(nextQuestion);
      }
  }
+
    Future<void>  backQuestion() async {
      if(i>0){
-       state=AsyncValue.data(listQuestion[--i]);
+       final backQuestion=listQuestion[--i];
+       ref.read(currentIdSelectedProvider.notifier).state = backQuestion.id;
+       state=AsyncValue.data(backQuestion);
      }
    }
-   Future<void> clickIdentifier(int id) async{
-     state=AsyncValue.data(listQuestion[--id]);
+
+   Future<void> getQuestionByIdentifier(String id) async{
+      for(final question in listQuestion){
+        if(question.id == id) {
+          state=AsyncValue.data(question);
+          break;
+        }
+      }
    }
+
+   Future<void>  addAnsweredUser(String answer) async{
+     final questionCurrent=state.value;
+     if(questionCurrent?.answerUser != null && questionCurrent?.answerUser == answer) {
+       questionCurrent?.answerUser = null;
+     } else {
+       questionCurrent?.answerUser = answer;
+     }
+     state=AsyncValue.data(questionCurrent);
+   }
+
    String  checkButton() {
      for( int index=0; index<listQuestion.length;index++){
        if(listQuestion[index] == state.value){
          if(index==0) {
-           return 'not back';
+           return 'notBack';
          }
          if(index==listQuestion.length-1){
-           return 'not next';
+           return 'notNext';
          }
        }
      }
      return 'submit';
    }
-   Map<int,String> getCorrectAnswer() {
-     final Map<int, String> listCorrectAnswer = {};
+
+   //  check answered all or not
+   bool checkAnsweredAll() {
      for(final question in listQuestion){
-       listCorrectAnswer[question.id]=question.correctAnswer;
+       if(question.answerUser == null) {
+         return false;
+         break;
+       }
      }
-     return listCorrectAnswer;
+     return true;
    }
+
    List<QuestionEntity> getListQuestion() {
     return listQuestion;
    }
+
 }
-final asyncQuestionProvider = AsyncNotifierProvider<AsyncQuestionNotifier,QuestionEntity?>(() {
+final questionProvider = AsyncNotifierProvider<AsyncQuestionNotifier,QuestionEntity?>(() {
   return AsyncQuestionNotifier();
 });

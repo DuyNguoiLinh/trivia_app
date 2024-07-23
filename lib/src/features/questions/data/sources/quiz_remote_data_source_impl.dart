@@ -5,17 +5,16 @@ import 'package:trivia_app_with_flutter/src/features/questions/data/models/categ
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/question_model.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/questions_response.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_remote_data_source.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
+
+
 const _baseUrl="https://opentdb.com/api.php";
 const _baseUrlToken="https://opentdb.com/api_token.php";
 const _baseUrlCategory='https://opentdb.com/api_category.php';
+
 class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   final Dio _dio = Dio();
   late String _token ;
   QuizRemoteDataSourceImpl();
-  // Future<void> _initToken() async {
-  //   _token = await _getToken();
-  // }
   @override
   Future<List<QuestionModel>> getQuestions(int amount,int idCategory, String? difficulty, String? type) async{
     try{

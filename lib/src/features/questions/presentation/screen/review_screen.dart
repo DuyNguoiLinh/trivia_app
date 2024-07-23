@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/result_controller/data_statistic_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/result_controller/data_result_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/review_widget/questions_summary.dart';
 
 class ReviewScreen extends ConsumerWidget {
@@ -9,8 +9,6 @@ class ReviewScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final mapData=ref.watch(asyncDataStatisticProvider);
-    // final correctCount= mapData['Correct'];
 
     return Scaffold(
       backgroundColor: Colors.purple.withOpacity(0.7),
@@ -37,7 +35,7 @@ class ReviewScreen extends ConsumerWidget {
             const SizedBox(
               height: 20,
             ),
-            Text('Your answered  out of  questions correctly !',
+            Text('Let\'s check your answers together !',
               style: TextStyle(color: Colors.white.withOpacity(0.8),fontSize: 26, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),

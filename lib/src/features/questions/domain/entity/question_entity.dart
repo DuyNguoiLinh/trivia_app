@@ -1,30 +1,36 @@
 import 'dart:math';
-
+import 'package:uuid/uuid.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/models/question_model.dart';
 
-class QuestionEntity{
-  static int _idCounter = 1;
-  final int id;
+const uuid = Uuid();
+
+class QuestionEntity {
+  final String id;
   final String question;
   final String correctAnswer;
   final List<String> incorrectAnswers;
+  String? answerUser;
   List<String>? shuffleAnswer;
-  QuestionEntity({required this.id,required this.question, required this.correctAnswer,required this.incorrectAnswers});
+
+  QuestionEntity(
+      {required this.question,
+      required this.correctAnswer,
+      required this.incorrectAnswers,
+      this.answerUser})
+      : id = uuid.v4();
+
   factory QuestionEntity.fromQuestionModel(QuestionModel questionModel) {
     return QuestionEntity(
-        id: _idCounter++,
         question: questionModel.question,
         correctAnswer: questionModel.correctAnswer,
         incorrectAnswers: questionModel.incorrectAnswers);
   }
-  List<String>?  get answers{
-    if(shuffleAnswer == null){
-      final List<String> listRandom= [...incorrectAnswers,correctAnswer];
-      shuffleAnswer=List.from(listRandom)..shuffle();
+
+  List<String>? get answers {
+    if (shuffleAnswer == null) {
+      final List<String> listRandom = [...incorrectAnswers, correctAnswer];
+      shuffleAnswer = List.from(listRandom)..shuffle();
     }
     return shuffleAnswer;
-  }
-  static void resetIdCounter() {
-    _idCounter = 1;
   }
 }

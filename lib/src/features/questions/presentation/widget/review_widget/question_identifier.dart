@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class QuestionIdentifier extends ConsumerWidget{
-  const QuestionIdentifier({super.key,required this.isTrue,required this.idQuestion });
+  const QuestionIdentifier({super.key,required this.isTrue,required this.index});
   final bool isTrue;
-  final int idQuestion;
+  final int index;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return  Container(
@@ -17,7 +17,7 @@ class QuestionIdentifier extends ConsumerWidget{
           : const Color.fromARGB(255, 249, 133, 241),
       borderRadius: BorderRadius.circular(100),
     ),
-    child: Text( idQuestion.toString(),
+    child: Text( index.toString(),
       style: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,

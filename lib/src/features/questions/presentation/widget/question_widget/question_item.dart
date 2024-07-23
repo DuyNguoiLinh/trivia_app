@@ -9,14 +9,15 @@ class QuestionItem extends ConsumerWidget{
   const QuestionItem({super.key,});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncQuestion=ref.watch(asyncQuestionProvider);
+    final asyncQuestion=ref.watch(questionProvider);
+
      return asyncQuestion.when(
          data: (questionCurrent) {
            if(questionCurrent != null) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                children: [
-                 const ListIdentifier(),
+                  const ListIdentifier(),
                  // const SizedBox(height: 30,),
                  Container(
                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
@@ -25,8 +26,7 @@ class QuestionItem extends ConsumerWidget{
                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                    ),
            ),
-                 ListAnswer(listAnswer: questionCurrent.answers,id: questionCurrent.id,),
-                 const Spacer(),
+                 ListAnswer(listAnswer: questionCurrent.answers,questionEntity: questionCurrent,),
                  Expanded(child: NavigationButton(questionEntity: questionCurrent,)),
                  const SizedBox(height: 20,)
                ],
