@@ -10,12 +10,12 @@ class QuestionsSummary extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-       final listQuestion=ref.read(asyncQuestionProvider.notifier).getListQuestion();
+       final listQuestion=ref.read(questionProvider.notifier).getListQuestion();
        final mapAnswered =ref.watch(answerProvider);
     return ListView.builder(
       itemCount: listQuestion.length,
         itemBuilder: (context,index) {
-             return  SummaryItem(questionEntity: listQuestion[index],userAnswered: mapAnswered[index+1]!,);
+             return  SummaryItem(questionEntity: listQuestion[index],userAnswered: mapAnswered[listQuestion[index].id]!,index: index+1,);
         }
     );
   }

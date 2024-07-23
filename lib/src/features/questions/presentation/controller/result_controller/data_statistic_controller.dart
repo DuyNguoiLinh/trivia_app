@@ -4,15 +4,16 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/question_controller.dart';
 
 class AsyncDataStatisticNotifier extends AsyncNotifier<Map<String,String>> {
-  int correctCount = 0;
   final Map<String, String> listDataStatistic = {};
 
   @override
   FutureOr<Map<String,String>> build() {
-    return {};
+    return _analysisQuiz();
   }
-  Future<void>  analysisQuiz() async{
-     final mapCorrectAnswer=ref.read(asyncQuestionProvider.notifier).getCorrectAnswer();
+  // analysis Quiz include : completion , Total , Correct, Wrong
+  Future<Map<String,String>>  _analysisQuiz() async{
+    int correctCount = 0;
+    final mapCorrectAnswer=ref.read(questionProvider.notifier).getCorrectAnswer();
      final mapUserAnswer =ref.watch(answerProvider);
      print(mapCorrectAnswer);
      print(mapUserAnswer);
@@ -34,8 +35,10 @@ class AsyncDataStatisticNotifier extends AsyncNotifier<Map<String,String>> {
      listDataStatistic['Completion']=completion.toStringAsFixed(1);
      listDataStatistic['Coin']=coin.toStringAsFixed(1);
      state=AsyncValue.data({...listDataStatistic});
+     return listDataStatistic;
   }
 }
+
 final asyncDataStatisticProvider = AsyncNotifierProvider<AsyncDataStatisticNotifier,Map<String,String>>(() {
   return AsyncDataStatisticNotifier();
 });

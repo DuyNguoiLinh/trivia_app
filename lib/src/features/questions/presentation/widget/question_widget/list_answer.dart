@@ -5,7 +5,7 @@ import 'answer_button.dart';
 class ListAnswer extends ConsumerWidget{
   const ListAnswer({super.key,required this.listAnswer,required this.id});
   final List<String>? listAnswer;
-  final int id;
+  final String id;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if(listAnswer != null){

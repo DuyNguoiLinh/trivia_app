@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final parameterProvider =
-    StateNotifierProvider<ParameterNotifier, Map<String, dynamic>>((ref) {
+    StateNotifierProvider.autoDispose<ParameterNotifier, Map<String, dynamic>>((ref) {
      return ParameterNotifier();
 });
 

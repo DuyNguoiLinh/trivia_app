@@ -4,9 +4,10 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/que
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/review_widget/question_identifier.dart';
 
 class SummaryItem extends ConsumerWidget{
-  const SummaryItem({super.key,required this.questionEntity,required this.userAnswered});
+  const SummaryItem({super.key,required this.questionEntity,required this.userAnswered,required this.index});
  final QuestionEntity  questionEntity;
  final String userAnswered ;
+ final int index;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isTrue = questionEntity.correctAnswer == userAnswered;
@@ -16,7 +17,7 @@ class SummaryItem extends ConsumerWidget{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(width: 10,),
-          QuestionIdentifier(isTrue: isTrue,idQuestion: questionEntity.id,),
+          QuestionIdentifier(isTrue: isTrue,index: index,),
           const SizedBox(width: 30,),
           Expanded(
               child: Column(

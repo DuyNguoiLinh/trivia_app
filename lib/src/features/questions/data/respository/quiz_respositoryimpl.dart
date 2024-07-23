@@ -18,7 +18,6 @@ class QuizRespositoryImpl implements QuizRespository{
       try{
         final questionsResponse= await remoteDataSourse.getQuestions(amount, idCategory, difficulty,type);
        if(questionsResponse.isNotEmpty){
-         QuestionEntity.resetIdCounter();
          final listQuestions=questionsResponse.map((e) => QuestionEntity.fromQuestionModel(e)).toList();
          return listQuestions;
        } else{

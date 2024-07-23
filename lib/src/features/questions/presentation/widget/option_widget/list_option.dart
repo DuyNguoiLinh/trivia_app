@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/answer_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/answer_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/question_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_async_notifier_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/question_screen.dart';
@@ -9,7 +9,9 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/widg
 
 class ListOptions extends ConsumerWidget {
   const ListOptions({super.key,required this.nameCategory});
+
   final String nameCategory;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
    return Column(
@@ -92,8 +94,12 @@ class ListOptions extends ConsumerWidget {
                    ],
                  ));
            } else {
+
+             // fetch Api
              ref.read(asyncQuizProvider.notifier).fetchNewQuiz();
+             // clear map user Answer
              ref.read(answerProvider.notifier).clearAnswerInMap();
+
              Navigator.push(
                context,
                MaterialPageRoute(builder: (context) =>  QuestionScreen(nameCategory: nameCategory,)),
