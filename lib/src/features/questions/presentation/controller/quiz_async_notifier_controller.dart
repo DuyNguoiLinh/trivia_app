@@ -45,7 +45,14 @@ class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
   }
 
   Future<void> saveUseName(String name) async {
-      quizRespository.saveUserName(name);
+      await quizRespository.saveUserName(name);
+  }
+  Future<String> getInfoUser() async{
+  try{
+    return await quizRespository.getInfoUser();
+  } catch (err){
+    return '';
+  }
   }
 }
 

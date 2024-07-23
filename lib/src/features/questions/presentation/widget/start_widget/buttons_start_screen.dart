@@ -3,12 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_async_notifier_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/home_screen.dart';
 
-class ButtonStartScreen extends ConsumerWidget{
-  final  nameController =TextEditingController();
+import '../../controller/user_info_future_rovider.dart';
 
+class ButtonStartScreen extends ConsumerWidget{
   ButtonStartScreen({super.key});
+  final  userNameController =TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userNameAsync= ref.watch(getInfoProvider);
+    final userName =userNameAsync.value;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -23,6 +26,7 @@ class ButtonStartScreen extends ConsumerWidget{
             'Username',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
+         if(userName?.isEmpty == true)
           Container(
             margin: const EdgeInsets.only(top: 20),
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -33,25 +37,55 @@ class ButtonStartScreen extends ConsumerWidget{
                   width: 2,
                 )),
             child:  TextField(
-              controller: nameController,
+              controller: userNameController,
               decoration:
               const InputDecoration(label: Text('Enter your usename'),
                   border: InputBorder.none
               ),
             ),
           ),
+          if(userName?.isNotEmpty == true)
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: Colors.blue,
+                    width: 2,
+                  )),
+              child:  Text(userName.toString(),style: const TextStyle(fontSize: 24),)
+            ),
           const SizedBox(
               height: 100
           ),
           InkWell(
             onTap: () {
-              final name=nameController.text;
+              final name=userNameController.text;
               if( name.isNotEmpty ){
                 ref.read(asyncQuizProvider.notifier).saveUseName(name);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),
                 );
+              //   navigator.push
+              } else if(userName?.isNotEmpty == true){
+              // navigator.push
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Enter a name to get started',style: TextStyle(fontSize: 20),),
+                      content: const Text(
+                          'You have not entered a username'),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(ctx);
+                            },
+                            child: const Text('Okay'))
+                      ],
+                    ));
               }
             },
             child: Container(

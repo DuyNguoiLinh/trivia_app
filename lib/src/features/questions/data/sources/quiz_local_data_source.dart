@@ -6,6 +6,8 @@ abstract class  QuizLocalDataSource{
   Future<void>  saveUserName(String name);
   Future<void>  saveCategory(List<CategoryLocal> listCategoryLocal);
   Future<List<CategoryLocal>>  getCategory();
+  Future<String>  getInfoUser();
+  Future<void> deleteInfoUser();
    factory QuizLocalDataSource.create() {
      return QuizLocalDataSourceImpl();
    }

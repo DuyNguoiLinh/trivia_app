@@ -50,4 +50,26 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource{
      return Future.error(Exception(err));
    }
  }
+  @override
+  Future<String>  getInfoUser() async{
+   try{
+      final isar = await db;
+      final  nameInfo= await isar.userInfoLocals.where().findFirst();
+        return nameInfo?.userName ?? '';
+   } catch (err) {
+     return Future.error(Exception(err));
+   }
+  }
+  @override
+  Future<void> deleteInfoUser() async{
+    try{
+      final isar = await db;
+      await isar.writeTxn(() async {
+        isar.userInfoLocals.clear();
+      });
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
+
 }
