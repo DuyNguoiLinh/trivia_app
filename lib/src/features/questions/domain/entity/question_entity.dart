@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:uuid/uuid.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/question_model.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/remote_models/question_model.dart';
 
 const uuid = Uuid();
 

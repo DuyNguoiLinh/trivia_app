@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/question_model.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/remote_models/question_model.dart';
 part 'questions_response.g.dart';
 @JsonSerializable()
 class QuestionsResponse{

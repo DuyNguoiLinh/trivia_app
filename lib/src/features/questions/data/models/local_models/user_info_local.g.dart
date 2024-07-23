@@ -165,7 +165,6 @@ extension UserInfoLocalByIndex on IsarCollection<UserInfoLocal> {
   }
 }
 
-
 extension UserInfoLocalQueryWhereSort
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QWhere> {
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhere> anyId() {

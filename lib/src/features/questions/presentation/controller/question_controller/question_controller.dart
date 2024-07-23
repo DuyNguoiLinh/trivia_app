@@ -84,6 +84,7 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
      }
      return true;
    }
+
    Future<void> playAgainQuiz() async {
      i=0;
      for(final question in listQuestion){

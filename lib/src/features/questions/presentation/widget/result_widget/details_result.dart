@@ -15,66 +15,70 @@ class DetailsResult extends ConsumerWidget {
 
       return asyncData.when(
           data: (dataResult) {
-            return  Column(
-              children: [
-
-                Container(
-                  width: double.infinity,
-                  height: 260,
-                  decoration:  const BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50),bottomRight: Radius.circular(50)),
-                    color: Colors.purpleAccent,
-                  ),
-                  child: Center(
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      alignment: Alignment.center,
-                      decoration:  BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.yellow.withOpacity(0.5),
-                            spreadRadius: 10,
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child:  Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 8,),
-                          const Text('+ ' , style: TextStyle(fontSize: 28 ,fontWeight: FontWeight.bold)),
-                          Text(dataResult.coin.toString(), style: const TextStyle(fontSize: 35 ,fontWeight: FontWeight.bold),),
-                          const SizedBox(width: 4,),
-                          Image.asset('assets/images/bitcoin.png', width: 35, height: 35),
-                        ],
+            if(dataResult == null){
+              return const Center(child: Text('No Result Found'));
+            } else {
+              return  Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 260,
+                    decoration:  const BoxDecoration(
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50),bottomRight: Radius.circular(50)),
+                      color: Colors.purpleAccent,
+                    ),
+                    child: Center(
+                      child: Container(
+                        width: 200,
+                        height: 200,
+                        alignment: Alignment.center,
+                        decoration:  BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.yellow.withOpacity(0.5),
+                              spreadRadius: 10,
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child:  Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(width: 8,),
+                            const Text('+ ' , style: TextStyle(fontSize: 28 ,fontWeight: FontWeight.bold)),
+                            Text(dataResult.coin.toString(), style: const TextStyle(fontSize: 35 ,fontWeight: FontWeight.bold),),
+                            const SizedBox(width: 4,),
+                            Image.asset('assets/images/bitcoin.png', width: 35, height: 35),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10,),
-                Row(
-                  children: [
-                    const SizedBox(width: 5,),
-                    PartDetail(title: 'Completion', content: dataResult.completion.toStringAsFixed(1)),
-                    const SizedBox(width: 20,),
-                    PartDetail(title: 'Total', content: dataResult.total.toString()),
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                Row(
-                  children: [
-                    const SizedBox(width: 5,),
-                    PartDetail(title: 'Correct', content: dataResult.correct.toString() ),
-                    const SizedBox(width: 20,),
-                    PartDetail(title: 'Wrong', content: dataResult.wrong.toString()),
-                  ],
-                )
-              ],
-            );
+                  const SizedBox(height: 10,),
+                  Row(
+                    children: [
+                      const SizedBox(width: 5,),
+                      PartDetail(title: 'Completion', content: dataResult.completion.toStringAsFixed(1)),
+                      const SizedBox(width: 20,),
+                      PartDetail(title: 'Total', content: dataResult.total.toString()),
+                    ],
+                  ),
+                  const SizedBox(height: 10,),
+                  Row(
+                    children: [
+                      const SizedBox(width: 5,),
+                      PartDetail(title: 'Correct', content: dataResult.correct.toString() ),
+                      const SizedBox(width: 20,),
+                      PartDetail(title: 'Wrong', content: dataResult.wrong.toString()),
+                    ],
+                  )
+                ],
+              );
+            }
+
           },
           error:(error, stack) {
             return Text('Error: $error');

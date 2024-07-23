@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/result_controller/data_result_controller.dart';
 import '../../screen/result_screen.dart';
 
 class SubmitButton extends ConsumerWidget{
@@ -11,7 +12,7 @@ class SubmitButton extends ConsumerWidget{
    return  ElevatedButton(
      onPressed: () {
        if(answeredAll){
-         // ref.read(asyncDataStatisticProvider.notifier).analysisQuiz();
+         ref.read(dataResultProvider.notifier).analysisQuiz();
          Navigator.push(
            context,
            MaterialPageRoute(builder: (context) =>  const ResultScreen() ),

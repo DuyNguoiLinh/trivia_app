@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/category_local.dart';
-import '../../data/models/category_response.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/local_models/category_local.dart';
+import '../../data/models/remote_models/category_response.dart';
 
 class CategoryEntity {
   final int id;
