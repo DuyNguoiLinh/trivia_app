@@ -4,6 +4,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/cat
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/home_controller/category_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/option_screen.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/question_screen.dart';
 
 class CategoryItem extends ConsumerWidget {
   const CategoryItem({super.key , required this.categoryEntity});
@@ -11,10 +12,12 @@ class CategoryItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final mapOptions=ref.watch(parameterProvider);
     final mapIcon=ref.watch(iconCategoryProvider);
     final iconCategory= mapIcon[categoryEntity.id] ?? "assets/icons/book.png";
     final isPickOption= (mapOptions['idCategory'] == categoryEntity.id);
+
     return Padding(
      padding: const EdgeInsets.symmetric(horizontal: 10),
      child: OutlinedButton(
@@ -28,11 +31,16 @@ class CategoryItem extends ConsumerWidget {
            ),
          ),
          onPressed: () {
+
+           //  add id Category
            ref.read(parameterProvider.notifier).addParameter('idCategory', categoryEntity.id);
+           ref.read(nameCategoryProvider.notifier).state = categoryEntity.nameCategory;
+
            Navigator.push(
              context,
-             MaterialPageRoute(builder: (context) => OptionScreen(nameCategory: categoryEntity.nameCategory,)),
+             MaterialPageRoute(builder: (context) =>  const OptionScreen()),
            );
+
          },
          child: Row(
            mainAxisAlignment: MainAxisAlignment.center,

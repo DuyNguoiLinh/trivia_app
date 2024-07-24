@@ -3,7 +3,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/cat
 
 import '../../../domain/repository/quiz_respository.dart';
 
-final categoryProvider = FutureProvider<List<CategoryEntity>>((ref) async {
+final categoryProvider = FutureProvider.autoDispose<List<CategoryEntity>>((ref) async {
   try {
     final quizRepository= QuizRepository.create();
     final  listCategory=await quizRepository.fetchCategories();

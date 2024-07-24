@@ -44,7 +44,6 @@ class NavigationButton extends ConsumerWidget{
                TextButton(
                  onPressed:() {
                    ref.read(questionProvider.notifier).nextQuestion();
-                   // ref.read(asyncIdentifierProvider.notifier).updateIdentifier();
 
                  },
                  child: const Row(

@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_async_notifier_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/question_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/option_widget/option_button.dart';
 
 class ListOptions extends ConsumerWidget {
-  const ListOptions({super.key,required this.nameCategory});
-
-  final String nameCategory;
-
+  const ListOptions({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
    return Column(
@@ -94,11 +91,11 @@ class ListOptions extends ConsumerWidget {
            } else {
 
              // fetch Api
-             ref.read(asyncQuizProvider.notifier).fetchNewQuiz();
+             ref.read(quizProvider.notifier).fetchNewQuiz();
 
-             Navigator.push(
+             Navigator.pushReplacement(
                context,
-               MaterialPageRoute(builder: (context) =>  QuestionScreen(nameCategory: nameCategory,)),
+               MaterialPageRoute(builder: (context) =>  const QuestionScreen()),
              );
            }
            },

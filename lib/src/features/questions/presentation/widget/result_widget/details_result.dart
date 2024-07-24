@@ -15,9 +15,9 @@ class DetailsResult extends ConsumerWidget {
 
       return asyncData.when(
           data: (dataResult) {
-            if(dataResult == null){
-              return const Center(child: Text('No Result Found'));
-            } else {
+            if(dataResult == null) {
+              return const Center(child: Text('No data available.'));
+            } else{
               return  Column(
                 children: [
                   Container(
@@ -79,7 +79,7 @@ class DetailsResult extends ConsumerWidget {
               );
             }
 
-          },
+            },
           error:(error, stack) {
             return Text('Error: $error');
           },

@@ -19,7 +19,6 @@ class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
          final questionsData= await quizRepository.fetchQuestions(amount, idCategory, difficulty,type);
          return questionsData;
        } catch(err){
-         print(err);
          return List.empty(growable: true);
        }
     }
@@ -51,6 +50,6 @@ class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
   }
 }
 
-final asyncQuizProvider=AsyncNotifierProvider<AsyncQuizNotifier,List<QuestionEntity>> (() {
+final quizProvider=AsyncNotifierProvider<AsyncQuizNotifier,List<QuestionEntity>> (() {
   return AsyncQuizNotifier();
 });

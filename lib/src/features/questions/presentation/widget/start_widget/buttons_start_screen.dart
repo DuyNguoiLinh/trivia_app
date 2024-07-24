@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_async_notifier_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/home_screen.dart';
 
-import '../../controller/user_info_future_rovider.dart';
+import '../../controller/user_povider.dart';
 
 class ButtonStartScreen extends ConsumerWidget{
   ButtonStartScreen({super.key});
@@ -63,7 +63,7 @@ class ButtonStartScreen extends ConsumerWidget{
             onTap: () {
               final name=userNameController.text;
               if( name.isNotEmpty ){
-                ref.read(asyncQuizProvider.notifier).saveUseName(name);
+                ref.read(quizProvider.notifier).saveUseName(name);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),

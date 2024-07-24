@@ -4,9 +4,9 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 
 enum ListFilter { popular, entertainment, science }
 
-final filtersProvider = StateProvider<ListFilter>((ref) => ListFilter.popular);
+final filtersProvider = StateProvider.autoDispose<ListFilter>((ref) => ListFilter.popular);
 // Category provider
-final categoryFilterProvider = Provider<List<CategoryEntity>>((ref) {
+final categoryFilterProvider = Provider.autoDispose<List<CategoryEntity>>((ref) {
   final filter = ref.watch(filtersProvider);
   final asyncCategories = ref.watch(categoryProvider);
 

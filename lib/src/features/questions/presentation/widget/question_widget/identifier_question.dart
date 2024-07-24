@@ -11,12 +11,11 @@ class IdentifierQuestion extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     // Is question current
     final currentQuestion = ref.watch(questionProvider).valueOrNull;
     final isQuestionCurrent= currentQuestion?.id  == questionEntity.id;
     //  answered or no
-    // final mapAnswered = ref.watch(answerProvider);
-    // final answered = mapAnswered.containsKey(questionCurrent.id)
      final answered = questionEntity.answerUser != null ;
 
     return Container(
@@ -56,4 +55,4 @@ class IdentifierQuestion extends ConsumerWidget {
   }
 }
 
-final currentIdSelectedProvider = StateProvider<String>((ref) => "");
+   final currentIdSelectedProvider = StateProvider<String>((ref) => "");

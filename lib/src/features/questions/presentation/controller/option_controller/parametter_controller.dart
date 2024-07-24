@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/option_entity.dart';
+
 
 final parameterProvider =
     StateNotifierProvider.autoDispose<ParameterNotifier, Map<String, dynamic>>((ref) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final iconPartDetailProvider = Provider<Map<String, IconData>>((ref) {
+final iconPartDetailProvider = Provider.autoDispose<Map<String, IconData>>((ref) {
   return {
     'Completion': Icons.percent,
     'Total':  Icons.list,
@@ -9,7 +9,7 @@ final iconPartDetailProvider = Provider<Map<String, IconData>>((ref) {
     'Wrong': Icons.cancel,
   };
 });
-final colorPartDetailProvider = Provider<Map<String, Color>>((ref) {
+final colorPartDetailProvider = Provider.autoDispose<Map<String, Color>>((ref) {
   return {
     'Completion': Colors.blueAccent,
     'Total':  Colors.orange,
