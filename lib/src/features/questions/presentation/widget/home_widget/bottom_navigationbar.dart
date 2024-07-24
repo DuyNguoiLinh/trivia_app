@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class QuizBottomNavigationbar extends ConsumerWidget{
-  const QuizBottomNavigationbar({super.key});
+class QuizBottomNavigationBar extends ConsumerWidget{
+  const QuizBottomNavigationBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

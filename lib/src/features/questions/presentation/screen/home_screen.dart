@@ -67,7 +67,7 @@ class HomeScreen extends ConsumerWidget {
             const Expanded(child: ListCategories())
           ],
         ),
-          bottomNavigationBar: const QuizBottomNavigationbar(),
+          bottomNavigationBar: const QuizBottomNavigationBar(),
 
     );
   }

@@ -13,7 +13,11 @@ class ActionButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
+    bool notReview=true;
+    if(nameAction == 'Play again'){
+      notReview=ref.watch(notReviewProvider);
+    }
+    //  get icon and color
     final mapIcon = ref.watch(iconActionProvider);
     final mapColor = ref.watch(colorActionProvider);
     final Color colorData = mapColor[nameAction] ?? Colors.black;
@@ -25,20 +29,59 @@ class ActionButton extends ConsumerWidget {
           onPressed: () {
 
             if (nameAction == 'Review Answer') {
+               ref.read(notReviewProvider.notifier).state = false;
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ReviewScreen()),
               );
             }
 
-            if (nameAction == 'Play again') {
+            if (nameAction == 'Play again' && notReview) {
+              showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('Do you want to replay the quiz?', style: TextStyle(fontSize: 16),),
+                    content: RichText(
+                      text: TextSpan(
+                        style: const TextStyle(fontSize: 20, color: Colors.black),
+                        children: [
+                          const TextSpan(text: 'You need to pay  '),
+                          const TextSpan(
+                            text: '2 ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40,
+                              color: Colors.red,
+                            ),
+                          ),
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Image.asset(
+                              'assets/images/bitcoin.png',
+                              width: 30,
+                              height: 40,
+                            ),
+                          ),
+                          const TextSpan(text: '  to play again'),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            // play again
+                            ref.read(questionProvider.notifier).playAgainQuiz();
 
-              ref.read(questionProvider.notifier).playAgainQuiz();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => const QuestionScreen()),
+                            );
+                          },
+                          child: const Text('Okay'))
+                    ],
+                  ));
 
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const QuestionScreen()),
-              );
             }
 
             if (nameAction == "Home") {
@@ -64,14 +107,15 @@ class ActionButton extends ConsumerWidget {
               child: Icon(
                 iconData,
                 size: 33,
-                color: nameAction != 'Home' ? Colors.white : Colors.black87,
+                color: nameAction != 'Home' ? ( !notReview ? Colors.white.withOpacity(0.3) : Colors.white ): Colors.black87,
               )),
         ),
         Text(
           nameAction,
-          style: const TextStyle(
+          style:  TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+            color: notReview ? Colors.black  : Colors.black.withOpacity(0.3)
           ),
         ),
       ],

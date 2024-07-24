@@ -32,8 +32,9 @@ class AsyncDataResultNotifier extends AsyncNotifier<ResultEntity?> {
     );
     print(resultEntity.correct);
     await quizRepository.saveResultQuiz(resultEntity);
-    state=AsyncValue.data(resultEntity);
+    state =AsyncValue.data(resultEntity);
   }
+
 }
 
 final dataResultProvider = AsyncNotifierProvider<

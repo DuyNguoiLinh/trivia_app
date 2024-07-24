@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
+// button action provider
+final notReviewProvider=StateProvider.autoDispose<bool>((ref) => true);
+
+// icon provider
 final iconActionProvider = Provider.autoDispose<Map<String, IconData>>((ref) {
   return {
     'Play again': Icons.replay,
@@ -11,6 +16,8 @@ final iconActionProvider = Provider.autoDispose<Map<String, IconData>>((ref) {
     'Feedback': Icons.feedback,
   };
 });
+
+//  color action provider
 final colorActionProvider = Provider.autoDispose<Map<String, Color>>((ref) {
   return {
     'Play again': Colors.blueAccent,
