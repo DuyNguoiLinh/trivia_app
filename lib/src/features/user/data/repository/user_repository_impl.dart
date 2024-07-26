@@ -16,15 +16,22 @@ class UserRepositoryImpl implements UserRepository {
 
   // get info user in local
   @override
-  Future<UserEntity> getInfoUser() async {
+  Stream<UserEntity> getInfoUser()  {
+       return localDataSource.getInfoUser().map((userLocal) {
+         return userLocal.map((user) => UserEntity.fromLocal(user)).toList().first;
+       });
+  }
+  @override
+  Future<UserEntity> initInfoUser() async {
     try {
-      final userNameLocal = await localDataSource.getInfoUser();
+      final userNameLocal = await localDataSource.initInfoUser();
       final userNameInfo = UserEntity.fromLocal(userNameLocal);
       return userNameInfo;
     } catch (err) {
       return Future.error(err);
     }
   }
+
 
   //  delete info user in local
   @override

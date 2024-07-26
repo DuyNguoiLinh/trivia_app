@@ -13,7 +13,7 @@ class SubmitButton extends ConsumerWidget {
     return ElevatedButton(
       onPressed: () {
         if (answeredAll) {
-          ref.read(dataResultProvider.notifier).analysisQuiz();
+          // ref.read(dataResultProvider.notifier).analysisQuiz();
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const ResultScreen()),

@@ -51,7 +51,7 @@ class ButtonStartScreen extends ConsumerWidget{
 
             Container(
               margin: const EdgeInsets.only(top: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 60),
+              padding: const EdgeInsets.symmetric(horizontal: 80,vertical: 5),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(

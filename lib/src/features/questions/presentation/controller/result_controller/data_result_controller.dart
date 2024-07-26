@@ -5,17 +5,17 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/repository
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
 
-class AsyncDataResultNotifier extends AsyncNotifier<ResultEntity?> {
+class AsyncDataResultNotifier extends AutoDisposeAsyncNotifier<ResultEntity> {
 
   final quizRepository= QuizRepository.create();
   final userRepository =UserRepository.create();
 
   @override
-  FutureOr<ResultEntity?> build() {
-    return  null;
+  FutureOr<ResultEntity> build() {
+    return   _analysisQuiz();
   }
   // analysis Quiz include : completion , Total , Correct, Wrong
-  Future<void> analysisQuiz() async {
+  Future<ResultEntity> _analysisQuiz() async {
 
     int correctCount = 0;
     final listQuestion=await ref.watch(quizProvider.future);
@@ -42,13 +42,13 @@ class AsyncDataResultNotifier extends AsyncNotifier<ResultEntity?> {
 
     print(resultEntity.correct);
     await quizRepository.saveResultQuiz(resultEntity);
-    state =AsyncValue.data(resultEntity);
+    // state =AsyncValue.data(resultEntity);
+    return resultEntity;
   }
-
 }
 
-final dataResultProvider = AsyncNotifierProvider<
+final dataResultProvider = AsyncNotifierProvider.autoDispose<
     AsyncDataResultNotifier,
-    ResultEntity?>(() {
+    ResultEntity>(() {
   return AsyncDataResultNotifier();
 });

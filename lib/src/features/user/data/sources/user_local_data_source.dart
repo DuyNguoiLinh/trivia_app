@@ -7,7 +7,8 @@ import '../model/user_info_local.dart';
 abstract class  UserLocalDataSource{
 
   Future<void>  saveUserName(String name);
-  Future<UserInfoLocal> getInfoUser();
+  Stream<List<UserInfoLocal>> getInfoUser();
+  Future<UserInfoLocal> initInfoUser();
   Future<void> deleteInfoUser();
   Future<void> updateCoin(double coin);
 

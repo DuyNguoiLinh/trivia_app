@@ -9,7 +9,6 @@ import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user
 class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
 
   final quizRepository= QuizRepository.create();
-  final userRepository =UserRepository.create();
   List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
   @override
   FutureOr<List<QuestionEntity>> build() {

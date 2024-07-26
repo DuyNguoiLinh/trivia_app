@@ -43,10 +43,9 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
       return Future.error(Exception(err));
     }
   }
-
-  // get info user
+  // get info
   @override
-  Future<UserInfoLocal> getInfoUser() async {
+  Future<UserInfoLocal> initInfoUser() async {
     try {
       final isar = await db;
       final userLocal = await isar.userInfoLocals.where().findAll();
@@ -54,6 +53,14 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     } catch (err) {
       return Future.error(Exception(err));
     }
+  }
+
+  // update info user
+  @override
+  Stream<List<UserInfoLocal>> getInfoUser() async* {
+      final isar = await db;
+      Query<UserInfoLocal>  userLocal =  isar.userInfoLocals.where().build();
+      yield* userLocal.watch(fireImmediately: true);
   }
 
   // delete info user

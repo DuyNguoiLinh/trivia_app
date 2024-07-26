@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/identifier_question.dart';
+import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
 
 class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
   late int i;
   List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
+  final userRepository =UserRepository.create();
+
   @override
   FutureOr<QuestionEntity?> build() {
     return _initQuestion();
@@ -95,6 +98,7 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
   //  play again
   Future<void> playAgainQuiz() async {
     i=0;
+    userRepository.updateCoin(-3);
     for(final question in listQuestion){
       question.answerUser = null;
     }
