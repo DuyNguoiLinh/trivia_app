@@ -4,7 +4,21 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 
 enum ListFilter { popular, entertainment, science }
 
+extension ListFilterExtension on ListFilter {
+  String get name => toString().split('.').last;
+}
+
 final filtersProvider = StateProvider.autoDispose<ListFilter>((ref) => ListFilter.popular);
+
+// Is pick Filter
+final isPickFilters = Provider.family.autoDispose<bool,String>((ref,name) {
+  final filter=ref.watch(filtersProvider);
+  if( filter.name.toString().toUpperCase() == name.toUpperCase()){
+    return true;
+  }
+  return false;
+});
+
 // Category provider
 final categoryFilterProvider = Provider.autoDispose<List<CategoryEntity>>((ref) {
   final filter = ref.watch(filtersProvider);

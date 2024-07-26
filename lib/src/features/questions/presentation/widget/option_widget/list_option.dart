@@ -90,9 +90,6 @@ class ListOptions extends ConsumerWidget {
                  ));
            } else {
 
-             // fetch Api
-             ref.read(quizProvider.notifier).fetchNewQuiz();
-
              Navigator.pushReplacement(
                context,
                MaterialPageRoute(builder: (context) =>  const QuestionScreen()),

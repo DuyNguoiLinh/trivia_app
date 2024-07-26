@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/home_screen.dart';
-
-import '../../controller/user_povider.dart';
+import '../../../../user/presentation/controller/user_controller.dart';
 
 class ButtonStartScreen extends ConsumerWidget{
   ButtonStartScreen({super.key});
   final  userNameController =TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userNameAsync= ref.watch(getInfoProvider);
-    final userName =userNameAsync.value;
+    // get use name
+    final userNameAsync= ref.watch(userProvider);
+    final userInfo =userNameAsync.valueOrNull;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -26,7 +26,9 @@ class ButtonStartScreen extends ConsumerWidget{
             'Username',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-         if(userName?.isEmpty == true)
+
+         if(userInfo?.userName.isEmpty == true)
+
           Container(
             margin: const EdgeInsets.only(top: 20),
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -39,12 +41,14 @@ class ButtonStartScreen extends ConsumerWidget{
             child:  TextField(
               controller: userNameController,
               decoration:
-              const InputDecoration(label: Text('Enter your usename'),
+              const InputDecoration(label: Text('Enter your username'),
                   border: InputBorder.none
               ),
             ),
           ),
-          if(userName?.isNotEmpty == true)
+
+          if(userInfo?.userName.isNotEmpty == true)
+
             Container(
               margin: const EdgeInsets.only(top: 20),
               padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -54,24 +58,35 @@ class ButtonStartScreen extends ConsumerWidget{
                     color: Colors.blue,
                     width: 2,
                   )),
-              child:  Text(userName.toString(),style: const TextStyle(fontSize: 24),)
+              child:  Text(userInfo!.userName.toString(),style: const TextStyle(fontSize: 24),)
             ),
           const SizedBox(
               height: 100
           ),
+
+
           InkWell(
             onTap: () {
+
               final name=userNameController.text;
+
               if( name.isNotEmpty ){
-                ref.read(quizProvider.notifier).saveUseName(name);
+
+                ref.read(userProvider.notifier).saveUseName(name);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),
                 );
               //   navigator.push
-              } else if(userName?.isNotEmpty == true){
-              // navigator.push
+              } else if(userInfo?.userName.isNotEmpty == true){
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                );
+
               } else {
+
                 showDialog(
                     context: context,
                     builder: (ctx) => AlertDialog(

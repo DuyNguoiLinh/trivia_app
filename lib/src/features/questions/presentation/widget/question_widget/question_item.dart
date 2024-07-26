@@ -14,23 +14,26 @@ class QuestionItem extends ConsumerWidget{
      return asyncQuestion.when(
          data: (questionCurrent) {
            if(questionCurrent != null) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-               children: [
-                  const ListIdentifier(),
-                 // const SizedBox(height: 30,),
-                 Container(
-                   padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-                   child: Text(
-                     questionCurrent.question,
-                     style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                   ),
-           ),
-                 ListAnswer(listAnswer: questionCurrent.answers,questionEntity: questionCurrent,),
-                 Expanded(child: NavigationButton(questionEntity: questionCurrent,)),
-                 const SizedBox(height: 20,)
-               ],
-             );
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                 children: [
+                    const ListIdentifier(),
+                   // const SizedBox(height: 30,),
+                   Container(
+                     padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                     child: Text(
+                       questionCurrent.question,
+                       style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                     ),
+                           ),
+                   ListAnswer(listAnswer: questionCurrent.answers,questionEntity: questionCurrent,),
+                   const SizedBox(height: 20,),
+                   NavigationButton(questionEntity: questionCurrent,),
+
+                 ],
+                             ),
+              );
            } else {
              return const Center(child: Text('Data null'),);
            }

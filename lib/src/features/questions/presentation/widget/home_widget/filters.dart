@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/home_controller/fliters_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/button_filter.dart';
 
 class Filters extends ConsumerWidget {
   const Filters({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final nameFilter =ref.watch(filtersProvider);
     return  Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
-      child:  Row(
-        children: [
-          TextButton(
-            onPressed: () {
+      child:  SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+
+            ButtonFilter(nameFilter: 'Popular', onPressed: () {
               ref.read(filtersProvider.notifier).state = ListFilter.popular;
-            },
-            child: const Text('Popular', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
-          ),
-          const SizedBox(width: 20,),
-          TextButton(
-            onPressed: () {
+            },),
+
+            const SizedBox(width: 20,),
+
+            ButtonFilter(nameFilter: 'Entertainment', onPressed: () {
               ref.read(filtersProvider.notifier).state = ListFilter.entertainment;
-            },
-            child: const Text('Entertainment', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
-          ),
-          const SizedBox(width: 15,),
-          TextButton(
-            onPressed: () {
+            },),
+
+            const SizedBox(width: 20,),
+
+            ButtonFilter(nameFilter: 'Science', onPressed: () {
               ref.read(filtersProvider.notifier).state = ListFilter.science;
-            },
-            child: const Text('Science', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
-          ),
-        ],
+            },),
+          ],
+        ),
       ),
     );
   }

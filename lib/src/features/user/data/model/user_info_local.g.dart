@@ -17,8 +17,13 @@ const UserInfoLocalSchema = CollectionSchema(
   name: r'UserInfoLocal',
   id: 4546886641457929965,
   properties: {
-    r'userName': PropertySchema(
+    r'coin': PropertySchema(
       id: 0,
+      name: r'coin',
+      type: IsarType.double,
+    ),
+    r'userName': PropertySchema(
+      id: 1,
       name: r'userName',
       type: IsarType.string,
     )
@@ -67,7 +72,8 @@ void _userInfoLocalSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.userName);
+  writer.writeDouble(offsets[0], object.coin);
+  writer.writeString(offsets[1], object.userName);
 }
 
 UserInfoLocal _userInfoLocalDeserialize(
@@ -77,7 +83,8 @@ UserInfoLocal _userInfoLocalDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = UserInfoLocal(
-    userName: reader.readString(offsets[0]),
+    coin: reader.readDoubleOrNull(offsets[0]) ?? 0.0,
+    userName: reader.readString(offsets[1]),
   );
   object.id = id;
   return object;
@@ -91,6 +98,8 @@ P _userInfoLocalDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readDoubleOrNull(offset) ?? 0.0) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -293,6 +302,70 @@ extension UserInfoLocalQueryWhere
 
 extension UserInfoLocalQueryFilter
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> coinEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'coin',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'coin',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'coin',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> coinBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'coin',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -492,6 +565,18 @@ extension UserInfoLocalQueryLinks
 
 extension UserInfoLocalQuerySortBy
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QSortBy> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByCoin() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coin', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByCoinDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coin', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByUserName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'userName', Sort.asc);
@@ -508,6 +593,18 @@ extension UserInfoLocalQuerySortBy
 
 extension UserInfoLocalQuerySortThenBy
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QSortThenBy> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByCoin() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coin', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByCoinDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'coin', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -536,6 +633,12 @@ extension UserInfoLocalQuerySortThenBy
 
 extension UserInfoLocalQueryWhereDistinct
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> distinctByCoin() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'coin');
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> distinctByUserName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -549,6 +652,12 @@ extension UserInfoLocalQueryProperty
   QueryBuilder<UserInfoLocal, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, double, QQueryOperations> coinProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'coin');
     });
   }
 

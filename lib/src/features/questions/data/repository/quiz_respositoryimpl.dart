@@ -1,11 +1,11 @@
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/local_models/category_local.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/local_models/result_local.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_local_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_remote_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/result_entity.dart';
 import '../../domain/repository/quiz_respository.dart';
+import '../models/local/category_local.dart';
+import '../models/local/result_local.dart';
 
 class QuizRepositoryImpl implements QuizRepository {
 
@@ -31,17 +31,11 @@ class QuizRepositoryImpl implements QuizRepository {
     }
   }
 
-  // save user name
-  @override
-  Future<void> saveUserName(String name) async {
-    await localDataSource.saveUserName(name);
-  }
-
   // fetch category
   @override
   Future<List<CategoryEntity>> fetchCategories() async {
     try {
-      final categoriesLocal = await localDataSource.getCategory();
+      final categoriesLocal = await localDataSource.getCategories();
       if (categoriesLocal.isNotEmpty) {
         final dataCategories = categoriesLocal.map((e) =>
             CategoryEntity.fromCategoryLocal(e)).toList();
@@ -76,28 +70,9 @@ class QuizRepositoryImpl implements QuizRepository {
     }
   }
 
-  // get info user in local
-  @override
-  Future<String> getInfoUser() async {
-    try {
-      final userNameInfo = await localDataSource.getInfoUser();
-      return userNameInfo;
-    } catch (err) {
-      return Future.error(err);
-    }
-  }
-
-  //  delete info user in local
-  @override
-  Future<void> deleteInfo() async {
-    try {
-      await localDataSource.deleteInfoUser();
-    } catch (err) {
-      return Future.error(err);
-    }
-  }
 
   //   save result quiz into local
+  @override
   Future<void> saveResultQuiz(ResultEntity resultEntity) async {
     try {
       final resultLocal = ResultLocal(

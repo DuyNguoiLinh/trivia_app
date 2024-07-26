@@ -13,7 +13,7 @@ final categoryProvider = FutureProvider.autoDispose<List<CategoryEntity>>((ref) 
   }
 });
 
-final iconCategoryProvider = Provider<Map<int,String>>((ref) {
+final iconCategoryProvider = Provider.autoDispose<Map<int,String>>((ref) {
   return {
     9 : 'assets/icons/brain.png',
     10 : 'assets/icons/book.png',

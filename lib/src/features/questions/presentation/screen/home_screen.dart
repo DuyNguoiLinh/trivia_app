@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/bottom_navigationbar.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/filters.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/list_categories.dart';
+import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/user_controller.dart';
 
 import '../widget/home_widget/draw.dart';
 
@@ -13,9 +12,27 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // get info user into local
+    final asyncUserName =ref.watch(userProvider);
+    final userInfo=asyncUserName.valueOrNull;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Coin')),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+             Text(
+              userInfo!.coin.toString(),
+              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 8,),
+            Image.asset(
+              'assets/images/bitcoin.png',
+              width: 34,
+              height: 34,
+            ),
+          ],
+        ),
         actions: [
           ClipRRect(
             borderRadius: BorderRadius.circular(30.0),
@@ -33,14 +50,20 @@ class HomeScreen extends ConsumerWidget {
           children: [
             Container(
               margin: const EdgeInsets.only(left: 20),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Hello, \$UserName',
-                    style: TextStyle(fontSize: 14),
+                  Row(
+                    children: [
+                      const Text(
+                        'Hello, ',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      const SizedBox(width: 5,),
+                      Text(userInfo.userName, style: const TextStyle(fontSize: 30,color: Colors.red,fontWeight: FontWeight.bold),)
+                    ],
                   ),
-                  Text("Lets test your knowledge",
+                  const Text("Lets test your knowledge",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ],
@@ -63,7 +86,6 @@ class HomeScreen extends ConsumerWidget {
                   color: Colors.grey,
                 )),
             const Filters(),
-            const SizedBox(height: 10,),
             const Expanded(child: ListCategories())
           ],
         ),

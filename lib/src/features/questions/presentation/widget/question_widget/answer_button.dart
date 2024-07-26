@@ -32,7 +32,6 @@ class AnswerButton extends ConsumerWidget {
               ),
               onPressed: () {
                 // ref.read(answerProvider.notifier).addAnswer(idKey,answer);
-
                 // Add answered user
                 ref.read(questionProvider.notifier).addAnsweredUser(answer);
 

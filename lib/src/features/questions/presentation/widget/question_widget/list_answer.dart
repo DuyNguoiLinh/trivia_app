@@ -5,12 +5,14 @@ import 'answer_button.dart';
 
 class ListAnswer extends ConsumerWidget{
   const ListAnswer({super.key,required this.listAnswer,required this.questionEntity});
+
   final List<String>? listAnswer;
   final QuestionEntity questionEntity;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if(listAnswer != null){
-      final int typeQuestion=listAnswer!.length;
+      final typeQuestion=listAnswer!.length;
         return Column(
         children: [
           const SizedBox(height: 1,),

@@ -17,11 +17,29 @@ class QuestionScreen extends ConsumerWidget {
          width: 100,
          alignment: Alignment.center,
          child: TextButton(
+
            onPressed: () {
-             Navigator.pushReplacement(
-               context,
-               MaterialPageRoute(builder: (context) => const HomeScreen()),
-             );
+
+             showDialog(
+                 context: context,
+                 builder: (ctx) => AlertDialog(
+                   title: const Text('Are you sure you want to exit ? '),
+                   actions: [
+                     TextButton(
+                         onPressed: () {
+
+                           Navigator.pop(ctx);
+
+                           Navigator.pushReplacement(
+                             context,
+                             MaterialPageRoute(builder: (context) => const HomeScreen()),
+                           );
+
+                         },
+                         child: const Text('Exit',style: TextStyle(fontSize: 24 ,color: Colors.red),))
+                   ],
+                 ));
+
 
            },
            child: const Text("Exit",style: TextStyle(fontSize: 18, color: Colors.black),),

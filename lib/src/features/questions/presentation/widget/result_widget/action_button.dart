@@ -7,9 +7,10 @@ import '../../screen/home_screen.dart';
 import '../../screen/review_screen.dart';
 
 class ActionButton extends ConsumerWidget {
-  const ActionButton({super.key, required this.nameAction});
+  const ActionButton({super.key, required this.nameAction,required this.onPressed});
 
   final String nameAction;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,72 +28,7 @@ class ActionButton extends ConsumerWidget {
       children: [
         ElevatedButton(
           onPressed: () {
-
-            if (nameAction == 'Review Answer') {
-               ref.read(notReviewProvider.notifier).state = false;
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ReviewScreen()),
-              );
-            }
-
-            if (nameAction == 'Play again' && notReview) {
-              showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('Do you want to replay the quiz?', style: TextStyle(fontSize: 16),),
-                    content: RichText(
-                      text: TextSpan(
-                        style: const TextStyle(fontSize: 20, color: Colors.black),
-                        children: [
-                          const TextSpan(text: 'You need to pay  '),
-                          const TextSpan(
-                            text: '2 ',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 40,
-                              color: Colors.red,
-                            ),
-                          ),
-                          WidgetSpan(
-                            alignment: PlaceholderAlignment.middle,
-                            child: Image.asset(
-                              'assets/images/bitcoin.png',
-                              width: 30,
-                              height: 40,
-                            ),
-                          ),
-                          const TextSpan(text: '  to play again'),
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            // play again
-                            ref.read(questionProvider.notifier).playAgainQuiz();
-
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const QuestionScreen()),
-                            );
-                          },
-                          child: const Text('Okay'))
-                    ],
-                  ));
-
-            }
-
-            if (nameAction == "Home") {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-                (Route<dynamic> route) => false,
-                // (Route<dynamic> route) => route.isFirst,
-              );
-            }
-
+            onPressed();
           },
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.zero,

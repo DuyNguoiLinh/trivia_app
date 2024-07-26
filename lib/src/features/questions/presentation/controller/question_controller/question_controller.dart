@@ -14,7 +14,8 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
 
   Future<QuestionEntity?> _initQuestion() async {
     try {
-      listQuestion = await ref.watch(quizProvider.future);
+      final question = await ref.watch(quizProvider.future);
+      listQuestion =question;
       i = 0;
       final initQuestion = listQuestion.firstOrNull;
       return initQuestion;
@@ -100,10 +101,6 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
     state=AsyncValue.data(listQuestion.first);
   }
 
-  // get listQuestion
-  List<QuestionEntity> getListQuestion() {
-    return listQuestion;
-  }
 }
 
 final questionProvider =
