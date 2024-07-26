@@ -5,7 +5,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/identifier_question.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
 
-class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
+class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
   late int i;
   List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
   final userRepository =UserRepository.create();
@@ -108,6 +108,6 @@ class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
 }
 
 final questionProvider =
-    AsyncNotifierProvider<AsyncQuestionNotifier, QuestionEntity?>(() {
+    AsyncNotifierProvider.autoDispose<AsyncQuestionNotifier, QuestionEntity?>(() {
   return AsyncQuestionNotifier();
 });

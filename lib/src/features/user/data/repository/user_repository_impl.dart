@@ -14,13 +14,15 @@ class UserRepositoryImpl implements UserRepository {
     await localDataSource.saveUserName(name);
   }
 
-  // get info user in local
+  // update coin
   @override
   Stream<UserEntity> getInfoUser()  {
        return localDataSource.getInfoUser().map((userLocal) {
          return userLocal.map((user) => UserEntity.fromLocal(user)).toList().first;
        });
   }
+  // get info user in local
+
   @override
   Future<UserEntity> initInfoUser() async {
     try {

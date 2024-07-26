@@ -6,7 +6,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/repository
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
 
-class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
+class AsyncQuizNotifier extends AutoDisposeAsyncNotifier<List<QuestionEntity>> {
 
   final quizRepository= QuizRepository.create();
   List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
@@ -42,6 +42,6 @@ class AsyncQuizNotifier extends AsyncNotifier<List<QuestionEntity>> {
   }
 }
 
-final quizProvider=AsyncNotifierProvider<AsyncQuizNotifier,List<QuestionEntity>> (() {
+final quizProvider=AsyncNotifierProvider.autoDispose<AsyncQuizNotifier,List<QuestionEntity>> (() {
   return AsyncQuizNotifier();
 });

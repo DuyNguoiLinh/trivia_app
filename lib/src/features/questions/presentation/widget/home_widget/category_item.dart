@@ -34,7 +34,7 @@ class CategoryItem extends ConsumerWidget {
 
            //  add id Category
            ref.read(parameterProvider.notifier).addParameter('idCategory', categoryEntity.id);
-           ref.read(nameCategoryProvider.notifier).state = categoryEntity.nameCategory;
+           ref.read(parameterProvider.notifier).addParameter('nameCategory', categoryEntity.nameCategory);
 
            Navigator.push(
              context,

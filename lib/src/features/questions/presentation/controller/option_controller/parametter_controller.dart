@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
 final parameterProvider =
-    StateNotifierProvider<ParameterNotifier, Map<String, dynamic>>((ref) {
+    StateNotifierProvider.autoDispose<ParameterNotifier, Map<String, dynamic>>((ref) {
      return ParameterNotifier();
 });
 
@@ -27,6 +27,9 @@ class ParameterNotifier extends StateNotifier<Map<String, dynamic>> {
     } else{
       return false;
     }
+  }
+  String getNameCategory() {
+    return parameter['nameCategory'];
   }
 
 }

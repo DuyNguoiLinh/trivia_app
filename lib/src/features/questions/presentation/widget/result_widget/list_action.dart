@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/result_widget/action_button.dart';
-
 import '../../controller/question_controller/question_controller.dart';
 import '../../controller/result_controller/action_controller.dart';
 import '../../screen/home_screen.dart';
-import '../../screen/question_screen.dart';
 import '../../screen/review_screen.dart';
 
 class ListAction extends ConsumerWidget {
@@ -69,10 +66,7 @@ class ListAction extends ConsumerWidget {
                                 ref.read(questionProvider.notifier).playAgainQuiz();
 
                                 Navigator.pop(context);
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const QuestionScreen()),
-                                );
+                                Navigator.pop(context);
 
                               },
                               child: const Text('Okay'))
@@ -104,7 +98,6 @@ class ListAction extends ConsumerWidget {
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),
                       (Route<dynamic> route) => false,
-                  // (Route<dynamic> route) => route.isFirst,
                 );
 
               },),

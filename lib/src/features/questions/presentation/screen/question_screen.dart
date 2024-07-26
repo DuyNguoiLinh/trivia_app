@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/home_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/question_item.dart';
+import '../controller/home_controller/category_controller.dart';
 
-import '../../domain/entity/question_entity.dart';
 
 class QuestionScreen extends ConsumerWidget {
   const QuestionScreen({super.key,});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nameCategory=ref.watch(nameCategoryProvider);
+    final nameCategory=ref.read(parameterProvider.notifier).getNameCategory();
    return Scaffold(
      appBar: AppBar(
        leading: Container(
@@ -55,4 +56,3 @@ class QuestionScreen extends ConsumerWidget {
   }
 
 }
-final nameCategoryProvider = StateProvider<String>( (ref) => '');
