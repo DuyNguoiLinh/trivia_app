@@ -31,11 +31,14 @@ class AsyncUserNotifier extends AutoDisposeAsyncNotifier<UserEntity> {
     return userInfo;
   }
 
-
+  //  init user name
   Future<void> saveUseName(String name) async {
     await userRepository.saveUserName(name);
   }
-
+  //   change user name
+  Future<void> changeUserName(String name) async{
+    await userRepository.changeUserName(name);
+  }
 
 }
 final userProvider = AsyncNotifierProvider.autoDispose<AsyncUserNotifier,UserEntity>(() => AsyncUserNotifier());

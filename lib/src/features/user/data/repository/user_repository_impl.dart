@@ -13,6 +13,10 @@ class UserRepositoryImpl implements UserRepository {
   Future<void> saveUserName(String name) async {
     await localDataSource.saveUserName(name);
   }
+  @override
+  Future<void> changeUserName(String name) async{
+    await localDataSource.changeUserName(name);
+  }
 
   // update coin
   @override

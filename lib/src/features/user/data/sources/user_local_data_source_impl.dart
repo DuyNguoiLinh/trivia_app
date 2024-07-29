@@ -37,10 +37,26 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   Future<void> saveUserName(String name) async {
     try {
       final isar = await db;
-      final userName = UserInfoLocal(userName: name);
+      final infoUser = UserInfoLocal(userName: name);
       await isar.writeTxn(() async {
-        isar.userInfoLocals.put(userName);
+        isar.userInfoLocals.put(infoUser);
       });
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
+  // change user name
+  @override
+  Future<void> changeUserName(String name) async {
+    try {
+      final isar = await db;
+      final infoUser = await isar.userInfoLocals.where().findFirst();
+      if(infoUser != null){
+        infoUser.userName=name;
+        await isar.writeTxn(() async {
+          isar.userInfoLocals.put(infoUser);
+        });
+      }
     } catch (err) {
       return Future.error(Exception(err));
     }

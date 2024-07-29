@@ -7,6 +7,7 @@ abstract class UserRepository{
 
   Stream<UserEntity> getInfoUser();
   Future<void> saveUserName(String name);
+  Future<void> changeUserName(String name);
   Future<UserEntity> initInfoUser();
   Future<void> deleteInfo();
   Future<void> updateCoin(double coin);

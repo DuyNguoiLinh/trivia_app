@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/bottom_navigationbar.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/user_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/wallet_screen.dart';
-import '../widget/home_widget/draw.dart';
+import '../widget/home_widget/draw_setting.dart';
 import '../widget/home_widget/home.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -55,7 +55,7 @@ class HomeScreen extends ConsumerWidget {
           )
         ],
       ),
-      drawer: const Draw(),
+      drawer: const DrawSetting(),
       body: body,
       bottomNavigationBar: const QuizBottomNavigationBar(),
 

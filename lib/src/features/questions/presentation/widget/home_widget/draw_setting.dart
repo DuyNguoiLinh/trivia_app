@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/set_name_screen.dart';
 
-class Draw extends ConsumerWidget {
-  const Draw({super.key});
+class DrawSetting extends ConsumerWidget {
+  const DrawSetting({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(
@@ -20,6 +23,10 @@ class Draw extends ConsumerWidget {
             // set name
             title: const Text('Change name '),
             onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  SetNameScreen()),
+              );
             },
           ),
           ListTile(
@@ -31,5 +38,4 @@ class Draw extends ConsumerWidget {
       ),
     );
   }
-
 }
