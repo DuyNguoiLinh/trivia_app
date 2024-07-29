@@ -120,6 +120,11 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
    state=AsyncValue.data(questionEntity);
   }
 
+// save or not question
+ Future<void>  saveOrNotQuestion(QuestionEntity questionEntity) async{
+    userRepository.saveOrNotQuestion(questionEntity);
+ }
+
 }
 
 final questionProvider =

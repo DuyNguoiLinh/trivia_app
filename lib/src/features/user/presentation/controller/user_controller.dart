@@ -20,8 +20,8 @@ class AsyncUserNotifier extends AutoDisposeAsyncNotifier<UserEntity> {
 
     _subscription = userRepository.getInfoUser().listen(
             (user) {
-          // state=const AsyncLoading();
-              print(user.coin);
+          state=const AsyncLoading();
+          print(user.coin);
           state = AsyncValue.data(user);
         }, onError: (err,stackTr){
           state= AsyncValue.error(err,stackTr);

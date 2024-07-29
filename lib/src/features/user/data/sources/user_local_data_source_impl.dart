@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/coin_history_local.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/model/question_local.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/user_local_data_source.dart';
 import '../../../questions/data/models/local/category_local.dart';
 import '../../../questions/data/models/local/result_local.dart';
@@ -22,7 +23,8 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
           UserInfoLocalSchema,
           CategoryLocalSchema,
           ResultLocalSchema,
-          CoinHistoryLocalSchema
+          CoinHistoryLocalSchema,
+          QuestionLocalSchema
         ],
         directory: dir.path,
       );
@@ -93,6 +95,26 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
           isar.userInfoLocals.put(userInfo);
         }
       });
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
+
+  @override
+  Future<void>  saveOrNotQuestion(QuestionLocal questionLocal) async{
+    try {
+      final isar = await db;
+      final question = await isar.questionLocals.filter().idQuestionEqualTo(questionLocal.idQuestion).findFirst();
+      if(question == null) {
+        await isar.writeTxn(() async {
+          isar.questionLocals.put(questionLocal);
+        });
+      } else {
+        await isar.writeTxn(() async {
+          isar.questionLocals.deleteByIdQuestion(questionLocal.idQuestion);
+        });
+      }
+
     } catch (err) {
       return Future.error(Exception(err));
     }

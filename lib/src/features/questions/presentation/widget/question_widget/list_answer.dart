@@ -94,13 +94,14 @@ class ListAnswer extends ConsumerWidget{
                   const SizedBox(width: 50,),
 
                 IconButton(
+                  color: Colors.red,
                   icon: SizedBox(
                     width: 30,
                     height: 30,
-                    child: Image.asset('assets/icons/save.png'),
+                    child: Image.asset('assets/icons/save.png',),
                   ),
                   onPressed: () {
-
+                      ref.read(questionProvider.notifier).saveOrNotQuestion(questionEntity);
                   },
                 ),
               ],
