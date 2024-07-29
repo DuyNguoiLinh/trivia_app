@@ -2,7 +2,6 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/coin_history_local.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/user_local_data_source.dart';
-
 import '../../../questions/data/models/local/category_local.dart';
 import '../../../questions/data/models/local/result_local.dart';
 import '../model/user_info_local.dart';
@@ -14,6 +13,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     db = _openDb();
   }
 
+  // openDb
   Future<Isar> _openDb() async {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
@@ -43,6 +43,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
       return Future.error(Exception(err));
     }
   }
+
   // get info
   @override
   Future<UserInfoLocal> initInfoUser() async {
@@ -75,6 +76,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
       return Future.error(Exception(err));
     }
   }
+
 
 //   update coin
   @override

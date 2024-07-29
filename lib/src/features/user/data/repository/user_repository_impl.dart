@@ -1,6 +1,4 @@
-
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/user_entity.dart';
-
 import '../../domain/repository/user_repository.dart';
 import '../sources/user_local_data_source.dart';
 
@@ -21,8 +19,9 @@ class UserRepositoryImpl implements UserRepository {
          return userLocal.map((user) => UserEntity.fromLocal(user)).toList().first;
        });
   }
-  // get info user in local
 
+
+  // get info user in local
   @override
   Future<UserEntity> initInfoUser() async {
     try {
@@ -33,7 +32,6 @@ class UserRepositoryImpl implements UserRepository {
       return Future.error(err);
     }
   }
-
 
   //  delete info user in local
   @override

@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/answer_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/question_controller.dart';
 
 class AnswerButton extends ConsumerWidget {
-  const AnswerButton({super.key, required this.answer,required this.title,required this.questionEntity});
+  const AnswerButton({super.key, required this.answer,required this.index,required this.questionEntity});
+
   final String answer;
-  final String title;
+  final int index;
   final QuestionEntity questionEntity;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final isPickAnswer = (answer == questionEntity.answerUser);
+    final title =ref.watch(answerProvider(index));
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       child: Row(
@@ -31,7 +37,7 @@ class AnswerButton extends ConsumerWidget {
                 ),
               ),
               onPressed: () {
-                // ref.read(answerProvider.notifier).addAnswer(idKey,answer);
+
                 // Add answered user
                 ref.read(questionProvider.notifier).addAnsweredUser(answer);
 

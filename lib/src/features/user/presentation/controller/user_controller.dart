@@ -3,19 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/user_entity.dart';
 import '../../domain/repository/user_repository.dart';
 
-class AsyncUserNotifier extends AsyncNotifier<UserEntity> {
+class AsyncUserNotifier extends AutoDisposeAsyncNotifier<UserEntity> {
+
   final userRepository = UserRepository.create();
   StreamSubscription<UserEntity>? _subscription;
 
   @override
   FutureOr<UserEntity> build() async{
+
     final userInfo =await userRepository.initInfoUser();
+
+    // _subscription?.cancel();
     ref.onDispose(() {
       _subscription?.cancel();
     },);
 
-    //TODO: init listen stream
-    // _subscription?.cancel();
     _subscription = userRepository.getInfoUser().listen(
             (user) {
           // state=const AsyncLoading();
@@ -25,6 +27,7 @@ class AsyncUserNotifier extends AsyncNotifier<UserEntity> {
           state= AsyncValue.error(err,stackTr);
     }
     );
+
     return userInfo;
   }
 
@@ -35,4 +38,4 @@ class AsyncUserNotifier extends AsyncNotifier<UserEntity> {
 
 
 }
-final userProvider = AsyncNotifierProvider<AsyncUserNotifier,UserEntity>(() => AsyncUserNotifier());
+final userProvider = AsyncNotifierProvider.autoDispose<AsyncUserNotifier,UserEntity>(() => AsyncUserNotifier());

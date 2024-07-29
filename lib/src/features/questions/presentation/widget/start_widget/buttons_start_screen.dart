@@ -5,9 +5,12 @@ import '../../../../user/presentation/controller/user_controller.dart';
 
 class ButtonStartScreen extends ConsumerWidget{
   ButtonStartScreen({super.key});
+
   final  userNameController =TextEditingController();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     // get use name
     final userNameAsync= ref.watch(userProvider);
     final userInfo =userNameAsync.valueOrNull;
@@ -27,7 +30,7 @@ class ButtonStartScreen extends ConsumerWidget{
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
 
-         if(userInfo?.userName.isEmpty == true)
+         if(userInfo == null)
 
           Container(
             margin: const EdgeInsets.only(top: 20),
@@ -70,13 +73,14 @@ class ButtonStartScreen extends ConsumerWidget{
 
               final name=userNameController.text;
 
-              if( name.isNotEmpty ){
+              if( name.isNotEmpty == true){
 
                 ref.read(userProvider.notifier).saveUseName(name);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),
                 );
+
               //   navigator.push
               } else if(userInfo?.userName.isNotEmpty == true){
 

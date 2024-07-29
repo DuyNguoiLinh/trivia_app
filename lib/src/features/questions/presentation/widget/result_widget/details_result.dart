@@ -2,22 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/result_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/result_controller/data_result_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/result_widget/part_detail.dart';
 
 class DetailsResult extends ConsumerWidget {
-  const DetailsResult({super.key});
+  const DetailsResult({super.key,required this.resultEntity});
 
+  final ResultEntity resultEntity;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-    final asyncData=ref.watch(dataResultProvider);
-
-      return asyncData.when(
-          data: (dataResult) {
-            if(dataResult == null) {
-              return const Center(child: Text('No data available.'));
-            } else{
               return  Column(
                 children: [
                   Container(
@@ -49,7 +43,7 @@ class DetailsResult extends ConsumerWidget {
                           children: [
                             const SizedBox(width: 8,),
                             const Text('+ ' , style: TextStyle(fontSize: 28 ,fontWeight: FontWeight.bold)),
-                            Text(dataResult.coin.toString(), style: const TextStyle(fontSize: 35 ,fontWeight: FontWeight.bold),),
+                            Text(resultEntity.coin.toString(), style: const TextStyle(fontSize: 35 ,fontWeight: FontWeight.bold),),
                             const SizedBox(width: 4,),
                             Image.asset('assets/images/bitcoin.png', width: 35, height: 35),
                           ],
@@ -61,34 +55,21 @@ class DetailsResult extends ConsumerWidget {
                   Row(
                     children: [
                       const SizedBox(width: 5,),
-                      PartDetail(title: 'Completion', content: dataResult.completion.toStringAsFixed(1)),
+                      PartDetail(title: 'Completion', content: resultEntity.completion.toStringAsFixed(1)),
                       const SizedBox(width: 20,),
-                      PartDetail(title: 'Total', content: dataResult.total.toString()),
+                      PartDetail(title: 'Total', content: resultEntity.total.toString()),
                     ],
                   ),
                   const SizedBox(height: 10,),
                   Row(
                     children: [
                       const SizedBox(width: 5,),
-                      PartDetail(title: 'Correct', content: dataResult.correct.toString() ),
+                      PartDetail(title: 'Correct', content: resultEntity.correct.toString() ),
                       const SizedBox(width: 20,),
-                      PartDetail(title: 'Wrong', content: dataResult.wrong.toString()),
+                      PartDetail(title: 'Wrong', content: resultEntity.wrong.toString()),
                     ],
                   )
                 ],
               );
-            }
-
-            },
-          error:(error, stack) {
-            return Text('Error: $error');
-          },
-          loading: () {
-            return const CircularProgressIndicator();
-          },
-      );
-
-
-
   }
 }
