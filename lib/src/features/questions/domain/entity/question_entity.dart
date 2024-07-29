@@ -9,8 +9,8 @@ class QuestionEntity {
   final String question;
   final String correctAnswer;
   final List<String> incorrectAnswers;
-  String? answerUser;
   List<String>? shuffleAnswer;
+  String? answerUser;
 
   QuestionEntity(
       {required this.question,
@@ -23,7 +23,8 @@ class QuestionEntity {
     return QuestionEntity(
         question: questionModel.question,
         correctAnswer: questionModel.correctAnswer,
-        incorrectAnswers: questionModel.incorrectAnswers);
+        incorrectAnswers: questionModel.incorrectAnswers
+    ) ;
   }
 
   List<String>? get answers {

@@ -60,6 +60,15 @@ class ListAction extends ConsumerWidget {
                           ),
                         ),
                         actions: [
+
+                          TextButton(
+                              onPressed: () {
+                                // play again
+
+                                Navigator.pop(context);
+
+                              },
+                              child: const Text('Cancel',style: TextStyle(color: Colors.red),)),
                           TextButton(
                               onPressed: () {
                                 // play again

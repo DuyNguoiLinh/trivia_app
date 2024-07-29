@@ -8,6 +8,7 @@ class ListIdentifier extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final questions = ref.watch(quizProvider).valueOrNull ?? List.empty();
 
     return Container(
@@ -29,46 +30,6 @@ class ListIdentifier extends ConsumerWidget {
           );
         },
       ),
-    //   // child: Row(
-    //   //   mainAxisAlignment: MainAxisAlignment.center,
-    //   //   children: List.generate(
-    //   //     5,
-    //   //     (index) {
-    //   //       if (amount == 5) {
-    //   //         return Column(
-    //   //           children: [
-    //   //             IdentifierQuestion(
-    //   //               id: ++index,
-    //   //               questionCurrent: questionCurrent,
-    //   //             ),
-    //   //             const SizedBox(
-    //   //               height: 10,
-    //   //             )
-    //   //           ],
-    //   //         );
-    //   //       } else {
-    //   //         return Column(
-    //   //           children: [
-    //   //             IdentifierQuestion(
-    //   //               id: ++index,
-    //   //               questionCurrent: questionCurrent,
-    //   //             ),
-    //   //             const SizedBox(
-    //   //               height: 5,
-    //   //             ),
-    //   //             IdentifierQuestion(
-    //   //               id: index += 5,
-    //   //               questionCurrent: questionCurrent,
-    //   //             ),
-    //   //             const SizedBox(
-    //   //               height: 5,
-    //   //             ),
-    //   //           ],
-    //   //         );
-    //   //       }
-    //   //     },
-    //   //   ),
-    //   // ),
     );
   }
 }

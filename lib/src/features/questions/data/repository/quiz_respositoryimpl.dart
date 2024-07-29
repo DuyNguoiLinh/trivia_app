@@ -22,6 +22,9 @@ class QuizRepositoryImpl implements QuizRepository {
       if (questionsResponse.isNotEmpty) {
         final listQuestions = questionsResponse.map((e) =>
             QuestionEntity.fromQuestionModel(e)).toList();
+       for(final question in  listQuestions){
+         question.answers;
+       }
         return listQuestions;
       } else {
         return List.empty(growable: true);

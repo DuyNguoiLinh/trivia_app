@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/identifier_question.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
+import 'answer_controller.dart';
 
 class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
   late int i;
@@ -103,6 +104,20 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
       question.answerUser = null;
     }
     state=AsyncValue.data(listQuestion.first);
+  }
+
+//   User uses assistance
+  Future<void> useAssistance(QuestionEntity questionEntity) async{
+    final random =Random();
+    //  update coin
+    userRepository.updateCoin(-1.0);
+    while(questionEntity.shuffleAnswer!.length > 2){
+      final index = random.nextInt(4);
+      if(questionEntity.correctAnswer != questionEntity.shuffleAnswer![index]){
+        questionEntity.shuffleAnswer!.removeAt(index);
+      }
+    }
+   state=AsyncValue.data(questionEntity);
   }
 
 }
