@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/domain/repository/quiz_respository.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
 import 'answer_controller.dart';
@@ -10,7 +11,7 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
   late int i;
   List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
   final userRepository =UserRepository.create();
-
+  final  quizRepository = QuizRepository.create();
   @override
   FutureOr<QuestionEntity?> build() {
     return _initQuestion();
@@ -99,7 +100,7 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
   //  play again
   Future<void> playAgainQuiz() async {
     i=0;
-    userRepository.updateCoin(-3);
+    userRepository.subtractionCoin(3);
     for(final question in listQuestion){
       question.answerUser = null;
     }
@@ -108,11 +109,12 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
 //   User uses assistance
   Future<void> useAssistance(QuestionEntity questionEntity) async{
+
     final random =Random();
     //  update coin
-    userRepository.updateCoin(-1.0);
+    userRepository.subtractionCoin(1.0);
     while(questionEntity.shuffleAnswer!.length > 2){
-      final index = random.nextInt(4);
+      final index = random.nextInt(3);
       if(questionEntity.correctAnswer != questionEntity.shuffleAnswer![index]){
         questionEntity.shuffleAnswer!.removeAt(index);
       }
@@ -122,8 +124,9 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
 // save or not question
  Future<void>  saveOrNotQuestion(QuestionEntity questionEntity) async{
-    userRepository.saveOrNotQuestion(questionEntity);
+    quizRepository.saveOrNotQuestion(questionEntity);
  }
+
 
 }
 

@@ -1,7 +1,8 @@
+import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/coin_history_local.dart';
-import 'package:trivia_app_with_flutter/src/features/user/data/model/question_local.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/local/question_local.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/user_local_data_source.dart';
 import '../../../questions/data/models/local/category_local.dart';
 import '../../../questions/data/models/local/result_local.dart';
@@ -45,14 +46,15 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
       return Future.error(Exception(err));
     }
   }
+
   // change user name
   @override
   Future<void> changeUserName(String name) async {
     try {
       final isar = await db;
       final infoUser = await isar.userInfoLocals.where().findFirst();
-      if(infoUser != null){
-        infoUser.userName=name;
+      if (infoUser != null) {
+        infoUser.userName = name;
         await isar.writeTxn(() async {
           isar.userInfoLocals.put(infoUser);
         });
@@ -64,7 +66,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   // get info
   @override
-  Future<UserInfoLocal> initInfoUser() async {
+  Future<UserInfoLocal> getUser() async {
     try {
       final isar = await db;
       final userLocal = await isar.userInfoLocals.where().findAll();
@@ -77,9 +79,9 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   // update info user
   @override
   Stream<List<UserInfoLocal>> getInfoUser() async* {
-      final isar = await db;
-      Query<UserInfoLocal>  userLocal =  isar.userInfoLocals.where().build();
-      yield* userLocal.watch(fireImmediately: true);
+    final isar = await db;
+    Query<UserInfoLocal> userLocal = isar.userInfoLocals.where().build();
+    yield* userLocal.watch(fireImmediately: true);
   }
 
   // delete info user
@@ -95,17 +97,19 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     }
   }
 
-
-//   update coin
+//   addition coin
   @override
-  Future<void> updateCoin(double coin) async {
+  Future<void> additionCoin(double coin) async {
     try {
       final isar = await db;
+      DateTime now = DateTime.now();
       await isar.writeTxn(() async {
         final userInfo = await isar.userInfoLocals.where().findFirst();
         if (userInfo != null) {
           final historyCoin = CoinHistoryLocal(
-              oldAmount: userInfo.coin, amountEarnCoin: coin, timestamp: DateTime.now());
+              oldAmount: userInfo.coin,
+              amountEarnCoin: coin,
+              timestamp: DateFormat('MMMM dd, yyyy').format(now));
           userInfo.coin += coin;
           isar.coinHistoryLocals.put(historyCoin);
           isar.userInfoLocals.put(userInfo);
@@ -116,21 +120,24 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     }
   }
 
+  // subtraction coin
   @override
-  Future<void>  saveOrNotQuestion(QuestionLocal questionLocal) async{
+  Future<void> subtractionCoin(double coin) async {
     try {
       final isar = await db;
-      final question = await isar.questionLocals.filter().idQuestionEqualTo(questionLocal.idQuestion).findFirst();
-      if(question == null) {
-        await isar.writeTxn(() async {
-          isar.questionLocals.put(questionLocal);
-        });
-      } else {
-        await isar.writeTxn(() async {
-          isar.questionLocals.deleteByIdQuestion(questionLocal.idQuestion);
-        });
-      }
-
+      DateTime now = DateTime.now();
+      await isar.writeTxn(() async {
+        final userInfo = await isar.userInfoLocals.where().findFirst();
+        if (userInfo != null) {
+          final historyCoin = CoinHistoryLocal(
+              oldAmount: userInfo.coin,
+              amountEarnCoin: coin,
+              timestamp:DateFormat('MMMM dd, yyyy').format(now));
+          userInfo.coin -= coin;
+          isar.coinHistoryLocals.put(historyCoin);
+          isar.userInfoLocals.put(userInfo);
+        }
+      });
     } catch (err) {
       return Future.error(Exception(err));
     }

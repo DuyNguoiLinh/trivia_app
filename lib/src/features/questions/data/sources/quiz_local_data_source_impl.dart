@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_local_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/coin_history_local.dart';
 import '../models/local/category_local.dart';
+import '../models/local/question_local.dart';
 import '../models/local/result_local.dart';
 import '../../../user/data/model/user_info_local.dart';
 
@@ -54,6 +55,29 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource{
       await isar.writeTxn(() async {
         isar.resultLocals.put(resultLocal);
       });
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
+
+  // save or not save
+  @override
+  Future<void> saveOrNotQuestion(QuestionLocal questionLocal) async {
+    try {
+      final isar = await db;
+      final question = await isar.questionLocals
+          .filter()
+          .idQuestionEqualTo(questionLocal.idQuestion)
+          .findFirst();
+      if (question == null) {
+        await isar.writeTxn(() async {
+          isar.questionLocals.put(questionLocal);
+        });
+      } else {
+        await isar.writeTxn(() async {
+          isar.questionLocals.deleteByIdQuestion(questionLocal.idQuestion);
+        });
+      }
     } catch (err) {
       return Future.error(Exception(err));
     }

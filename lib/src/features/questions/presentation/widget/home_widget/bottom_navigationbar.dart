@@ -11,13 +11,13 @@ class QuizBottomNavigationBar extends ConsumerWidget{
 
    return  BottomNavigationBar(
         // backgroundColor: Colors.grey,
-       items: const <BottomNavigationBarItem>  [
+       items:  <BottomNavigationBarItem>  [
          BottomNavigationBarItem(
-             icon: Icon(Icons.home),
+             icon: Icon(Icons.home,color: indexSelect == 0 ? Colors.purple : Colors.black38,),
              label:  'Home',
          ),
          BottomNavigationBarItem(
-             icon: Icon(Icons.wallet),
+             icon: Icon(Icons.wallet,color: indexSelect == 1 ? Colors.purple : Colors.black38),
              label: 'Wallet'
          )
        ],

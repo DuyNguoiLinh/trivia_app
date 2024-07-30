@@ -9,32 +9,35 @@ class ResultScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncData = ref.watch(dataResultProvider);
 
-    return Scaffold(
-      body: asyncData.when(
-        data: (dataResult) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              DetailsResult(resultEntity: dataResult),
-              const SizedBox(height: 10),
-              const Expanded(child: ListAction()),
-            ],
-          );
-        },
-        loading: () {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-        error: (error, stack) {
-          return Center(
-            child: Text('Error: $error'),
-          );
-        },
-      ),
-    );
+    final asyncData = ref.watch(dataResultProvider);
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: asyncData.when(
+          data: (dataResult) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                DetailsResult(resultEntity: dataResult),
+                const SizedBox(height: 10),
+                const Expanded(child: ListAction()),
+              ],
+            );
+          },
+          loading: () {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+          error: (error, stack) {
+            return Center(
+              child: Text('Error: $error'),
+            );
+          },
+        ),
+      )
+      );
   }
 
 }

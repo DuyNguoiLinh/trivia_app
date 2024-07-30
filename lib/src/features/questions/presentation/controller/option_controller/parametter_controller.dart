@@ -10,7 +10,9 @@ final parameterProvider =
 
 class ParameterNotifier extends StateNotifier<Map<String, dynamic>> {
   ParameterNotifier() : super({});
+
   final Map<String, dynamic> parameter = {};
+
   // Use map
   void addParameter(String key, dynamic value) {
     parameter[key] = value;
@@ -28,6 +30,8 @@ class ParameterNotifier extends StateNotifier<Map<String, dynamic>> {
       return false;
     }
   }
+
+  //  get nameCategory
   String getNameCategory() {
     return parameter['nameCategory'];
   }

@@ -31,7 +31,7 @@ class AsyncDataResultNotifier extends AutoDisposeAsyncNotifier<ResultEntity> {
     }
      final amountCoinEarn = (correctCount/listQuestion.length)*10;
      // save , update coin
-     await userRepository.updateCoin(amountCoinEarn);
+     await userRepository.additionCoin(amountCoinEarn);
      //  obj results
      final resultEntity = ResultEntity(total: listQuestion.length,
         completion: (correctCount/listQuestion.length)*100,

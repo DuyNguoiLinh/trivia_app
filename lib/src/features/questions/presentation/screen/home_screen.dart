@@ -11,9 +11,10 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     // get info user into local
-    final asyncUserName =ref.watch(userProvider);
-    final userInfo=asyncUserName.valueOrNull;
+    final asyncUser =ref.watch(userProvider);
+    final userInfo =asyncUser.valueOrNull;
     final index =ref.watch(isSelect);
 
     Widget body;
@@ -26,39 +27,42 @@ class HomeScreen extends ConsumerWidget {
         body = const Home();
         break;
     }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-             Text(
-              userInfo!.coin.toString(),
-              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(width: 8,),
-            Image.asset(
-              'assets/images/bitcoin.png',
-              width: 34,
-              height: 34,
-            ),
+    if(userInfo != null){
+      return Scaffold(
+        appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                userInfo.coin.toString(),
+                style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(width: 8,),
+              Image.asset(
+                'assets/images/bitcoin.png',
+                width: 34,
+                height: 34,
+              ),
+            ],
+          ),
+          actions: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(30.0),
+              child: IconButton(
+                onPressed: () {},
+                icon: Image.asset('assets/images/logo1.png'),
+                iconSize: 50,
+              ),
+            )
           ],
         ),
-        actions: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(30.0),
-            child: IconButton(
-              onPressed: () {},
-              icon: Image.asset('assets/images/logo1.png'),
-              iconSize: 50,
-            ),
-          )
-        ],
-      ),
-      drawer: const DrawSetting(),
-      body: body,
-      bottomNavigationBar: const QuizBottomNavigationBar(),
+        drawer: const DrawSetting(),
+        body: body,
+        bottomNavigationBar: const QuizBottomNavigationBar(),
 
-    );
+      );
+    } else {
+      return const Center(child: CircularProgressIndicator());
+    }
   }
 }

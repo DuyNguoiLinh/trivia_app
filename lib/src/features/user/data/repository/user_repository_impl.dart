@@ -1,5 +1,5 @@
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/user/data/model/question_local.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/data/models/local/question_local.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/user_entity.dart';
 import '../../domain/repository/user_repository.dart';
 import '../sources/user_local_data_source.dart';
@@ -13,6 +13,8 @@ class UserRepositoryImpl implements UserRepository {
   Future<void> saveUserName(String name) async {
     await localDataSource.saveUserName(name);
   }
+
+  // change user name
   @override
   Future<void> changeUserName(String name) async{
     await localDataSource.changeUserName(name);
@@ -32,11 +34,12 @@ class UserRepositoryImpl implements UserRepository {
 
   // get info user in local
   @override
-  Future<UserEntity> initInfoUser() async {
+  Future<UserEntity> getUser() async {
+
     try {
-      final userNameLocal = await localDataSource.initInfoUser();
-      final userNameInfo = UserEntity.fromLocal(userNameLocal);
-      return userNameInfo;
+      final userLocal = await localDataSource.getUser();
+      final userInfo = UserEntity.fromLocal(userLocal);
+      return userInfo;
     } catch (err) {
       return Future.error(err);
     }
@@ -52,27 +55,24 @@ class UserRepositoryImpl implements UserRepository {
     }
   }
 
-  //   update coin
+  //   addition  coin
   @override
-  Future<void> updateCoin(double coin) async {
+  Future<void> additionCoin(double coin) async {
     try {
-      await localDataSource.updateCoin(coin);
+      await localDataSource.additionCoin(coin);
     } catch (err) {
       return Future.error(err);
     }
   }
-
-  //   save question into Local
+  // subtraction coin
   @override
-  Future<void> saveOrNotQuestion(QuestionEntity questionEntity) async {
-    final questionLocal = QuestionLocal(
-        idQuestion: questionEntity.id,
-        question: questionEntity.question,
-        correctAnswer: questionEntity.correctAnswer,
-        incorrectAnswers: questionEntity.incorrectAnswers);
-     await localDataSource.saveOrNotQuestion(questionLocal);
+  Future<void> subtractionCoin(double coin) async {
+    try {
+      await localDataSource.subtractionCoin(coin);
+    } catch (err) {
+      return Future.error(err);
+    }
   }
-
 
 }
 

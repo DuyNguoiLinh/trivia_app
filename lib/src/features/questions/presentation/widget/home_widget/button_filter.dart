@@ -14,7 +14,9 @@ class ButtonFilter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final isPick=ref.watch(isPickFilters(nameFilter));
+
     return TextButton(
       onPressed: () {
         onPressed();

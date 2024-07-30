@@ -24,6 +24,8 @@ class AsyncQuizNotifier extends AutoDisposeAsyncNotifier<List<QuestionEntity>> {
          return List.empty(growable: true);
        }
     }
+
+  //   fetch new questions
   Future<List<QuestionEntity>> _fetchNewQuiz() async {
     final parameter = ref.watch(parameterProvider);
     state = const AsyncValue.loading();

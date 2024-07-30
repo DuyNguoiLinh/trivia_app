@@ -5,19 +5,20 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/que
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/result_entity.dart';
 import '../../domain/repository/quiz_respository.dart';
 import '../models/local/category_local.dart';
+import '../models/local/question_local.dart';
 import '../models/local/result_local.dart';
 
 class QuizRepositoryImpl implements QuizRepository {
 
   final localDataSource = QuizLocalDataSource.create();
-  final remoteDataSourse = QuizRemoteDataSource.create();
+  final remoteDataSource = QuizRemoteDataSource.create();
 
   //  fetch question
   @override
   Future<List<QuestionEntity>> fetchQuestions(int amount, int idCategory,
       String? difficulty, String? type) async {
     try {
-      final questionsResponse = await remoteDataSourse.getQuestions(
+      final questionsResponse = await remoteDataSource.getQuestions(
           amount, idCategory, difficulty, type);
       if (questionsResponse.isNotEmpty) {
         final listQuestions = questionsResponse.map((e) =>
@@ -55,7 +56,7 @@ class QuizRepositoryImpl implements QuizRepository {
   //  get categories local or api
   Future<List<CategoryEntity>> _fetchAndSaveCategories() async {
     try {
-      final categories = await remoteDataSourse.getCategories();
+      final categories = await remoteDataSource.getCategories();
       if (categories.isNotEmpty) {
         final listCategories = categories.map((e) =>
             CategoryEntity.fromCategoryResponse(e)).toList();
@@ -89,6 +90,17 @@ class QuizRepositoryImpl implements QuizRepository {
     } catch (err) {
       return Future.error(err);
     }
+  }
+
+  //   save question into Local
+  @override
+  Future<void> saveOrNotQuestion(QuestionEntity questionEntity) async {
+    final questionLocal = QuestionLocal(
+        idQuestion: questionEntity.id,
+        question: questionEntity.question,
+        correctAnswer: questionEntity.correctAnswer,
+        incorrectAnswers: questionEntity.incorrectAnswers);
+    await localDataSource.saveOrNotQuestion(questionLocal);
   }
 
 

@@ -11,7 +11,7 @@ class AsyncUserNotifier extends AutoDisposeAsyncNotifier<UserEntity> {
   @override
   FutureOr<UserEntity> build() async{
 
-    final userInfo =await userRepository.initInfoUser();
+    final userInfo =userRepository.getUser();
 
     // _subscription?.cancel();
     ref.onDispose(() {
@@ -20,7 +20,6 @@ class AsyncUserNotifier extends AutoDisposeAsyncNotifier<UserEntity> {
 
     _subscription = userRepository.getInfoUser().listen(
             (user) {
-          state=const AsyncLoading();
           print(user.coin);
           state = AsyncValue.data(user);
         }, onError: (err,stackTr){
@@ -33,11 +32,11 @@ class AsyncUserNotifier extends AutoDisposeAsyncNotifier<UserEntity> {
 
   //  init user name
   Future<void> saveUseName(String name) async {
-    await userRepository.saveUserName(name);
+    userRepository.saveUserName(name);
   }
   //   change user name
   Future<void> changeUserName(String name) async{
-    await userRepository.changeUserName(name);
+    userRepository.changeUserName(name);
   }
 
 }

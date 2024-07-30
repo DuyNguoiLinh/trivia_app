@@ -1,6 +1,6 @@
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_local_data_source_impl.dart';
-
 import '../models/local/category_local.dart';
+import '../models/local/question_local.dart';
 import '../models/local/result_local.dart';
 
 abstract class  QuizLocalDataSource{
@@ -8,6 +8,7 @@ abstract class  QuizLocalDataSource{
   Future<void>  saveCategory(List<CategoryLocal> listCategoryLocal);
   Future<List<CategoryLocal>>  getCategories();
   Future<void>  saveResultQuiz(ResultLocal resultLocal);
+  Future<void> saveOrNotQuestion(QuestionLocal questionLocal);
 
    factory QuizLocalDataSource.create() {
      return QuizLocalDataSourceImpl();

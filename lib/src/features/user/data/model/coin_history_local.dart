@@ -6,7 +6,7 @@ class CoinHistoryLocal {
   Id id = Isar.autoIncrement;
   late double oldAmount;
   late double amountEarnCoin;
-  late DateTime timestamp;
+  late String timestamp;
 
 
   CoinHistoryLocal({
