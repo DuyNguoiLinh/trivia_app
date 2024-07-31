@@ -95,11 +95,12 @@ class ListAnswer extends ConsumerWidget{
                   const SizedBox(width: 50,),
                 IconButton(
                   color: Colors.red,
-                  icon: SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: Image.asset('assets/icons/save.png',color: isSave ? Colors.red :  Colors.black,colorBlendMode: BlendMode.srcIn,),
-                  ),
+                    icon : SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: Image.asset('assets/icons/save.png',color: isSave ? Colors.red :  Colors.black,),
+                    ),
+
                   onPressed: () {
                       // save question or not
                       ref.read(questionProvider.notifier).saveOrNotQuestion(questionEntity);

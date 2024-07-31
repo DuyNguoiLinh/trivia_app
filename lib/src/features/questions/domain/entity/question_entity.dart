@@ -6,6 +6,8 @@ const uuid = Uuid();
 
 class QuestionEntity {
   final String id;
+   int? idCategory;
+   String? nameCategory;
   final String question;
   final String correctAnswer;
   final List<String> incorrectAnswers;

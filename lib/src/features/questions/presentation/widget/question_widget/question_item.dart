@@ -5,8 +5,8 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/widg
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/navigation_button.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/list_answer.dart';
 
-class QuestionItem extends ConsumerWidget{
-  const QuestionItem({super.key,});
+class QuestionView extends ConsumerWidget{
+  const QuestionView({super.key,});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 

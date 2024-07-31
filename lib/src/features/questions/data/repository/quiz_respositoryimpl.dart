@@ -94,13 +94,15 @@ class QuizRepositoryImpl implements QuizRepository {
 
   //   save question into Local
   @override
-  Future<void> saveOrNotQuestion(QuestionEntity questionEntity) async {
+  Future<void> toggleSaveQuestion(QuestionEntity questionEntity,int idCategory,String nameCategory) async {
     final questionLocal = QuestionLocal(
         idQuestion: questionEntity.id,
+        idCategory: idCategory,
+        nameCategory: nameCategory,
         question: questionEntity.question,
         correctAnswer: questionEntity.correctAnswer,
         incorrectAnswers: questionEntity.incorrectAnswers);
-    await localDataSource.saveOrNotQuestion(questionLocal);
+    await localDataSource.toggleSaveQuestion(questionLocal);
   }
 
 

@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/repository/quiz_respository.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
 
 class AsyncQuizNotifier extends AutoDisposeAsyncNotifier<List<QuestionEntity>> {
 
   final quizRepository= QuizRepository.create();
   List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
+  Map<String,dynamic> mapParameter= {};
   @override
   FutureOr<List<QuestionEntity>> build() {
 
@@ -28,6 +28,7 @@ class AsyncQuizNotifier extends AutoDisposeAsyncNotifier<List<QuestionEntity>> {
   //   fetch new questions
   Future<List<QuestionEntity>> _fetchNewQuiz() async {
     final parameter = ref.watch(parameterProvider);
+    mapParameter =parameter;
     state = const AsyncValue.loading();
     try {
       listQuestion = await _initQuestionsData(
@@ -41,6 +42,9 @@ class AsyncQuizNotifier extends AutoDisposeAsyncNotifier<List<QuestionEntity>> {
     } catch (e, stackTr) {
       return List.empty(growable: true);
     }
+  }
+  Map<String,dynamic> getMap() {
+    return mapParameter;
   }
 }
 

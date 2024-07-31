@@ -1,5 +1,3 @@
-import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/local/question_local.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/user_entity.dart';
 import '../../domain/repository/user_repository.dart';
 import '../sources/user_local_data_source.dart';
@@ -64,6 +62,7 @@ class UserRepositoryImpl implements UserRepository {
       return Future.error(err);
     }
   }
+
   // subtraction coin
   @override
   Future<void> subtractionCoin(double coin) async {

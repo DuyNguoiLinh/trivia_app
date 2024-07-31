@@ -7,6 +7,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
 import 'answer_controller.dart';
 
+
 class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
   late int i;
   List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
@@ -124,7 +125,10 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
 // save or not question
  Future<void>  saveOrNotQuestion(QuestionEntity questionEntity) async{
-    quizRepository.saveOrNotQuestion(questionEntity);
+    final map =ref.read(quizProvider.notifier).getMap();
+    final id =map['idCategory'];
+    final nameCategory=map['nameCategory'];
+    quizRepository.toggleSaveQuestion(questionEntity,id,nameCategory);
  }
 
 

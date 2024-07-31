@@ -48,7 +48,14 @@ const UserInfoLocalSchema = CollectionSchema(
       ],
     )
   },
-  links: {},
+  links: {
+    r'coinHistories': LinkSchema(
+      id: 7088160925093364011,
+      name: r'coinHistories',
+      target: r'CoinHistoryLocal',
+      single: false,
+    )
+  },
   embeddedSchemas: {},
   getId: _userInfoLocalGetId,
   getLinks: _userInfoLocalGetLinks,
@@ -111,12 +118,14 @@ Id _userInfoLocalGetId(UserInfoLocal object) {
 }
 
 List<IsarLinkBase<dynamic>> _userInfoLocalGetLinks(UserInfoLocal object) {
-  return [];
+  return [object.coinHistories];
 }
 
 void _userInfoLocalAttach(
     IsarCollection<dynamic> col, Id id, UserInfoLocal object) {
   object.id = id;
+  object.coinHistories.attach(
+      col, col.isar.collection<CoinHistoryLocal>(), r'coinHistories', id);
 }
 
 extension UserInfoLocalByIndex on IsarCollection<UserInfoLocal> {
@@ -561,7 +570,68 @@ extension UserInfoLocalQueryObject
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {}
 
 extension UserInfoLocalQueryLinks
-    on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {}
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistories(FilterQuery<CoinHistoryLocal> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'coinHistories');
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'coinHistories', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'coinHistories', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'coinHistories', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'coinHistories', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'coinHistories', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'coinHistories', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension UserInfoLocalQuerySortBy
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QSortBy> {

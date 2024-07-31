@@ -7,51 +7,58 @@ import '../models/local/question_local.dart';
 import '../models/local/result_local.dart';
 import '../../../user/data/model/user_info_local.dart';
 
-class QuizLocalDataSourceImpl implements QuizLocalDataSource{
- late Future<Isar> db;
- QuizLocalDataSourceImpl() {
-  db=_openDb();
- }
+class QuizLocalDataSourceImpl implements QuizLocalDataSource {
+  late Future<Isar> db;
 
- Future<Isar> _openDb() async{
- final dir= await getApplicationDocumentsDirectory();
- if(Isar.instanceNames.isEmpty){
-  return await Isar.open(
-      [UserInfoLocalSchema,CategoryLocalSchema,ResultLocalSchema,CoinHistoryLocalSchema],
-      directory: dir.path,
-  );
- }
- return Future.value(Isar.getInstance());
- }
+  QuizLocalDataSourceImpl() {
+    db = _openDb();
+  }
 
- // save category
- @override
-  Future<void>  saveCategory(List<CategoryLocal> listCategoryLocal) async{
-   try{
-       final isar = await db;
-        await isar.writeTxn(() async => isar.categoryLocals.putAll(listCategoryLocal));
-   } catch (err) {
-     return Future.error(Exception(err));
-   }
- }
+  Future<Isar> _openDb() async {
+    final dir = await getApplicationDocumentsDirectory();
+    if (Isar.instanceNames.isEmpty) {
+      return await Isar.open(
+        [
+          UserInfoLocalSchema,
+          CategoryLocalSchema,
+          ResultLocalSchema,
+          CoinHistoryLocalSchema,
+        ],
+        directory: dir.path,
+      );
+    }
+    return Future.value(Isar.getInstance());
+  }
 
- // get category
- @override
- Future<List<CategoryLocal>>  getCategories() async{
-   try{
-     final isar = await db;
-     final dataCategories = await isar.categoryLocals.where().findAll();
-     return dataCategories;
-   } catch (err) {
-     return Future.error(Exception(err));
-   }
- }
+  // save category
+  @override
+  Future<void> saveCategory(List<CategoryLocal> listCategoryLocal) async {
+    try {
+      final isar = await db;
+      await isar
+          .writeTxn(() async => isar.categoryLocals.putAll(listCategoryLocal));
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
+
+  // get category
+  @override
+  Future<List<CategoryLocal>> getCategories() async {
+    try {
+      final isar = await db;
+      final dataCategories = await isar.categoryLocals.where().findAll();
+      return dataCategories;
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
 
 //   save result quiz
   @override
-  Future<void>  saveResultQuiz(ResultLocal resultLocal) async{
-    try{
-      final isar= await db;
+  Future<void> saveResultQuiz(ResultLocal resultLocal) async {
+    try {
+      final isar = await db;
       await isar.writeTxn(() async {
         isar.resultLocals.put(resultLocal);
       });
@@ -60,18 +67,27 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource{
     }
   }
 
-  // save or not save
+  //  save or not question
   @override
-  Future<void> saveOrNotQuestion(QuestionLocal questionLocal) async {
+  Future<void> toggleSaveQuestion(QuestionLocal questionLocal) async {
     try {
       final isar = await db;
+      final category = await isar.categoryLocals
+          .filter()
+          .idCategoryEqualTo(questionLocal.idCategory)
+          .findFirst();
+      if (category == null) {
+        return;
+      }
       final question = await isar.questionLocals
           .filter()
           .idQuestionEqualTo(questionLocal.idQuestion)
           .findFirst();
       if (question == null) {
+        category.questions.add(questionLocal);
         await isar.writeTxn(() async {
-          isar.questionLocals.put(questionLocal);
+          await isar.questionLocals.put(questionLocal);
+          await category.questions.save();
         });
       } else {
         await isar.writeTxn(() async {
@@ -82,5 +98,4 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource{
       return Future.error(Exception(err));
     }
   }
-
 }

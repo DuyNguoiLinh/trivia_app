@@ -7,11 +7,12 @@ class CoinHistoryLocal {
   late double oldAmount;
   late double amountEarnCoin;
   late String timestamp;
-
+  late String type;
 
   CoinHistoryLocal({
     required this.oldAmount,
     required this.amountEarnCoin,
     required this.timestamp,
+    required this.type
   });
 }

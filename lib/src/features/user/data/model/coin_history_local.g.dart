@@ -31,6 +31,11 @@ const CoinHistoryLocalSchema = CollectionSchema(
       id: 2,
       name: r'timestamp',
       type: IsarType.string,
+    ),
+    r'type': PropertySchema(
+      id: 3,
+      name: r'type',
+      type: IsarType.string,
     )
   },
   estimateSize: _coinHistoryLocalEstimateSize,
@@ -54,6 +59,7 @@ int _coinHistoryLocalEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.timestamp.length * 3;
+  bytesCount += 3 + object.type.length * 3;
   return bytesCount;
 }
 
@@ -66,6 +72,7 @@ void _coinHistoryLocalSerialize(
   writer.writeDouble(offsets[0], object.amountEarnCoin);
   writer.writeDouble(offsets[1], object.oldAmount);
   writer.writeString(offsets[2], object.timestamp);
+  writer.writeString(offsets[3], object.type);
 }
 
 CoinHistoryLocal _coinHistoryLocalDeserialize(
@@ -78,6 +85,7 @@ CoinHistoryLocal _coinHistoryLocalDeserialize(
     amountEarnCoin: reader.readDouble(offsets[0]),
     oldAmount: reader.readDouble(offsets[1]),
     timestamp: reader.readString(offsets[2]),
+    type: reader.readString(offsets[3]),
   );
   object.id = id;
   return object;
@@ -95,6 +103,8 @@ P _coinHistoryLocalDeserializeProp<P>(
     case 1:
       return (reader.readDouble(offset)) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -518,6 +528,142 @@ extension CoinHistoryLocalQueryFilter
       ));
     });
   }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      typeEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      typeGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      typeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      typeBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'type',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      typeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      typeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      typeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      typeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'type',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      typeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'type',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      typeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'type',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension CoinHistoryLocalQueryObject
@@ -567,6 +713,19 @@ extension CoinHistoryLocalQuerySortBy
       sortByTimestampDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timestamp', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy> sortByType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
+      sortByTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.desc);
     });
   }
 }
@@ -627,6 +786,19 @@ extension CoinHistoryLocalQuerySortThenBy
       return query.addSortBy(r'timestamp', Sort.desc);
     });
   }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy> thenByType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
+      thenByTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.desc);
+    });
+  }
 }
 
 extension CoinHistoryLocalQueryWhereDistinct
@@ -649,6 +821,13 @@ extension CoinHistoryLocalQueryWhereDistinct
       distinctByTimestamp({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'timestamp', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QDistinct> distinctByType(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'type', caseSensitive: caseSensitive);
     });
   }
 }
@@ -677,6 +856,12 @@ extension CoinHistoryLocalQueryProperty
   QueryBuilder<CoinHistoryLocal, String, QQueryOperations> timestampProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'timestamp');
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, String, QQueryOperations> typeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'type');
     });
   }
 }

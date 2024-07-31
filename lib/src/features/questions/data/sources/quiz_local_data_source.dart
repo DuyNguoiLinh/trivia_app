@@ -8,7 +8,7 @@ abstract class  QuizLocalDataSource{
   Future<void>  saveCategory(List<CategoryLocal> listCategoryLocal);
   Future<List<CategoryLocal>>  getCategories();
   Future<void>  saveResultQuiz(ResultLocal resultLocal);
-  Future<void> saveOrNotQuestion(QuestionLocal questionLocal);
+  Future<void> toggleSaveQuestion(QuestionLocal questionLocal);
 
    factory QuizLocalDataSource.create() {
      return QuizLocalDataSourceImpl();

@@ -103,17 +103,24 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     try {
       final isar = await db;
       DateTime now = DateTime.now();
+      final userInfo = await isar.userInfoLocals.where().findFirst();
+      if(userInfo == null){
+        return;
+      }
+      final historyCoin = CoinHistoryLocal(
+          oldAmount: userInfo.coin,
+          amountEarnCoin: coin,
+          timestamp: DateFormat('MMMM dd, yyyy').format(now),
+          type: 'earn'
+      );
+      userInfo.coin += coin;
+      userInfo.coinHistories.add(historyCoin);
       await isar.writeTxn(() async {
-        final userInfo = await isar.userInfoLocals.where().findFirst();
-        if (userInfo != null) {
-          final historyCoin = CoinHistoryLocal(
-              oldAmount: userInfo.coin,
-              amountEarnCoin: coin,
-              timestamp: DateFormat('MMMM dd, yyyy').format(now));
-          userInfo.coin += coin;
-          isar.coinHistoryLocals.put(historyCoin);
-          isar.userInfoLocals.put(userInfo);
-        }
+          await isar.userInfoLocals.put(userInfo);
+
+         await isar.coinHistoryLocals.put(historyCoin);
+
+          await userInfo.coinHistories.save();
       });
     } catch (err) {
       return Future.error(Exception(err));
@@ -126,17 +133,24 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     try {
       final isar = await db;
       DateTime now = DateTime.now();
+      final userInfo = await isar.userInfoLocals.where().findFirst();
+      if(userInfo == null){
+        return;
+      }
+      final historyCoin = CoinHistoryLocal(
+          oldAmount: userInfo.coin,
+          amountEarnCoin: coin,
+          timestamp: DateFormat('MMMM dd, yyyy').format(now),
+          type: 'fee'
+      );
+      userInfo.coin += coin;
+      userInfo.coinHistories.add(historyCoin);
       await isar.writeTxn(() async {
-        final userInfo = await isar.userInfoLocals.where().findFirst();
-        if (userInfo != null) {
-          final historyCoin = CoinHistoryLocal(
-              oldAmount: userInfo.coin,
-              amountEarnCoin: coin,
-              timestamp:DateFormat('MMMM dd, yyyy').format(now));
-          userInfo.coin -= coin;
-          isar.coinHistoryLocals.put(historyCoin);
-          isar.userInfoLocals.put(userInfo);
-        }
+        await isar.userInfoLocals.put(userInfo);
+
+        await isar.coinHistoryLocals.put(historyCoin);
+
+        await userInfo.coinHistories.save();
       });
     } catch (err) {
       return Future.error(Exception(err));
