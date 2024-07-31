@@ -76,7 +76,7 @@ class ButtonStartScreen extends ConsumerWidget{
                    if( name.isNotEmpty == true){
 
                      ref.read(userProvider.notifier).saveUseName(name);
-                     Navigator.push(
+                     Navigator.pushReplacement(
                        context,
                        MaterialPageRoute(builder: (context) => const HomeScreen()),
                      );
@@ -84,7 +84,7 @@ class ButtonStartScreen extends ConsumerWidget{
                      //   navigator.push
                    } else if(userInfo != null ){
 
-                     Navigator.push(
+                     Navigator.pushReplacement(
                        context,
                        MaterialPageRoute(builder: (context) => const HomeScreen()),
                      );

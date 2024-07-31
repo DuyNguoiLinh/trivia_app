@@ -4,7 +4,6 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/cat
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/home_controller/category_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/option_screen.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/question_screen.dart';
 
 class CategoryItem extends ConsumerWidget {
   const CategoryItem({super.key , required this.categoryEntity});

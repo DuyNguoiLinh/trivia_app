@@ -98,4 +98,21 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
       return Future.error(Exception(err));
     }
   }
+
+//   get category has question
+  @override
+  Future<List<CategoryLocal>> getCategoryHasQuestion() async {
+    try {
+      final isar = await db;
+
+      final dataCategories =
+          await isar.categoryLocals.filter().questionsIsNotEmpty().findAll();
+
+      dataCategories
+          .sort((a, b) => b.questions.length.compareTo(a.questions.length));
+      return dataCategories;
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
 }

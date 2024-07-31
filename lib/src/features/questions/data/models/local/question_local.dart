@@ -11,6 +11,7 @@ class QuestionLocal {
   late String question;
   late String correctAnswer;
   late List<String> incorrectAnswers;
+  late List<String> shuffleAnswer;
 
   QuestionLocal({
     required this.idQuestion,
@@ -19,5 +20,6 @@ class QuestionLocal {
     required this.question,
     required this.correctAnswer,
     required this.incorrectAnswers,
+    required this.shuffleAnswer
   });
 }

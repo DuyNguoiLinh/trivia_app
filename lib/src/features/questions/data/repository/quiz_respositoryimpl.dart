@@ -9,23 +9,23 @@ import '../models/local/question_local.dart';
 import '../models/local/result_local.dart';
 
 class QuizRepositoryImpl implements QuizRepository {
-
   final localDataSource = QuizLocalDataSource.create();
   final remoteDataSource = QuizRemoteDataSource.create();
 
   //  fetch question
   @override
-  Future<List<QuestionEntity>> fetchQuestions(int amount, int idCategory,
-      String? difficulty, String? type) async {
+  Future<List<QuestionEntity>> fetchQuestions(
+      int amount, int idCategory, String? difficulty, String? type) async {
     try {
       final questionsResponse = await remoteDataSource.getQuestions(
           amount, idCategory, difficulty, type);
       if (questionsResponse.isNotEmpty) {
-        final listQuestions = questionsResponse.map((e) =>
-            QuestionEntity.fromQuestionModel(e)).toList();
-       for(final question in  listQuestions){
-         question.answers;
-       }
+        final listQuestions = questionsResponse
+            .map((e) => QuestionEntity.fromQuestionModel(e))
+            .toList();
+        for (final question in listQuestions) {
+          question.answers;
+        }
         return listQuestions;
       } else {
         return List.empty(growable: true);
@@ -41,8 +41,9 @@ class QuizRepositoryImpl implements QuizRepository {
     try {
       final categoriesLocal = await localDataSource.getCategories();
       if (categoriesLocal.isNotEmpty) {
-        final dataCategories = categoriesLocal.map((e) =>
-            CategoryEntity.fromCategoryLocal(e)).toList();
+        final dataCategories = categoriesLocal
+            .map((e) => CategoryEntity.fromCategoryLocal(e))
+            .toList();
         return dataCategories;
       } else {
         final dataCategories = await _fetchAndSaveCategories();
@@ -58,12 +59,15 @@ class QuizRepositoryImpl implements QuizRepository {
     try {
       final categories = await remoteDataSource.getCategories();
       if (categories.isNotEmpty) {
-        final listCategories = categories.map((e) =>
-            CategoryEntity.fromCategoryResponse(e)).toList();
-        final categoryLocal = listCategories.map((e) =>
-            CategoryLocal(idCategory: e.id,
+        final listCategories = categories
+            .map((e) => CategoryEntity.fromCategoryResponse(e))
+            .toList();
+        final categoryLocal = listCategories
+            .map((e) => CategoryLocal(
+                idCategory: e.id,
                 nameCategory: e.nameCategory,
-                filterCategory: e.filterCategory)).toList();
+                filterCategory: e.filterCategory))
+            .toList();
         await localDataSource.saveCategory(categoryLocal);
         return listCategories;
       } else {
@@ -73,7 +77,6 @@ class QuizRepositoryImpl implements QuizRepository {
       return Future.error(err);
     }
   }
-
 
   //   save result quiz into local
   @override
@@ -94,17 +97,35 @@ class QuizRepositoryImpl implements QuizRepository {
 
   //   save question into Local
   @override
-  Future<void> toggleSaveQuestion(QuestionEntity questionEntity,int idCategory,String nameCategory) async {
+  Future<void> toggleSaveQuestion(QuestionEntity questionEntity, int idCategory,
+      String nameCategory) async {
     final questionLocal = QuestionLocal(
         idQuestion: questionEntity.id,
         idCategory: idCategory,
         nameCategory: nameCategory,
         question: questionEntity.question,
         correctAnswer: questionEntity.correctAnswer,
-        incorrectAnswers: questionEntity.incorrectAnswers);
+        incorrectAnswers: questionEntity.incorrectAnswers,
+        shuffleAnswer: questionEntity.shuffleAnswer!,
+    );
     await localDataSource.toggleSaveQuestion(questionLocal);
   }
 
-
+//   get category has question
+  @override
+  Future<List<CategoryEntity>> getCategoryHasQuestion() async {
+    try {
+      final listCategory = await localDataSource.getCategoryHasQuestion();
+      if (listCategory.isNotEmpty) {
+        final dataCategories = listCategory
+            .map((e) => CategoryEntity.fromCategoryLocal(e))
+            .toList();
+        return dataCategories;
+      } else {
+        return List<CategoryEntity>.empty(growable: true);
+      }
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
 }
-

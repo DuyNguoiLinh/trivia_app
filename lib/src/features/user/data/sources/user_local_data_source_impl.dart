@@ -143,7 +143,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
           timestamp: DateFormat('MMMM dd, yyyy').format(now),
           type: 'fee'
       );
-      userInfo.coin += coin;
+      userInfo.coin -= coin;
       userInfo.coinHistories.add(historyCoin);
       await isar.writeTxn(() async {
         await isar.userInfoLocals.put(userInfo);

@@ -33,8 +33,7 @@ class HomeScreen extends ConsumerWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                userInfo.coin.toString(),
+              Text(userInfo.coin.toString(),
                 style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               ),
               const SizedBox(width: 8,),

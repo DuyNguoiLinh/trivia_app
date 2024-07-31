@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../user/presentation/controller/user_controller.dart';
 import 'filters.dart';
-import 'list_categories.dart';
+import 'list_category.dart';
 
 class Home extends ConsumerWidget {
   const Home({super.key});
@@ -55,7 +55,7 @@ class Home extends ConsumerWidget {
                color: Colors.grey,
              )),
          const Filters(),
-         const Expanded(child: ListCategories())
+         const Expanded(child: ListCategory())
        ],
      );
   }

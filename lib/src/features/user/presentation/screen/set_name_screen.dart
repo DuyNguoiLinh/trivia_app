@@ -11,7 +11,9 @@ class SetNameScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
     final asyncInfoUser=ref.watch(userProvider);
+
     final infoUser = asyncInfoUser.valueOrNull;
+
     _textController.text=infoUser!.userName;
 
     return Scaffold(

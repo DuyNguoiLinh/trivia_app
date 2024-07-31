@@ -10,7 +10,9 @@ abstract class QuizRepository{
   Future<List<CategoryEntity>> fetchCategories();
   Future<void> saveResultQuiz(ResultEntity resultEntity);
   Future<void> toggleSaveQuestion(QuestionEntity questionEntity,int idCategory,String nameCategory);
-    factory QuizRepository.create() {
+  Future<List<CategoryEntity>> getCategoryHasQuestion();
+
+  factory QuizRepository.create() {
      return QuizRepositoryImpl();
    }
 }
