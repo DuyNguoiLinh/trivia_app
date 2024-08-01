@@ -57,7 +57,7 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> additionCoin(double coin) async {
     try {
-      await localDataSource.additionCoin(coin);
+      await localDataSource.addCoin(coin);
     } catch (err) {
       return Future.error(err);
     }

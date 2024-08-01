@@ -4,6 +4,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/cont
 
 enum ListFilter { popular, entertainment, science }
 
+
 // Convert enum to String
 extension ListFilterExtension on ListFilter {
   String get name => toString().split('.').last;
@@ -23,6 +24,7 @@ final isPickFilters = Provider.family.autoDispose<bool,String>((ref,name) {
 
 // Category provider
 final categoryFilterProvider = Provider.autoDispose<List<CategoryEntity>>((ref) {
+
   final filter = ref.watch(filtersProvider);
   final asyncCategories = ref.watch(categoryProvider);
 
@@ -32,20 +34,20 @@ final categoryFilterProvider = Provider.autoDispose<List<CategoryEntity>>((ref) 
 
   if (listCategory.isNotEmpty) {
       switch (filter) {
+
         case ListFilter.popular:
           final popularCategory = listCategory
               .where((e) => e.filterCategory=='popular').toList();
           return popularCategory;
-          break;
+
         case ListFilter.entertainment:
           final entertainmentCategory = listCategory
               .where((e) => e.filterCategory=='entertainment').toList();
           return entertainmentCategory;
-          break;
+
         case ListFilter.science:
           final scienceCategory = listCategory.where((e) => e.filterCategory=='science').toList();
           return scienceCategory;
-          break;
       }
     } else {
 return List.empty();

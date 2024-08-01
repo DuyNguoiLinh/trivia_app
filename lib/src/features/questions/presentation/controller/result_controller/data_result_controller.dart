@@ -8,8 +8,8 @@ import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user
 
 class AsyncDataResultNotifier extends AutoDisposeAsyncNotifier<ResultEntity> {
 
-  final quizRepository= QuizRepository.create();
-  final userRepository =UserRepository.create();
+  final _quizRepository= QuizRepository.create();
+  final _userRepository =UserRepository.create();
 
   @override
   FutureOr<ResultEntity> build() {
@@ -21,20 +21,13 @@ class AsyncDataResultNotifier extends AutoDisposeAsyncNotifier<ResultEntity> {
     int correctCount = 0;
     final listQuestion=ref.read(questionProvider.notifier).getQuestions();
 
-    for (final question in listQuestion) {
-      print(question.correctAnswer);
-      print(question.answerUser);
+    correctCount=listQuestion.where((e) => e.answerUser==e.correctAnswer).toList().length;
 
-      // count correct
-      if (question.answerUser == question.correctAnswer) {
-        correctCount++;
-      }
-    }
      final amountCoinEarn = (correctCount/listQuestion.length)*10;
-    final roundedAmountCoinEarn = (amountCoinEarn * 100).round() / 100;
+     final roundedAmountCoinEarn = (amountCoinEarn * 100).round() / 100;
 
     // save , update coin
-     await userRepository.additionCoin(amountCoinEarn);
+     await _userRepository.additionCoin(roundedAmountCoinEarn);
      //  obj results
      final resultEntity = ResultEntity(total: listQuestion.length,
         completion: (correctCount/listQuestion.length)*100,
@@ -44,7 +37,7 @@ class AsyncDataResultNotifier extends AutoDisposeAsyncNotifier<ResultEntity> {
     );
 
     print(resultEntity.correct);
-    await quizRepository.saveResultQuiz(resultEntity);
+    await _quizRepository.saveResultQuiz(resultEntity);
     // state =AsyncValue.data(resultEntity);
     return resultEntity;
   }

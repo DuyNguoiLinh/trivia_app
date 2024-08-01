@@ -6,13 +6,20 @@ import '../models/local/result_local.dart';
 abstract class  QuizLocalDataSource{
 
   Future<void>  saveCategory(List<CategoryLocal> listCategoryLocal);
+
   Future<List<CategoryLocal>>  getCategories();
+
   Future<void>  saveResultQuiz(ResultLocal resultLocal);
+
   Future<void> toggleSaveQuestion(QuestionLocal questionLocal);
-  Future<List<CategoryLocal>> getCategoryHasQuestion();
+
+  // Future<List<CategoryLocal>> getCategoryHasQuestion();
   Stream<List<CategoryLocal>> watchCategories();
+
   Future<void>  deleteQuestion(String idQuestion,int idCategory);
-  Stream<List<QuestionLocal>>  watchQuestionLocal();
+
+  Stream<List<QuestionLocal>>  watchQuestionLocal(int idCategory);
+
   Future<void>  deleteAllQuestionByIdCategory(int idCateGory);
 
   factory QuizLocalDataSource.create() {

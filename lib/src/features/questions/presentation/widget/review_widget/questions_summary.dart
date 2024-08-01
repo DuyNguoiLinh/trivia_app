@@ -11,7 +11,7 @@ class QuestionsSummary extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final asyncListQuestion = ref.watch(quizProvider);
+    final asyncListQuestion = ref.watch(questionApiProvider);
     final listQuestion = asyncListQuestion.maybeMap(
         data: (list) => list.value,
         orElse: () => List<QuestionEntity>.empty(growable: true));

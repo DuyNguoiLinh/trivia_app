@@ -12,7 +12,7 @@ abstract class  UserLocalDataSource{
   Stream<List<UserInfoLocal>> getInfoUser();
   Future<UserInfoLocal> getUser();
   Future<void> deleteInfoUser();
-  Future<void> additionCoin(double coin);
+  Future<void> addCoin(double coin);
   Future<void> subtractionCoin(double coin);
 
   factory UserLocalDataSource.create() {

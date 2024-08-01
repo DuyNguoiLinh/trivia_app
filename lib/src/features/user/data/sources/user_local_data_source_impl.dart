@@ -99,7 +99,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
 //   addition coin
   @override
-  Future<void> additionCoin(double coin) async {
+  Future<void> addCoin(double coin) async {
     try {
       final isar = await db;
       DateTime now = DateTime.now();

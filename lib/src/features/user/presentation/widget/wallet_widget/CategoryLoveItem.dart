@@ -5,7 +5,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/que
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/question_favorite_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/view_question_screen.dart';
 import '../../../../questions/presentation/controller/home_controller/category_controller.dart';
-import '../../../../questions/presentation/controller/wallet_controller/list_category_love_controller.dart';
+import '../../../../questions/presentation/controller/wallet_controller/list_category_favorite_controller.dart';
 
 class CategoryLoveItem extends ConsumerWidget{
   const CategoryLoveItem({super.key,required this.categoryEntity,});
@@ -15,7 +15,7 @@ class CategoryLoveItem extends ConsumerWidget{
   Widget build(BuildContext context, WidgetRef ref) {
 
     // get list question by category
-    final asyncListQuestion =ref.watch(amountQuestionProvider(categoryEntity));
+    final asyncListQuestion =ref.watch(questionFavoriteProvider(categoryEntity.id));
     final listQuestion =asyncListQuestion.maybeMap(data:  (data) => data.value,orElse: () => List<QuestionEntity>.empty());
 
     // get icon by category
@@ -79,7 +79,10 @@ class CategoryLoveItem extends ConsumerWidget{
               IconButton(
                   onPressed: () {
 
+                     // get id, name category
                      ref.read(idCategoryProvider.notifier).state=categoryEntity.id;
+                     ref.read(nameCategoryProvider.notifier).state=categoryEntity.nameCategory;
+
                   //   view question
                     Navigator.push(
                       context,

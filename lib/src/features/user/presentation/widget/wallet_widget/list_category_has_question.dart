@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/list_category_love_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/list_category_favorite_controller.dart';
 
 import 'CategoryLoveItem.dart';
 

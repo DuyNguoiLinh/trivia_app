@@ -5,7 +5,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/repository
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/view_question_screen.dart';
 import '../../../domain/entity/question_entity.dart';
 
-class AsyncCategoriesLoveNotifier
+class CategoriesLoveNotifier
     extends AutoDisposeAsyncNotifier<List<CategoryEntity>> {
 
   List<CategoryEntity> listCategoryLove = List<CategoryEntity>.empty(
@@ -27,6 +27,7 @@ class AsyncCategoriesLoveNotifier
 
     _subscription = quizRepository.watchCategoryLocal().listen(
             (categories) {
+          //     sort
           state = AsyncValue.data(categories);
         }, onError: (err,stackTr){
       state= AsyncValue.error(err,stackTr);
@@ -66,7 +67,6 @@ class AsyncCategoriesLoveNotifier
 }
 
 final listCategoryLoveProvider = AsyncNotifierProvider.autoDispose<
-    AsyncCategoriesLoveNotifier,
-    List<CategoryEntity>>(() => AsyncCategoriesLoveNotifier());
+    CategoriesLoveNotifier,
+    List<CategoryEntity>>(() => CategoriesLoveNotifier());
 
-final idCategoryProvider =StateProvider<int>((ref) => 0);

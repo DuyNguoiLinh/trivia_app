@@ -23,9 +23,9 @@ class QuizRepositoryImpl implements QuizRepository {
         final listQuestions = questionsResponse
             .map((e) => QuestionEntity.fromQuestionModel(e))
             .toList();
-        for (final question in listQuestions) {
-          question.answers;
-        }
+        // for (final question in listQuestions) {
+        //   question.answers;
+        // }
         return listQuestions;
       } else {
         return List.empty(growable: true);
@@ -111,23 +111,23 @@ class QuizRepositoryImpl implements QuizRepository {
     await localDataSource.toggleSaveQuestion(questionLocal);
   }
 
-//   get category has question
-  @override
-  Future<List<CategoryEntity>> getCategoryHasQuestion() async {
-    try {
-      final listCategory = await localDataSource.getCategoryHasQuestion();
-      if (listCategory.isNotEmpty) {
-        final dataCategories = listCategory
-            .map((e) => CategoryEntity.fromCategoryLocal(e))
-            .toList();
-        return dataCategories;
-      } else {
-        return List<CategoryEntity>.empty(growable: true);
-      }
-    } catch (err) {
-      return Future.error(err);
-    }
-  }
+// //   get category has question
+//   @override
+//   Future<List<CategoryEntity>> getCategoryHasQuestion() async {
+//     try {
+//       final listCategory = await localDataSource.getCategoryHasQuestion();
+//       if (listCategory.isNotEmpty) {
+//         final dataCategories = listCategory
+//             .map((e) => CategoryEntity.fromCategoryLocal(e))
+//             .toList();
+//         return dataCategories;
+//       } else {
+//         return List<CategoryEntity>.empty(growable: true);
+//       }
+//     } catch (err) {
+//       return Future.error(err);
+//     }
+//   }
 
 //  watch  categories have question
   @override
@@ -144,8 +144,8 @@ class QuizRepositoryImpl implements QuizRepository {
 
 //   watch questionLocal
   @override
-  Stream<List<QuestionEntity>>  watchQuestionLocal() {
-    return localDataSource.watchQuestionLocal().map((listQuestionLocal) {
+  Stream<List<QuestionEntity>>  watchQuestionLocal(int idCategory) {
+    return localDataSource.watchQuestionLocal(idCategory).map((listQuestionLocal) {
       return listQuestionLocal.map((e) => QuestionEntity.fromQuestionLocal(e)).toList();
     });
   }

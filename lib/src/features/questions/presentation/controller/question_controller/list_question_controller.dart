@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/list_category_love_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/question_favorite_controller.dart';
+import '../home_controller/category_controller.dart';
 import '../quiz_controller.dart';
 
 class AsyncListQuestionNotifier extends AutoDisposeAsyncNotifier<List<QuestionEntity>> {
+
   @override
   FutureOr<List<QuestionEntity>> build() async{
 
@@ -13,11 +15,11 @@ class AsyncListQuestionNotifier extends AutoDisposeAsyncNotifier<List<QuestionEn
 
     switch (indexType) {
       case 0 :
-        final questions = await ref.watch(quizProvider.future);
+        final questions = await ref.watch(questionApiProvider.future);
         return questions;
 
       case 1 :
-        final questions = ref.read(listCategoryLoveProvider.notifier).getListQuestion();
+        final questions =await ref.watch(questionFavoriteProvider(idCategory).future);
         return questions;
       default :
         return List<QuestionEntity>.empty();

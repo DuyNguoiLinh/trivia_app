@@ -16,6 +16,7 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
 
   Future<Isar> _openDb() async {
     final dir = await getApplicationDocumentsDirectory();
+
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open(
         [
@@ -71,50 +72,60 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
   @override
   Future<void> toggleSaveQuestion(QuestionLocal questionLocal) async {
     try {
+
       final isar = await db;
+
       final category = await isar.categoryLocals
           .filter()
           .idCategoryEqualTo(questionLocal.idCategory)
           .findFirst();
+
       if (category == null) {
         return;
       }
+
       final question = await isar.questionLocals
           .filter()
           .idQuestionEqualTo(questionLocal.idQuestion)
           .findFirst();
+
       if (question == null) {
+
         category.questions.add(questionLocal);
+
         await isar.writeTxn(() async {
           await isar.questionLocals.put(questionLocal);
           await category.questions.save();
         });
+
       } else {
+
         await isar.writeTxn(() async {
           isar.questionLocals.deleteByIdQuestion(questionLocal.idQuestion);
         });
+
       }
     } catch (err) {
       return Future.error(Exception(err));
     }
   }
 
-//   get category has question
-  @override
-  Future<List<CategoryLocal>> getCategoryHasQuestion() async {
-    try {
-      final isar = await db;
-
-      final dataCategories =
-          await isar.categoryLocals.filter().questionsIsNotEmpty().findAll();
-
-      dataCategories
-          .sort((a, b) => b.questions.length.compareTo(a.questions.length));
-      return dataCategories;
-    } catch (err) {
-      return Future.error(Exception(err));
-    }
-  }
+// //   get category has question
+//   @override
+//   Future<List<CategoryLocal>> getCategoryHasQuestion() async {
+//     try {
+//       final isar = await db;
+//
+//       final dataCategories =
+//           await isar.categoryLocals.filter().questionsIsNotEmpty().findAll();
+//
+//       dataCategories
+//           .sort((a, b) => b.questions.length.compareTo(a.questions.length));
+//       return dataCategories;
+//     } catch (err) {
+//       return Future.error(Exception(err));
+//     }
+//   }
 
   //  watch category
   @override
@@ -126,9 +137,9 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
 
    //  watch question local
   @override
-  Stream<List<QuestionLocal>>  watchQuestionLocal() async* {
+  Stream<List<QuestionLocal>>  watchQuestionLocal(int idCategory) async* {
     final isar =await db;
-    Query<QuestionLocal> questions =isar.questionLocals.where().build();
+    Query<QuestionLocal> questions =isar.questionLocals.filter().idCategoryEqualTo(idCategory).build();
     yield* questions.watch(fireImmediately: true);
   }
 

@@ -3,19 +3,19 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/repository/quiz_respository.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/home_controller/category_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/list_question_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
 import 'answer_controller.dart';
 
 
-class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
+class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
-  late int i;
+  int currentQuestionIndex=-1;
   List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
 
-  final userRepository =UserRepository.create();
-  final  quizRepository = QuizRepository.create();
+  final _userRepository =UserRepository.create();
+  final  _quizRepository = QuizRepository.create();
 
   @override
   FutureOr<QuestionEntity?> build() {
@@ -26,7 +26,7 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
     try {
       final question = await ref.watch(listQuestionProvider.future);
       listQuestion =question;
-      i = 0;
+      currentQuestionIndex = 0;
       final initQuestion = listQuestion.firstOrNull;
       return initQuestion;
     } catch (err, stackTr) {
@@ -36,8 +36,8 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
   // update question when next
   Future<void> nextQuestion() async {
-    if (i < listQuestion.length) {
-      final nextQuestion = listQuestion[++i];
+    if (currentQuestionIndex < listQuestion.length) {
+      final nextQuestion = listQuestion[++currentQuestionIndex];
       ref.read(currentIdSelectedProvider.notifier).state = nextQuestion.id;
       state = AsyncValue.data(nextQuestion);
     }
@@ -45,8 +45,8 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
   // update question when back
   Future<void> backQuestion() async {
-    if (i > 0) {
-      final backQuestion = listQuestion[--i];
+    if (currentQuestionIndex > 0) {
+      final backQuestion = listQuestion[--currentQuestionIndex];
       ref.read(currentIdSelectedProvider.notifier).state = backQuestion.id;
       state = AsyncValue.data(backQuestion);
     }
@@ -97,15 +97,15 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
     for (final question in listQuestion) {
       if (question.answerUser == null) {
         return false;
-        break;
       }
     }
     return true;
   }
+
   //  play again
   Future<void> playAgainQuiz() async {
-    i=0;
-    userRepository.subtractionCoin(3);
+    currentQuestionIndex=0;
+    await _userRepository.subtractionCoin(3);
     for(final question in listQuestion){
       question.answerUser = null;
     }
@@ -117,7 +117,7 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
     final random =Random();
     //  update coin
-    userRepository.subtractionCoin(1.0);
+    await _userRepository.subtractionCoin(1.0);
     while(questionEntity.shuffleAnswer!.length > 2){
       final index = random.nextInt(3);
       if(questionEntity.correctAnswer != questionEntity.shuffleAnswer![index]){
@@ -129,10 +129,10 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
 // save or not question
  Future<void>  saveOrNotQuestion(QuestionEntity questionEntity) async{
-    final map =ref.read(quizProvider.notifier).getMap();
-    final id =map['idCategory'];
-    final nameCategory=map['nameCategory'];
-    quizRepository.toggleSaveQuestion(questionEntity,id,nameCategory);
+    // final map =ref.read(questionApiProvider.notifier).getMap();
+    final id =ref.watch(idCategoryProvider);
+    final nameCategory=ref.watch(nameCategoryProvider);
+    _quizRepository.toggleSaveQuestion(questionEntity,id,nameCategory);
  }
 
 //   get list question
@@ -142,6 +142,6 @@ List<QuestionEntity> getQuestions() {
 }
 
 final questionProvider =
-    AsyncNotifierProvider.autoDispose<AsyncQuestionNotifier, QuestionEntity?>(() {
-  return AsyncQuestionNotifier();
+    AsyncNotifierProvider.autoDispose<QuestionNotifier, QuestionEntity?>(() {
+  return QuestionNotifier();
 });

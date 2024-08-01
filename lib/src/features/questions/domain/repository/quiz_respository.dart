@@ -14,11 +14,11 @@ abstract class QuizRepository {
   Future<void> toggleSaveQuestion(
       QuestionEntity questionEntity, int idCategory, String nameCategory);
 
-  Future<List<CategoryEntity>> getCategoryHasQuestion();
+  // Future<List<CategoryEntity>> getCategoryHasQuestion();
 
   Stream<List<CategoryEntity>> watchCategoryLocal();
 
-  Stream<List<QuestionEntity>>  watchQuestionLocal();
+  Stream<List<QuestionEntity>>  watchQuestionLocal(int idCategory);
 
   Future<void> deleteQuestion(String idQuestion,int idCategory);
 

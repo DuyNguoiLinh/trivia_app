@@ -1,4 +1,3 @@
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/remote/question_model.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 
 import '../../data/models/local/category_local.dart';
@@ -6,8 +5,8 @@ import '../../data/models/remote/category_response.dart';
 
 class CategoryEntity {
   final int id;
-  String nameCategory;
-  String filterCategory;
+  final String nameCategory;
+  final String filterCategory;
   List<QuestionEntity>? listQuestion;
 
   CategoryEntity(

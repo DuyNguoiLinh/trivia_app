@@ -2,6 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
 import '../../../domain/repository/quiz_respository.dart';
 
+// get name category
+final nameCategoryProvider= StateProvider<String>((ref) => '');
+// get id category
+final idCategoryProvider =StateProvider<int>((ref) => 0);
+
+
 final categoryProvider = FutureProvider.autoDispose<List<CategoryEntity>>((ref) async {
   try {
     final quizRepository= QuizRepository.create();

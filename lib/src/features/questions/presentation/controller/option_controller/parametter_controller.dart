@@ -22,18 +22,11 @@ class ParameterNotifier extends StateNotifier<Map<String, dynamic>> {
 
   //  check option
   bool checkParameter() {
-    if (parameter.containsKey('difficulty') &&
+    return parameter.containsKey('difficulty') &&
         parameter.containsKey('type') &&
-        parameter.containsKey('amount')) {
-      return true;
-    } else{
-      return false;
-    }
+        parameter.containsKey('amount') ;
+
   }
 
-  //  get nameCategory
-  String getNameCategory() {
-    return parameter['nameCategory'];
-  }
 
 }

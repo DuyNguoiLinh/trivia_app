@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/list_question_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/list_category_love_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/list_category_favorite_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/widget/view_question_widget/question_love_item.dart';
 import '../../../questions/domain/entity/question_entity.dart';
+import '../../../questions/presentation/controller/home_controller/category_controller.dart';
 import '../../../questions/presentation/screen/question_screen.dart';
 
 class ViewQuestionScreen extends ConsumerWidget {
