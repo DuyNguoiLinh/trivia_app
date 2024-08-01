@@ -6,11 +6,9 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/widg
 
 class QuestionScreen extends ConsumerWidget {
   const QuestionScreen({super.key,});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-    final nameCategory=ref.read(parameterProvider.notifier).getNameCategory();
+    // final nameCategory=ref.read(parameterProvider.notifier).getNameCategory();
 
    return Scaffold(
      appBar: AppBar(
@@ -54,7 +52,7 @@ class QuestionScreen extends ConsumerWidget {
        ),
        title: Container(
             margin: const EdgeInsets.only(left: 80),
-           child:  Text(nameCategory)),
+           child:  const Text('hehe')),
      ),
      body:   const QuestionView(),
    );

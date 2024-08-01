@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/repository/quiz_respository.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/list_question_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
 import 'answer_controller.dart';
@@ -20,7 +21,7 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
   Future<QuestionEntity?> _initQuestion() async {
     try {
-      final question = await ref.watch(quizProvider.future);
+      final question = await ref.watch(listQuestionProvider.future);
       listQuestion =question;
       i = 0;
       final initQuestion = listQuestion.firstOrNull;
@@ -131,7 +132,10 @@ class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
     quizRepository.toggleSaveQuestion(questionEntity,id,nameCategory);
  }
 
-
+//   get list question
+List<QuestionEntity> getQuestions() {
+    return listQuestion;
+}
 }
 
 final questionProvider =

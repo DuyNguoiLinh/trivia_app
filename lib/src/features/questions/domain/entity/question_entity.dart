@@ -7,8 +7,8 @@ const uuid = Uuid();
 
 class QuestionEntity {
   final String id;
-   int? idCategory;
-   String? nameCategory;
+  int? idCategory;
+  String? nameCategory;
   final String question;
   final String correctAnswer;
   final List<String> incorrectAnswers;
@@ -16,27 +16,29 @@ class QuestionEntity {
   String? answerUser;
 
   QuestionEntity(
-      {required this.question,
+      {required this.id,
+      required this.question,
       required this.correctAnswer,
       required this.incorrectAnswers,
-        this.shuffleAnswer,
-      this.answerUser})
-      : id = uuid.v4();
+      this.shuffleAnswer,
+      this.answerUser});
 
   factory QuestionEntity.fromQuestionModel(QuestionModel questionModel) {
     return QuestionEntity(
+        id: uuid.v4(),
         question: questionModel.question,
         correctAnswer: questionModel.correctAnswer,
-        incorrectAnswers: questionModel.incorrectAnswers
-    ) ;
+        incorrectAnswers: questionModel.incorrectAnswers);
   }
+
   factory QuestionEntity.fromQuestionLocal(QuestionLocal questionLocal) {
     return QuestionEntity(
-        question: questionLocal.question,
-        correctAnswer: questionLocal.correctAnswer,
-        incorrectAnswers: questionLocal.incorrectAnswers,
-        shuffleAnswer: questionLocal.shuffleAnswer,
-    ) ;
+      id: questionLocal.idQuestion,
+      question: questionLocal.question,
+      correctAnswer: questionLocal.correctAnswer,
+      incorrectAnswers: questionLocal.incorrectAnswers,
+      shuffleAnswer: questionLocal.shuffleAnswer,
+    );
   }
 
   List<String>? get answers {

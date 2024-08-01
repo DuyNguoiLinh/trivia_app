@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/option_controller/parametter_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/list_question_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/question_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/option_widget/option_button.dart';
@@ -89,7 +90,7 @@ class ListOptions extends ConsumerWidget {
                    ],
                  ));
            } else {
-
+             ref.read(typeSourceProvider.notifier).state=0;
              Navigator.pushReplacement(
                context,
                MaterialPageRoute(builder: (context) =>  const QuestionScreen()),

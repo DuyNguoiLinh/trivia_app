@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/view_question_screen.dart';
 import '../../../../questions/presentation/controller/home_controller/category_controller.dart';
+import '../../../../questions/presentation/controller/question_controller/list_question_controller.dart';
 
 class CategoryLoveItem extends ConsumerWidget{
-  const CategoryLoveItem({super.key,required this.categoryEntity});
+  const CategoryLoveItem({super.key,required this.categoryEntity,});
 
- final CategoryEntity categoryEntity;
-
+   final CategoryEntity categoryEntity;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
@@ -71,10 +71,11 @@ class CategoryLoveItem extends ConsumerWidget{
               ),
               IconButton(
                   onPressed: () {
+                     ref.read(idCategoryProvider.notifier).state=categoryEntity.id;
                   //   view question
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ViewQuestionScreen(listQuestion: categoryEntity.listQuestion!)),
+                      MaterialPageRoute(builder: (context) => ViewQuestionScreen(listQuestion: categoryEntity.listQuestion!,)),
                     );
                   },
                   icon: const Icon(Icons.visibility),iconSize: 28,)

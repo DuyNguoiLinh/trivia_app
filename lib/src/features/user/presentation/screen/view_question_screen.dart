@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/list_question_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/widget/view_question_widget/question_love_item.dart';
 import '../../../questions/domain/entity/question_entity.dart';
+import '../../../questions/presentation/screen/question_screen.dart';
 
 class ViewQuestionScreen extends ConsumerWidget {
   const ViewQuestionScreen({super.key, required this.listQuestion});
 
   final List<QuestionEntity> listQuestion;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -85,7 +86,12 @@ class ViewQuestionScreen extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () {
+               ref.read(typeSourceProvider.notifier).state=1;
 
+               Navigator.pushReplacement(
+                 context,
+                 MaterialPageRoute(builder: (context) =>  const QuestionScreen()),
+               );
             },
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),

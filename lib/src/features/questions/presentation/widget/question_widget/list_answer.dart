@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/answer_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/list_question_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/question_controller.dart';
 import 'answer_button.dart';
 
@@ -14,8 +15,7 @@ class ListAnswer extends ConsumerWidget{
   Widget build(BuildContext context, WidgetRef ref) {
 
     final isSave =ref.watch(isSaveProvider(questionEntity.id));
-    print(isSave);
-
+     final indexTypeSource =ref.watch(typeSourceProvider);
     if(questionEntity.shuffleAnswer != null){
       return Column(
           children: [
@@ -91,8 +91,14 @@ class ListAnswer extends ConsumerWidget{
                     style: TextStyle(fontSize: 20, color: Colors.blueAccent),
                   ),
                 ),
+
                 if(questionEntity.shuffleAnswer!.length == 2)
+
                   const SizedBox(width: 50,),
+
+
+                if(indexTypeSource == 0)
+
                 IconButton(
                   color: Colors.red,
                     icon : SizedBox(
