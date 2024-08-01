@@ -17,6 +17,7 @@ class QuestionEntity {
 
   QuestionEntity(
       {required this.id,
+        this.idCategory,
       required this.question,
       required this.correctAnswer,
       required this.incorrectAnswers,
@@ -34,6 +35,7 @@ class QuestionEntity {
   factory QuestionEntity.fromQuestionLocal(QuestionLocal questionLocal) {
     return QuestionEntity(
       id: questionLocal.idQuestion,
+      idCategory: questionLocal.idCategory,
       question: questionLocal.question,
       correctAnswer: questionLocal.correctAnswer,
       incorrectAnswers: questionLocal.incorrectAnswers,

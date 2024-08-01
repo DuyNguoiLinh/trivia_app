@@ -7,28 +7,25 @@ import '../quiz_controller.dart';
 class AsyncListQuestionNotifier extends AutoDisposeAsyncNotifier<List<QuestionEntity>> {
   @override
   FutureOr<List<QuestionEntity>> build() async{
+
     final indexType = ref.watch(typeSourceProvider);
     final idCategory=ref.watch(idCategoryProvider);
+
     switch (indexType) {
       case 0 :
         final questions = await ref.watch(quizProvider.future);
         return questions;
-        break;
+
       case 1 :
-        final categories =await ref.watch(listCategoryLoveProvider.future);
-        for(final category in categories){
-          if(category.id == idCategory){
-            return category.listQuestion!;
-          }
-        }
-        return List<QuestionEntity>.empty();
+        final questions = ref.read(listCategoryLoveProvider.notifier).getListQuestion();
+        return questions;
       default :
         return List<QuestionEntity>.empty();
     }
   }
 
+
 }
 final listQuestionProvider = AsyncNotifierProvider.autoDispose<AsyncListQuestionNotifier,List<QuestionEntity>>(() => AsyncListQuestionNotifier());
 
 final typeSourceProvider=StateProvider<int>((ref) => 0);
-final idCategoryProvider =StateProvider<int>((ref) => 0);

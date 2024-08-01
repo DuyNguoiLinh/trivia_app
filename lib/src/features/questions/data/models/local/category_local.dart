@@ -8,6 +8,7 @@ class CategoryLocal{
   late int idCategory;
   late String nameCategory;
   late String filterCategory;
+
   final questions =IsarLinks<QuestionLocal>();
 
   CategoryLocal({

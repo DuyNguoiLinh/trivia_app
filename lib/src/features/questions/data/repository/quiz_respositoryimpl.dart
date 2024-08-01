@@ -100,13 +100,13 @@ class QuizRepositoryImpl implements QuizRepository {
   Future<void> toggleSaveQuestion(QuestionEntity questionEntity, int idCategory,
       String nameCategory) async {
     final questionLocal = QuestionLocal(
-        idQuestion: questionEntity.id,
-        idCategory: idCategory,
-        nameCategory: nameCategory,
-        question: questionEntity.question,
-        correctAnswer: questionEntity.correctAnswer,
-        incorrectAnswers: questionEntity.incorrectAnswers,
-        shuffleAnswer: questionEntity.shuffleAnswer!,
+      idQuestion: questionEntity.id,
+      idCategory: idCategory,
+      nameCategory: nameCategory,
+      question: questionEntity.question,
+      correctAnswer: questionEntity.correctAnswer,
+      incorrectAnswers: questionEntity.incorrectAnswers,
+      shuffleAnswer: questionEntity.shuffleAnswer!,
     );
     await localDataSource.toggleSaveQuestion(questionLocal);
   }
@@ -124,6 +124,48 @@ class QuizRepositoryImpl implements QuizRepository {
       } else {
         return List<CategoryEntity>.empty(growable: true);
       }
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
+//  watch  categories have question
+  @override
+  Stream<List<CategoryEntity>> watchCategoryLocal() {
+    return localDataSource.watchCategories().map((listCategoryLocal) {
+      final categoriesLocalHaveQuestion = listCategoryLocal
+          .where((category) => category.questions.isNotEmpty)
+          .toList();
+      return categoriesLocalHaveQuestion
+          .map((e) => CategoryEntity.fromCategoryLocal(e))
+          .toList();
+    });
+  }
+
+//   watch questionLocal
+  @override
+  Stream<List<QuestionEntity>>  watchQuestionLocal() {
+    return localDataSource.watchQuestionLocal().map((listQuestionLocal) {
+      return listQuestionLocal.map((e) => QuestionEntity.fromQuestionLocal(e)).toList();
+    });
+  }
+
+
+//   delete question by id
+  @override
+  Future<void> deleteQuestion(String idQuestion,int idCategory) async {
+    try {
+      await localDataSource.deleteQuestion(idQuestion,idCategory);
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
+//   delete all question
+  @override
+  Future<void> deleteAllQuestionByIdCategory(int idCateGory) async {
+    try {
+      await localDataSource.deleteAllQuestionByIdCategory(idCateGory);
     } catch (err) {
       return Future.error(err);
     }

@@ -10,10 +10,13 @@ import 'answer_controller.dart';
 
 
 class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
+
   late int i;
   List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
+
   final userRepository =UserRepository.create();
   final  quizRepository = QuizRepository.create();
+
   @override
   FutureOr<QuestionEntity?> build() {
     return _initQuestion();

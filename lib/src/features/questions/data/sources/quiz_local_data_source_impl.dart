@@ -115,4 +115,57 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
       return Future.error(Exception(err));
     }
   }
+
+  //  watch category
+  @override
+  Stream<List<CategoryLocal>> watchCategories() async* {
+     final isar =await db;
+     Query<CategoryLocal>  categories = isar.categoryLocals.where().build();
+     yield* categories.watch(fireImmediately: true);
+  }
+
+   //  watch question local
+  @override
+  Stream<List<QuestionLocal>>  watchQuestionLocal() async* {
+    final isar =await db;
+    Query<QuestionLocal> questions =isar.questionLocals.where().build();
+    yield* questions.watch(fireImmediately: true);
+  }
+
+   // delete question by id
+   @override
+  Future<void>  deleteQuestion(String idQuestion,int idCategory) async{
+     try {
+        final isar =await db;
+        final category = await isar.categoryLocals
+            .filter()
+            .idCategoryEqualTo(idCategory)
+            .findFirst();
+        if(category == null){
+          return;
+        }
+        // category.questions.removeWhere((element) => element.idQuestion == idQuestion,);
+          await isar.writeTxn(() async {
+          await isar.questionLocals.deleteByIdQuestion(idQuestion);
+          await category.questions.save();
+        });
+     } catch (err) {
+       return Future.error(Exception(err));
+     }
+   }
+
+//    delete all question
+  @override
+  Future<void>  deleteAllQuestionByIdCategory(int idCateGory)  async {
+    try {
+      final isar =await db;
+      await isar.writeTxn(() async {
+        isar.questionLocals.filter().idCategoryEqualTo(idCateGory).deleteAll();
+      });
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
+
+
 }

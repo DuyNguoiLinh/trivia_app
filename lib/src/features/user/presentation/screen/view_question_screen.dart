@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/list_question_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/list_category_love_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/widget/view_question_widget/question_love_item.dart';
 import '../../../questions/domain/entity/question_entity.dart';
 import '../../../questions/presentation/screen/question_screen.dart';
@@ -11,6 +12,12 @@ class ViewQuestionScreen extends ConsumerWidget {
   final List<QuestionEntity> listQuestion;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    // id category user pick
+    final idCategory =ref.watch(idCategoryProvider);
+    //  amount question pick
+    final amountPick =ref.watch(amountPickProvider);
+
     return Scaffold(
       backgroundColor: Colors.white70,
       appBar: AppBar(
@@ -45,6 +52,8 @@ class ViewQuestionScreen extends ConsumerWidget {
                           style: TextStyle(fontSize: 20, color: Colors.red),
                         ),
                         onPressed: () {
+
+                          ref.read(listCategoryLoveProvider.notifier).deleteAllQuestion(idCategory);
                           Navigator.of(context).pop();
                         },
                       ),
@@ -77,21 +86,25 @@ class ViewQuestionScreen extends ConsumerWidget {
                       ),
                     ),
                     onDismissed: (direction) {
+
+                      ref.read(listCategoryLoveProvider.notifier).deleteQuestion(listQuestion[index].id,idCategory);
+
                     },
                     child: QuestionLoveItem(questionEntity: listQuestion[index])
                 );
-                // return QuestionLoveItem(questionEntity: listQuestion[index]);
               }
             ),
           ),
           TextButton(
             onPressed: () {
-               ref.read(typeSourceProvider.notifier).state=1;
+              if(amountPick >= 5){
+                ref.read(typeSourceProvider.notifier).state=1;
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  const QuestionScreen()),
+                );
+              }
 
-               Navigator.pushReplacement(
-                 context,
-                 MaterialPageRoute(builder: (context) =>  const QuestionScreen()),
-               );
             },
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -104,9 +117,14 @@ class ViewQuestionScreen extends ConsumerWidget {
               ),
             ),
             child: const Center(
-              child: Text(
-                'Practice Now!',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+              child: Column(
+                children: [
+                  Text('Please ! choose more than 5 question',style:  TextStyle(color: Colors.black),),
+                  Text(
+                    'Practice Now!',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ],
               ),
             ),
           ),
@@ -116,3 +134,4 @@ class ViewQuestionScreen extends ConsumerWidget {
     );
   }
 }
+final amountPickProvider =StateProvider.autoDispose<int>((ref) => 0);

@@ -10,6 +10,10 @@ abstract class  QuizLocalDataSource{
   Future<void>  saveResultQuiz(ResultLocal resultLocal);
   Future<void> toggleSaveQuestion(QuestionLocal questionLocal);
   Future<List<CategoryLocal>> getCategoryHasQuestion();
+  Stream<List<CategoryLocal>> watchCategories();
+  Future<void>  deleteQuestion(String idQuestion,int idCategory);
+  Stream<List<QuestionLocal>>  watchQuestionLocal();
+  Future<void>  deleteAllQuestionByIdCategory(int idCateGory);
 
   factory QuizLocalDataSource.create() {
      return QuizLocalDataSourceImpl();

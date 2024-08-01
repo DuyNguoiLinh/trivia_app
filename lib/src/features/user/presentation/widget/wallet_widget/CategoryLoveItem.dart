@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/question_favorite_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/view_question_screen.dart';
 import '../../../../questions/presentation/controller/home_controller/category_controller.dart';
-import '../../../../questions/presentation/controller/question_controller/list_question_controller.dart';
+import '../../../../questions/presentation/controller/wallet_controller/list_category_love_controller.dart';
 
 class CategoryLoveItem extends ConsumerWidget{
   const CategoryLoveItem({super.key,required this.categoryEntity,});
@@ -12,6 +14,11 @@ class CategoryLoveItem extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
+    // get list question by category
+    final asyncListQuestion =ref.watch(amountQuestionProvider(categoryEntity));
+    final listQuestion =asyncListQuestion.maybeMap(data:  (data) => data.value,orElse: () => List<QuestionEntity>.empty());
+
+    // get icon by category
     final mapIcon=ref.watch(iconCategoryProvider);
     final iconCategory= mapIcon[categoryEntity.id] ?? "assets/icons/book.png";
 
@@ -59,7 +66,7 @@ class CategoryLoveItem extends ConsumerWidget{
                             size: 24,
                           ),
                           const SizedBox(width: 4),
-                          Text( '${categoryEntity.listQuestion?.length.toString()} question',
+                          Text( '${listQuestion.length.toString()} question',
                             style: const TextStyle(
                               fontSize: 18,
                             ),
@@ -71,11 +78,12 @@ class CategoryLoveItem extends ConsumerWidget{
               ),
               IconButton(
                   onPressed: () {
+
                      ref.read(idCategoryProvider.notifier).state=categoryEntity.id;
                   //   view question
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ViewQuestionScreen(listQuestion: categoryEntity.listQuestion!,)),
+                      MaterialPageRoute(builder: (context) => ViewQuestionScreen(listQuestion: listQuestion,)),
                     );
                   },
                   icon: const Icon(Icons.visibility),iconSize: 28,)
