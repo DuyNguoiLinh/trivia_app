@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/answer_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/submit_button.dart';
 import '../../controller/question_controller/question_controller.dart';
 
@@ -45,7 +44,6 @@ class NavigationButton extends ConsumerWidget{
                TextButton(
                  onPressed:() {
                    ref.read(questionProvider.notifier).nextQuestion();
-                   // ref.read(asyncIdentifierProvider.notifier).updateIdentifier();
 
                  },
                  child: const Row(
@@ -55,11 +53,11 @@ class NavigationButton extends ConsumerWidget{
                    ],
                  )
                ),
-             if(checkButton == "notNext" && !answeredAll)
+             if(checkButton == "notNext" )
                SubmitButton(answeredAll: answeredAll),
            ],
          ),
-         if(answeredAll)
+         if(answeredAll && checkButton != 'notNext')
            Center(
               child: SubmitButton(answeredAll: answeredAll),
            ),

@@ -9,16 +9,16 @@ class Draw extends ConsumerWidget {
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
               color: Colors.blue,
             ),
-            child: Text('Drawer Header'),
+            child: Text('Setting '),
           ),
           ListTile(
-            title: const Text('Item 1'),
+            // set name
+            title: const Text('Change name '),
             onTap: () {
             },
           ),

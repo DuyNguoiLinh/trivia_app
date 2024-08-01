@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/answer_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/question_controller.dart';
+import '../../controller/question_controller/answer_controller.dart';
 
 class IdentifierQuestion extends ConsumerWidget {
   const IdentifierQuestion({super.key, required this.id,required this.questionEntity});
@@ -12,12 +12,11 @@ class IdentifierQuestion extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     // Is question current
     final currentQuestion = ref.watch(questionProvider).valueOrNull;
     final isQuestionCurrent= currentQuestion?.id  == questionEntity.id;
     //  answered or no
-    // final mapAnswered = ref.watch(answerProvider);
-    // final answered = mapAnswered.containsKey(questionCurrent.id)
      final answered = questionEntity.answerUser != null ;
 
     return Container(
@@ -31,7 +30,7 @@ class IdentifierQuestion extends ConsumerWidget {
         onPressed: () {
 
           ref.read(currentIdSelectedProvider.notifier).state = questionEntity.id;
-          ref.read(questionProvider.notifier).getQuestionByIdentifier(questionEntity.id);
+          ref.read(questionProvider.notifier).updateQuestionByIdentifier(questionEntity.id);
 
         },
         style: ElevatedButton.styleFrom(
@@ -56,5 +55,3 @@ class IdentifierQuestion extends ConsumerWidget {
     );
   }
 }
-
-final currentIdSelectedProvider = StateProvider<String>((ref) => "");

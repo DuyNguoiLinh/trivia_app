@@ -5,11 +5,15 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/widg
 
 class SummaryItem extends ConsumerWidget{
   const SummaryItem({super.key,required this.questionEntity,required this.index});
+
  final QuestionEntity  questionEntity;
  final int index;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final isTrue = questionEntity.correctAnswer == questionEntity.answerUser;
+
     return  Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(

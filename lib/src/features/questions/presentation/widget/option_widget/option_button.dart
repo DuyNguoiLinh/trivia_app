@@ -9,12 +9,15 @@ class ButtonOption extends ConsumerWidget {
   final dynamic nameParameter;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final mapOptions=ref.watch(parameterProvider);
      bool isPickOption= false;
     if(mapOptions.containsKey(typeOption)){
       isPickOption= (mapOptions[typeOption] == nameParameter);
     }
+
     return OutlinedButton(
+
         style: OutlinedButton.styleFrom(
           backgroundColor: isPickOption ? Colors.blueAccent : Colors.white,
           foregroundColor: isPickOption ? Colors.white.withOpacity(0.8) : Colors.blueAccent.withOpacity(0.8),
@@ -25,7 +28,9 @@ class ButtonOption extends ConsumerWidget {
           ),
         ),
         onPressed: () {
+
           ref.read(parameterProvider.notifier).addParameter(typeOption,nameParameter);
+
         },
         child:  Text(nameOption.toString(), style: const TextStyle(fontSize: 20),),
       );

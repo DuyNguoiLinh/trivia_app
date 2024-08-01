@@ -1,93 +1,133 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_async_notifier_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/identifier_question.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
+import 'answer_controller.dart';
 
-class AsyncQuestionNotifier extends AsyncNotifier<QuestionEntity?> {
-   late int i;
-   List<QuestionEntity> listQuestion=List<QuestionEntity>.empty(growable: true);
-   @override
+class AsyncQuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
+  late int i;
+  List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
+  final userRepository =UserRepository.create();
+
+  @override
   FutureOr<QuestionEntity?> build() {
-   return _initQuestion();
+    return _initQuestion();
   }
 
- Future<QuestionEntity?> _initQuestion() async{
-    try{
-      listQuestion = await ref.watch(asyncQuizProvider.future);
-      i=0;
-      final initQuestion =listQuestion.firstOrNull;
+  Future<QuestionEntity?> _initQuestion() async {
+    try {
+      final question = await ref.watch(quizProvider.future);
+      listQuestion =question;
+      i = 0;
+      final initQuestion = listQuestion.firstOrNull;
       return initQuestion;
-    } catch(err,stackTr){
-      return Future.error(err,stackTr);
+    } catch (err, stackTr) {
+      return Future.error(err, stackTr);
     }
- }
+  }
 
- Future<void> nextQuestion() async{
-     if(i<listQuestion.length){
-       final nextQuestion =listQuestion[++i];
-       ref.read(currentIdSelectedProvider.notifier).state = nextQuestion.id;
-       state=AsyncValue.data(nextQuestion);
-     }
- }
+  // update question when next
+  Future<void> nextQuestion() async {
+    if (i < listQuestion.length) {
+      final nextQuestion = listQuestion[++i];
+      ref.read(currentIdSelectedProvider.notifier).state = nextQuestion.id;
+      state = AsyncValue.data(nextQuestion);
+    }
+  }
 
-   Future<void>  backQuestion() async {
-     if(i>0){
-       final backQuestion=listQuestion[--i];
-       ref.read(currentIdSelectedProvider.notifier).state = backQuestion.id;
-       state=AsyncValue.data(backQuestion);
-     }
-   }
+  // update question when back
+  Future<void> backQuestion() async {
+    if (i > 0) {
+      final backQuestion = listQuestion[--i];
+      ref.read(currentIdSelectedProvider.notifier).state = backQuestion.id;
+      state = AsyncValue.data(backQuestion);
+    }
+  }
 
-   Future<void> getQuestionByIdentifier(String id) async{
-      for(final question in listQuestion){
-        if(question.id == id) {
-          state=AsyncValue.data(question);
-          break;
+  //  update question by click identifier
+  Future<void> updateQuestionByIdentifier(String id) async {
+    for (final question in listQuestion) {
+      if (question.id == id) {
+        state = AsyncValue.data(question);
+        break;
+      }
+    }
+  }
+
+  // add answerUser
+  Future<void> addAnsweredUser(String answer) async {
+    final questionCurrent = state.value;
+
+    if (questionCurrent == null) return;
+
+    if (questionCurrent.answerUser != null &&
+        questionCurrent.answerUser == answer) {
+      questionCurrent.answerUser = null;
+    } else {
+      questionCurrent.answerUser = answer;
+    }
+    state = AsyncValue.data(questionCurrent);
+  }
+
+  // check button next or back or submit
+  String checkButton() {
+    for (int index = 0; index < listQuestion.length; index++) {
+      if (listQuestion[index] == state.value) {
+        if (index == 0) {
+          return 'notBack';
+        }
+        if (index == listQuestion.length - 1) {
+          return 'notNext';
         }
       }
-   }
+    }
+    return 'submit';
+  }
 
-   Future<void>  addAnsweredUser(String answer) async{
-     final questionCurrent=state.value;
-     if(questionCurrent?.answerUser != null && questionCurrent?.answerUser == answer) {
-       questionCurrent?.answerUser = null;
-     } else {
-       questionCurrent?.answerUser = answer;
-     }
-     state=AsyncValue.data(questionCurrent);
-   }
+  //  check answered all or not
+  bool checkAnsweredAll() {
+    for (final question in listQuestion) {
+      if (question.answerUser == null) {
+        return false;
+        break;
+      }
+    }
+    return true;
+  }
+  //  play again
+  Future<void> playAgainQuiz() async {
+    i=0;
+    userRepository.updateCoin(-3);
+    for(final question in listQuestion){
+      question.answerUser = null;
+    }
+    state=AsyncValue.data(listQuestion.first);
+  }
 
-   String  checkButton() {
-     for( int index=0; index<listQuestion.length;index++){
-       if(listQuestion[index] == state.value){
-         if(index==0) {
-           return 'notBack';
-         }
-         if(index==listQuestion.length-1){
-           return 'notNext';
-         }
-       }
-     }
-     return 'submit';
-   }
+//   User uses assistance
+  Future<void> useAssistance(QuestionEntity questionEntity) async{
+    final random =Random();
+    //  update coin
+    userRepository.updateCoin(-1.0);
+    while(questionEntity.shuffleAnswer!.length > 2){
+      final index = random.nextInt(4);
+      if(questionEntity.correctAnswer != questionEntity.shuffleAnswer![index]){
+        questionEntity.shuffleAnswer!.removeAt(index);
+      }
+    }
+   state=AsyncValue.data(questionEntity);
+  }
 
-   //  check answered all or not
-   bool checkAnsweredAll() {
-     for(final question in listQuestion){
-       if(question.answerUser == null) {
-         return false;
-         break;
-       }
-     }
-     return true;
-   }
-
-   List<QuestionEntity> getListQuestion() {
-    return listQuestion;
-   }
+// save or not question
+ Future<void>  saveOrNotQuestion(QuestionEntity questionEntity) async{
+    userRepository.saveOrNotQuestion(questionEntity);
+ }
 
 }
-final questionProvider = AsyncNotifierProvider<AsyncQuestionNotifier,QuestionEntity?>(() {
+
+final questionProvider =
+    AsyncNotifierProvider.autoDispose<AsyncQuestionNotifier, QuestionEntity?>(() {
   return AsyncQuestionNotifier();
 });

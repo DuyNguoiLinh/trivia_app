@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/categories_response.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/category_response.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/question_model.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/data/models/questions_response.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz_remote_data_source.dart';
+
+import '../models/remote/categories_response.dart';
+import '../models/remote/category_response.dart';
+import '../models/remote/question_model.dart';
+import '../models/remote/questions_response.dart';
 
 
 const _baseUrl="https://opentdb.com/api.php";

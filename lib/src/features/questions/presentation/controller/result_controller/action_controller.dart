@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final iconActionProvider = Provider<Map<String, IconData>>((ref) {
+
+// button action provider
+final notReviewProvider=StateProvider.autoDispose<bool>((ref) => true);
+
+// icon provider
+final iconActionProvider = Provider.autoDispose<Map<String, IconData>>((ref) {
   return {
     'Play again': Icons.replay,
     'Review Answer':  Icons.remove_red_eye,
@@ -11,7 +16,9 @@ final iconActionProvider = Provider<Map<String, IconData>>((ref) {
     'Feedback': Icons.feedback,
   };
 });
-final colorActionProvider = Provider<Map<String, Color>>((ref) {
+
+//  color action provider
+final colorActionProvider = Provider.autoDispose<Map<String, Color>>((ref) {
   return {
     'Play again': Colors.blueAccent,
     'Review Answer':  Colors.orange,

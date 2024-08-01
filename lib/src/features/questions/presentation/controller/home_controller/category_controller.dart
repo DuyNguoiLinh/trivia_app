@@ -1,19 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
+import '../../../domain/repository/quiz_respository.dart';
 
-import '../../../domain/respository/quiz_respository.dart';
-
-final categoryProvider = FutureProvider<List<CategoryEntity>>((ref) async {
+final categoryProvider = FutureProvider.autoDispose<List<CategoryEntity>>((ref) async {
   try {
-    final quizRespository= QuizRespository.create();
-    final  listCategory=await quizRespository.fetchCategories();
+    final quizRepository= QuizRepository.create();
+    final  listCategory=await quizRepository.fetchCategories();
     return listCategory;
   } catch (e) {
     throw Exception('Failed to fetch categories: $e');
   }
 });
 
-final iconCategoryProvider = Provider<Map<int,String>>((ref) {
+final iconCategoryProvider = Provider.autoDispose<Map<int,String>>((ref) {
   return {
     9 : 'assets/icons/brain.png',
     10 : 'assets/icons/book.png',

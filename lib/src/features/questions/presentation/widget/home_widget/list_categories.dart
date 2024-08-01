@@ -11,7 +11,9 @@ class ListCategories extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
      final categories= ref.watch(categoryFilterProvider);
+
        return Scaffold(
          body: ListView.builder(
              itemCount: categories.length,
