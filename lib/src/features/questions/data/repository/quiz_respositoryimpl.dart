@@ -15,20 +15,23 @@ class QuizRepositoryImpl implements QuizRepository {
   //  fetch question
   @override
   Future<List<QuestionEntity>> fetchQuestions(
+
       int amount, int idCategory, String? difficulty, String? type) async {
     try {
+
       final questionsResponse = await remoteDataSource.getQuestions(
           amount, idCategory, difficulty, type);
+
       if (questionsResponse.isNotEmpty) {
         final listQuestions = questionsResponse
             .map((e) => QuestionEntity.fromQuestionModel(e))
             .toList();
-        // for (final question in listQuestions) {
-        //   question.answers;
-        // }
+
         return listQuestions;
       } else {
+
         return List.empty(growable: true);
+
       }
     } catch (err) {
       return Future.error(err);
@@ -39,15 +42,22 @@ class QuizRepositoryImpl implements QuizRepository {
   @override
   Future<List<CategoryEntity>> fetchCategories() async {
     try {
+
       final categoriesLocal = await localDataSource.getCategories();
+
       if (categoriesLocal.isNotEmpty) {
+
         final dataCategories = categoriesLocal
             .map((e) => CategoryEntity.fromCategoryLocal(e))
             .toList();
+
         return dataCategories;
+
       } else {
+
         final dataCategories = await _fetchAndSaveCategories();
         return dataCategories;
+
       }
     } catch (err) {
       return Future.error(err);
@@ -57,21 +67,30 @@ class QuizRepositoryImpl implements QuizRepository {
   //  get categories local or api
   Future<List<CategoryEntity>> _fetchAndSaveCategories() async {
     try {
+
       final categories = await remoteDataSource.getCategories();
+
       if (categories.isNotEmpty) {
+
         final listCategories = categories
             .map((e) => CategoryEntity.fromCategoryResponse(e))
             .toList();
+
         final categoryLocal = listCategories
             .map((e) => CategoryLocal(
                 idCategory: e.id,
                 nameCategory: e.nameCategory,
                 filterCategory: e.filterCategory))
             .toList();
+
         await localDataSource.saveCategory(categoryLocal);
+
         return listCategories;
+
       } else {
+
         return List.empty(growable: true);
+
       }
     } catch (err) {
       return Future.error(err);
@@ -82,6 +101,7 @@ class QuizRepositoryImpl implements QuizRepository {
   @override
   Future<void> saveResultQuiz(ResultEntity resultEntity) async {
     try {
+
       final resultLocal = ResultLocal(
           idResult: resultEntity.id,
           total: resultEntity.total,
@@ -89,7 +109,9 @@ class QuizRepositoryImpl implements QuizRepository {
           correct: resultEntity.correct,
           wrong: resultEntity.wrong,
           coin: resultEntity.coin);
+
       await localDataSource.saveResultQuiz(resultLocal);
+
     } catch (err) {
       return Future.error(err);
     }
@@ -99,6 +121,7 @@ class QuizRepositoryImpl implements QuizRepository {
   @override
   Future<void> toggleSaveQuestion(QuestionEntity questionEntity, int idCategory,
       String nameCategory) async {
+
     final questionLocal = QuestionLocal(
       idQuestion: questionEntity.id,
       idCategory: idCategory,
@@ -132,10 +155,13 @@ class QuizRepositoryImpl implements QuizRepository {
 //  watch  categories have question
   @override
   Stream<List<CategoryEntity>> watchCategoryLocal() {
+
     return localDataSource.watchCategories().map((listCategoryLocal) {
+
       final categoriesLocalHaveQuestion = listCategoryLocal
           .where((category) => category.questions.isNotEmpty)
           .toList();
+
       return categoriesLocalHaveQuestion
           .map((e) => CategoryEntity.fromCategoryLocal(e))
           .toList();
@@ -145,6 +171,7 @@ class QuizRepositoryImpl implements QuizRepository {
 //   watch questionLocal
   @override
   Stream<List<QuestionEntity>>  watchQuestionLocal(int idCategory) {
+
     return localDataSource.watchQuestionLocal(idCategory).map((listQuestionLocal) {
       return listQuestionLocal.map((e) => QuestionEntity.fromQuestionLocal(e)).toList();
     });
@@ -155,7 +182,9 @@ class QuizRepositoryImpl implements QuizRepository {
   @override
   Future<void> deleteQuestion(String idQuestion,int idCategory) async {
     try {
+
       await localDataSource.deleteQuestion(idQuestion,idCategory);
+
     } catch (err) {
       return Future.error(err);
     }

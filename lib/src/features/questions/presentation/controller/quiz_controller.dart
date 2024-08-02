@@ -18,6 +18,7 @@ class QuestionApiNotifier
 
   Future<List<QuestionEntity>> _initQuestionsData(
       int amount, int idCategory, String? difficulty, String? type) async {
+
     try {
       final questionsData = await quizRepository.fetchQuestions(
         amount,
@@ -25,6 +26,7 @@ class QuestionApiNotifier
         difficulty,
         type,
       );
+
       return questionsData;
     } catch (err) {
       return List.empty(growable: true);
@@ -36,8 +38,10 @@ class QuestionApiNotifier
 
     final parameter = ref.watch(parameterProvider);
     try {
+
       listQuestion = await _initQuestionsData(parameter['amount'],
           parameter['idCategory'], parameter['difficulty'], parameter['type']);
+
       return listQuestion;
     } catch (e, stackTr) {
       return List.empty(growable: true);

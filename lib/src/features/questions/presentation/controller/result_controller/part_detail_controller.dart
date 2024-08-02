@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final iconPartDetailProvider = Provider.autoDispose<Map<String, IconData>>((ref) {
+
   return {
     'Completion': Icons.percent,
     'Total':  Icons.list,

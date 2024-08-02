@@ -42,7 +42,9 @@ class CategoriesLoveNotifier
 
       mapQuestion.remove(question.id);
       ref.read(amountPickProvider.notifier).state--;
+
     } else {
+
       mapQuestion[question.id] =question;
       ref.read(amountPickProvider.notifier).state++;
     }

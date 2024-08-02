@@ -15,6 +15,7 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
   List<QuestionEntity> listQuestion = List<QuestionEntity>.empty(growable: true);
 
   final _userRepository =UserRepository.create();
+
   final  _quizRepository = QuizRepository.create();
 
   @override
@@ -24,11 +25,14 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
   Future<QuestionEntity?> _initQuestion() async {
     try {
+
       final question = await ref.watch(listQuestionProvider.future);
       listQuestion =question;
       currentQuestionIndex = 0;
       final initQuestion = listQuestion.firstOrNull;
+
       return initQuestion;
+
     } catch (err, stackTr) {
       return Future.error(err, stackTr);
     }
@@ -36,26 +40,35 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
   // update question when next
   Future<void> nextQuestion() async {
+
     if (currentQuestionIndex < listQuestion.length) {
+
       final nextQuestion = listQuestion[++currentQuestionIndex];
       ref.read(currentIdSelectedProvider.notifier).state = nextQuestion.id;
+
       state = AsyncValue.data(nextQuestion);
     }
   }
 
   // update question when back
   Future<void> backQuestion() async {
+
     if (currentQuestionIndex > 0) {
+
       final backQuestion = listQuestion[--currentQuestionIndex];
       ref.read(currentIdSelectedProvider.notifier).state = backQuestion.id;
+
       state = AsyncValue.data(backQuestion);
     }
   }
 
   //  update question by click identifier
   Future<void> updateQuestionByIdentifier(String id) async {
+
     for (final question in listQuestion) {
+
       if (question.id == id) {
+
         state = AsyncValue.data(question);
         break;
       }
@@ -70,8 +83,11 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
     if (questionCurrent.answerUser != null &&
         questionCurrent.answerUser == answer) {
+
       questionCurrent.answerUser = null;
+
     } else {
+
       questionCurrent.answerUser = answer;
     }
     state = AsyncValue.data(questionCurrent);
@@ -79,14 +95,19 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
   // check button next or back or submit
   String checkButton() {
+
     for (int index = 0; index < listQuestion.length; index++) {
+
       if (listQuestion[index] == state.value) {
+
         if (index == 0) {
           return 'notBack';
         }
+
         if (index == listQuestion.length - 1) {
           return 'notNext';
         }
+
       }
     }
     return 'submit';
@@ -94,21 +115,27 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
   //  check answered all or not
   bool checkAnsweredAll() {
+
     for (final question in listQuestion) {
+
       if (question.answerUser == null) {
         return false;
       }
     }
+
     return true;
   }
 
   //  play again
   Future<void> playAgainQuiz() async {
+
     currentQuestionIndex=0;
     await _userRepository.subtractionCoin(3);
+
     for(final question in listQuestion){
       question.answerUser = null;
     }
+
     state=AsyncValue.data(listQuestion.first);
   }
 
@@ -118,21 +145,26 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
     final random =Random();
     //  update coin
     await _userRepository.subtractionCoin(1.0);
+
     while(questionEntity.shuffleAnswer!.length > 2){
+
       final index = random.nextInt(3);
       if(questionEntity.correctAnswer != questionEntity.shuffleAnswer![index]){
+
         questionEntity.shuffleAnswer!.removeAt(index);
       }
     }
+
    state=AsyncValue.data(questionEntity);
   }
 
 // save or not question
  Future<void>  saveOrNotQuestion(QuestionEntity questionEntity) async{
-    // final map =ref.read(questionApiProvider.notifier).getMap();
+
     final id =ref.watch(idCategoryProvider);
     final nameCategory=ref.watch(nameCategoryProvider);
     _quizRepository.toggleSaveQuestion(questionEntity,id,nameCategory);
+
  }
 
 //   get list question
