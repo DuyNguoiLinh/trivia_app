@@ -1,3 +1,4 @@
+import 'package:trivia_app_with_flutter/src/features/user/domain/entity/coin_history_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/user_entity.dart';
 import '../../domain/repository/user_repository.dart';
 import '../sources/user_local_data_source.dart';
@@ -72,6 +73,39 @@ class UserRepositoryImpl implements UserRepository {
       return Future.error(err);
     }
   }
+
+  @override
+  Stream<List<CoinHistoryEntity>>  watchCoinHistoryLocal(int pageIndex)  {
+
+    return localDataSource.watchCoinHistoryInThirtyDays(pageIndex).map((listCoinHistory) {
+
+      return listCoinHistory.map((e) => CoinHistoryEntity.fromLocal(e)).toList();
+
+    });
+ }
+
+  @override
+  Future<List<CoinHistoryEntity>> getCoinHistories(int pageIndex) async{
+    try {
+
+      final coinHistoriesLocal = await localDataSource.getCoinHistories(pageIndex);
+      final coinHistories = coinHistoriesLocal.map((e) => CoinHistoryEntity.fromLocal(e)).toList();
+      return coinHistories;
+
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+  // delete CoinHistory
+  @override
+  Future<void> deleteCoinHistory(int id) async{
+    try {
+       await localDataSource.deleteCoinHistory(id);
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
 
 }
 

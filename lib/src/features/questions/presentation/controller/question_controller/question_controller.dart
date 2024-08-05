@@ -149,21 +149,24 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
     while(questionEntity.shuffleAnswer!.length > 2){
 
       final index = random.nextInt(3);
+
       if(questionEntity.correctAnswer != questionEntity.shuffleAnswer![index]){
 
         questionEntity.shuffleAnswer!.removeAt(index);
       }
     }
-
    state=AsyncValue.data(questionEntity);
   }
+
 
 // save or not question
  Future<void>  saveOrNotQuestion(QuestionEntity questionEntity) async{
 
     final id =ref.watch(idCategoryProvider);
+
     final nameCategory=ref.watch(nameCategoryProvider);
-    _quizRepository.toggleSaveQuestion(questionEntity,id,nameCategory);
+
+   await _quizRepository.toggleSaveQuestion(questionEntity,id,nameCategory);
 
  }
 

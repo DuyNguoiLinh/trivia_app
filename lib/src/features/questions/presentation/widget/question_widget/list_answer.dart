@@ -16,7 +16,9 @@ class ListAnswer extends ConsumerWidget{
 
     final isSave =ref.watch(isSaveProvider(questionEntity.id));
      final indexTypeSource =ref.watch(typeSourceProvider);
+
     if(questionEntity.shuffleAnswer != null){
+
       return Column(
           children: [
             SizedBox(
@@ -33,6 +35,7 @@ class ListAnswer extends ConsumerWidget{
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 if(questionEntity.shuffleAnswer!.length >2)
+                  if(indexTypeSource == 0)
                 TextButton(
                   onPressed: () {
 
@@ -100,7 +103,6 @@ class ListAnswer extends ConsumerWidget{
                 if(indexTypeSource == 0)
 
                 IconButton(
-                  color: Colors.red,
                     icon : SizedBox(
                       width: 30,
                       height: 30,
@@ -108,6 +110,7 @@ class ListAnswer extends ConsumerWidget{
                     ),
 
                   onPressed: () {
+
                       // save question or not
                       ref.read(questionProvider.notifier).saveOrNotQuestion(questionEntity);
                       ref.read(isSaveProvider(questionEntity.id).notifier).state=!isSave;

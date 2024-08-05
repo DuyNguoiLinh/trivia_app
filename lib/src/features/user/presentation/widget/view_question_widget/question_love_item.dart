@@ -14,14 +14,18 @@ class QuestionLoveItem extends ConsumerWidget {
     final isPick =ref.watch(isPickProvider(questionEntity.id));
 
     return Container(
+
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+
       child: OutlinedButton(
+
         onPressed: () {
 
           ref.read(isPickProvider(questionEntity.id).notifier).state= !isPick;
           ref.read(listCategoryLoveProvider.notifier).pickQuestion(questionEntity);
 
         },
+
         style: OutlinedButton.styleFrom(
           backgroundColor: isPick ? Colors.blueAccent : Colors.white.withOpacity(1),
           side: BorderSide(color: Colors.grey.shade300),

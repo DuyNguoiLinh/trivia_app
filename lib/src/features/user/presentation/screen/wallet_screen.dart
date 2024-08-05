@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/widget/wallet_widget/filter_history.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/widget/wallet_widget/list_category_has_question.dart';
+import 'package:trivia_app_with_flutter/src/features/user/presentation/widget/wallet_widget/list_coin_history.dart';
 
 import '../controller/filter_controller.dart';
 
@@ -57,8 +58,14 @@ class WalletScreen extends ConsumerWidget {
                   color: Colors.white54,
                 ),
                 const SizedBox(height: 10,),
-                if(index==1)
-                const Expanded(child: ListCategoryHasQuestion()),
+
+                if(index==0)
+
+                const Expanded(child: ListCoinHistory()),
+
+                if(index == 1)
+
+                  const Expanded(child: ListCategoryHasQuestion()),
           ]),
         ));
   }

@@ -14,7 +14,8 @@ class SubmitButton extends ConsumerWidget {
       onPressed: () {
 
         if (answeredAll) {
-          Navigator.pushReplacement(
+
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const ResultScreen()),
           );

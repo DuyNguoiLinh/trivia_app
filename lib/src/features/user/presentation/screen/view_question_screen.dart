@@ -98,6 +98,7 @@ class ViewQuestionScreen extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () {
+              print(amountPick);
               if(amountPick >= 5){
                 ref.read(typeSourceProvider.notifier).state=1;
                 Navigator.pushReplacement(

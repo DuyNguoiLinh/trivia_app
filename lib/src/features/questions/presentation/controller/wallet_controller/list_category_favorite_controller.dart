@@ -27,8 +27,10 @@ class CategoriesLoveNotifier
 
     _subscription = quizRepository.watchCategoryLocal().listen(
             (categories) {
-          //     sort
-          state = AsyncValue.data(categories);
+
+              categories.sort((a, b) => b.listQuestion!.length.compareTo(a.listQuestion!.length));
+
+              state = AsyncValue.data(categories);
         }, onError: (err,stackTr){
       state= AsyncValue.error(err,stackTr);
     }

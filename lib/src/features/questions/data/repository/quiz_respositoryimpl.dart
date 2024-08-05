@@ -131,6 +131,7 @@ class QuizRepositoryImpl implements QuizRepository {
       incorrectAnswers: questionEntity.incorrectAnswers,
       shuffleAnswer: questionEntity.shuffleAnswer!,
     );
+
     await localDataSource.toggleSaveQuestion(questionLocal);
   }
 
@@ -165,6 +166,7 @@ class QuizRepositoryImpl implements QuizRepository {
       return categoriesLocalHaveQuestion
           .map((e) => CategoryEntity.fromCategoryLocal(e))
           .toList();
+
     });
   }
 

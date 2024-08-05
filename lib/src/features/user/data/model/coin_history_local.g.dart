@@ -30,7 +30,7 @@ const CoinHistoryLocalSchema = CollectionSchema(
     r'timestamp': PropertySchema(
       id: 2,
       name: r'timestamp',
-      type: IsarType.string,
+      type: IsarType.dateTime,
     ),
     r'type': PropertySchema(
       id: 3,
@@ -58,7 +58,6 @@ int _coinHistoryLocalEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.timestamp.length * 3;
   bytesCount += 3 + object.type.length * 3;
   return bytesCount;
 }
@@ -71,7 +70,7 @@ void _coinHistoryLocalSerialize(
 ) {
   writer.writeDouble(offsets[0], object.amountEarnCoin);
   writer.writeDouble(offsets[1], object.oldAmount);
-  writer.writeString(offsets[2], object.timestamp);
+  writer.writeDateTime(offsets[2], object.timestamp);
   writer.writeString(offsets[3], object.type);
 }
 
@@ -84,7 +83,7 @@ CoinHistoryLocal _coinHistoryLocalDeserialize(
   final object = CoinHistoryLocal(
     amountEarnCoin: reader.readDouble(offsets[0]),
     oldAmount: reader.readDouble(offsets[1]),
-    timestamp: reader.readString(offsets[2]),
+    timestamp: reader.readDateTime(offsets[2]),
     type: reader.readString(offsets[3]),
   );
   object.id = id;
@@ -103,7 +102,7 @@ P _coinHistoryLocalDeserializeProp<P>(
     case 1:
       return (reader.readDouble(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 3:
       return (reader.readString(offset)) as P;
     default:
@@ -394,58 +393,49 @@ extension CoinHistoryLocalQueryFilter
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      timestampEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      timestampEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'timestamp',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
       timestampGreaterThan(
-    String value, {
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'timestamp',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
       timestampLessThan(
-    String value, {
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'timestamp',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
       timestampBetween(
-    String lower,
-    String upper, {
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -454,77 +444,6 @@ extension CoinHistoryLocalQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      timestampStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'timestamp',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      timestampEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'timestamp',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      timestampContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'timestamp',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      timestampMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'timestamp',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      timestampIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'timestamp',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      timestampIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'timestamp',
-        value: '',
       ));
     });
   }
@@ -818,9 +737,9 @@ extension CoinHistoryLocalQueryWhereDistinct
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QDistinct>
-      distinctByTimestamp({bool caseSensitive = true}) {
+      distinctByTimestamp() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'timestamp', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'timestamp');
     });
   }
 
@@ -853,7 +772,8 @@ extension CoinHistoryLocalQueryProperty
     });
   }
 
-  QueryBuilder<CoinHistoryLocal, String, QQueryOperations> timestampProperty() {
+  QueryBuilder<CoinHistoryLocal, DateTime, QQueryOperations>
+      timestampProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'timestamp');
     });

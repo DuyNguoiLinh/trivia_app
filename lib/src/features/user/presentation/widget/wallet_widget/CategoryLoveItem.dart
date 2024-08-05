@@ -5,7 +5,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/que
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/question_favorite_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/view_question_screen.dart';
 import '../../../../questions/presentation/controller/home_controller/category_controller.dart';
-import '../../../../questions/presentation/controller/wallet_controller/list_category_favorite_controller.dart';
+
 
 class CategoryLoveItem extends ConsumerWidget{
   const CategoryLoveItem({super.key,required this.categoryEntity,});
@@ -22,7 +22,8 @@ class CategoryLoveItem extends ConsumerWidget{
     final mapIcon=ref.watch(iconCategoryProvider);
     final iconCategory= mapIcon[categoryEntity.id] ?? "assets/icons/book.png";
 
-    return Padding(
+    if(listQuestion.isNotEmpty) {
+      return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
       child: OutlinedButton(
           style: OutlinedButton.styleFrom(
@@ -94,6 +95,9 @@ class CategoryLoveItem extends ConsumerWidget{
           )
       ),
     );
+    } else {
+      return Container();
+    }
 
   }
 

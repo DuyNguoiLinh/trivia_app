@@ -45,7 +45,7 @@ class SetNameScreen extends ConsumerWidget {
                 TextButton(
                   onPressed: () {
 
-                    if(_textController.text != infoUser.userName){
+                    if(_textController.text != infoUser.userName && _textController.text.isNotEmpty){
                       ref.read(userProvider.notifier).changeUserName(_textController.text);
                       Navigator.pop(context);
                     }
