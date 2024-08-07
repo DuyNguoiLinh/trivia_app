@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/coin_history_local.dart';
@@ -190,11 +189,11 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
         .filter()
         .timestampGreaterThan(thirtyAgo)
         .sortByTimestampDesc()
+        .offset(offset)
+        .limit(5)
         .build();
 
-    yield* histories.watch(fireImmediately: true).map((listHistory) {
-      return listHistory.skip(offset).take(5).toList();
-    });
+    yield* histories.watch(fireImmediately: true);
   }
 
   // get coinHistories by pageIndex
@@ -207,13 +206,18 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
       final int offset = pageIndex * 5;
 
-      final listHistory = await isar.coinHistoryLocals
-          .filter()
-          .timestampGreaterThan(thirtyAgo)
+      final pageHistories = await isar.coinHistoryLocals
+          .where()
           .sortByTimestampDesc()
+          .offset(offset)
+          .limit(5)
           .findAll();
+      // .filter()
+      // .timestampGreaterThan(thirtyAgo)
+      // .sortByTimestampDesc()
+      // .findAll();
 
-      final pageHistories = listHistory.skip(offset).take(5).toList();
+      // final pageHistories = listHistory.skip(offset).take(5).toList();
 
       return pageHistories;
     } catch (err) {

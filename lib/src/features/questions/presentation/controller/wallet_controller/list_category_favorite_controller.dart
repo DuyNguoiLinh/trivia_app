@@ -38,7 +38,7 @@ class CategoriesLoveNotifier
 
     return listCategoryLove;
   }
-
+  // pick question
   Future<void> pickQuestion(QuestionEntity question) async {
     if(mapQuestion.containsKey(question.id)){
 
@@ -52,7 +52,11 @@ class CategoriesLoveNotifier
     }
     print(mapQuestion.length);
   }
-
+  // toggle pick question
+  bool togglePick(String idQuestion) {
+    return mapQuestion.containsKey(idQuestion);
+  }
+  // get list question
   List<QuestionEntity> getListQuestion() {
     return mapQuestion.values.toList();
   }

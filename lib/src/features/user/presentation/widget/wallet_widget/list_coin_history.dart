@@ -10,9 +10,9 @@ class ListCoinHistory extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final pageIndex = ref.watch(pageIndexProvider);
+    final pageIndex = ref.read(coinHistoryProvider.notifier).indexByPage();
 
-    final asyncCoinHistories = ref.watch(coinHistoryProvider(pageIndex));
+    final asyncCoinHistories = ref.watch(coinHistoryProvider);
 
     final listCoinHistory = asyncCoinHistories.maybeMap(
         data: (data) => data.value,
@@ -40,7 +40,8 @@ class ListCoinHistory extends ConsumerWidget {
               IconButton(
                 icon: const Icon(Icons.arrow_back_ios_new),
                 onPressed: () {
-                  ref.read(pageIndexProvider.notifier).state--;
+                  // ref.read(pageIndexProvider.notifier).state--;
+                  ref.read(coinHistoryProvider.notifier).backPage();
                 },
               ),
 
@@ -53,14 +54,16 @@ class ListCoinHistory extends ConsumerWidget {
                 style: const TextStyle(fontSize: 22),
               ),
 
-              if(listCoinHistory.length == 5)
+              if(listCoinHistory.length == 5 )
 
               IconButton(
                 icon: const Icon(Icons.arrow_forward_ios_outlined),
                 onPressed: () {
-                  ref.read(pageIndexProvider.notifier).state++;
+
+                  ref.read(coinHistoryProvider.notifier).nextPage();
                 },
               ),
+
             ],
           ),
         ),

@@ -11,7 +11,8 @@ class QuestionLoveItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final isPick =ref.watch(isPickProvider(questionEntity.id));
+    // final isPick =ref.watch(isPickProvider(questionEntity.id));
+    final isPick = ref.read(listCategoryLoveProvider.notifier).togglePick(questionEntity.id);
 
     return Container(
 
@@ -21,7 +22,7 @@ class QuestionLoveItem extends ConsumerWidget {
 
         onPressed: () {
 
-          ref.read(isPickProvider(questionEntity.id).notifier).state= !isPick;
+          // ref.read(isPickProvider(questionEntity.id).notifier).state= !isPick;
           ref.read(listCategoryLoveProvider.notifier).pickQuestion(questionEntity);
 
         },
@@ -61,4 +62,4 @@ class QuestionLoveItem extends ConsumerWidget {
     );
   }
 }
-final isPickProvider =StateProvider.family<bool,String>( (ref,id) => false);
+// final isPickProvider =StateProvider.family<bool,String>( (ref,id) => false);

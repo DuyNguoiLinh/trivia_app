@@ -78,7 +78,7 @@ class CoinHistoryItem extends ConsumerWidget {
         IconButton(
           icon: const Icon(Icons.delete),
           onPressed: () {
-            ref.read(coinHistoryProvider(pageIndex).notifier).deleteCoinHistory(coinHistoryEntity.id);
+            ref.read(coinHistoryProvider.notifier).deleteCoinHistory(coinHistoryEntity.id);
           },
           color: Colors.black54,
           iconSize: 30.0,
