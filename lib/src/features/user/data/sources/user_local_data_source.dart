@@ -21,7 +21,7 @@ abstract class  UserLocalDataSource{
 
   Stream<List<CoinHistoryLocal>> watchCoinHistoryInThirtyDays(int pageIndex);
 
-  Future<List<CoinHistoryLocal>> getCoinHistories(int pageIndex);
+  Future<List<CoinHistoryLocal>> getCoinHistories(int pageIndex,int pageSize);
 
   Future<void> deleteCoinHistory(int id);
 

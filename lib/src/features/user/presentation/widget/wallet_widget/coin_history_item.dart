@@ -5,9 +5,10 @@ import 'package:trivia_app_with_flutter/src/features/user/domain/entity/coin_his
 import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/coin_history_controller.dart';
 
 class CoinHistoryItem extends ConsumerWidget {
-  const CoinHistoryItem({super.key, required this.coinHistoryEntity});
+  const CoinHistoryItem({super.key, required this.coinHistoryEntity,required this.onPressed});
 
   final CoinHistoryEntity coinHistoryEntity;
+ final  VoidCallback onPressed;
 
   // parse datetime -> String
   String formatDate(DateTime dateTime) {
@@ -21,7 +22,7 @@ class CoinHistoryItem extends ConsumerWidget {
     final pageIndex = ref.watch(pageIndexProvider);
 
     return Container(
-      height: 56,
+      height: 100,
       decoration: BoxDecoration(
         color: coinHistoryEntity.type == 'fee' ? Colors.red.withOpacity(0.8) : Colors.green,
         borderRadius: BorderRadius.circular(20),
@@ -78,7 +79,7 @@ class CoinHistoryItem extends ConsumerWidget {
         IconButton(
           icon: const Icon(Icons.delete),
           onPressed: () {
-            ref.read(coinHistoryProvider.notifier).deleteCoinHistory(coinHistoryEntity.id);
+            onPressed();
           },
           color: Colors.black54,
           iconSize: 30.0,

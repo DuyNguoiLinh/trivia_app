@@ -10,67 +10,45 @@ final pageIndexProvider =StateProvider<int>((ref) => 0);
 class CoinHistoryNotifier
     extends AutoDisposeAsyncNotifier<List<CoinHistoryEntity>> {
 
-  int pageIndex=0;
-  List<CoinHistoryEntity> listCoinHistory = List<CoinHistoryEntity>.empty(
-      growable: true);
 
-  final userRepository = UserRepository.create();
+  // List<CoinHistoryEntity> listCoinHistory = List<CoinHistoryEntity>.empty(
+  //     growable: true);
+  final int pageSize = 10 ;
+  final _userRepository = UserRepository.create();
 
-  StreamSubscription<List<CoinHistoryEntity>>? _subscription;
+
 
   @override
   FutureOr<List<CoinHistoryEntity>> build() async {
-    listCoinHistory = await userRepository.getCoinHistories(pageIndex);
-    // ref.onDispose(() {
-    //   _subscription?.cancel();
-    // },);
-    //
-    // _subscription = userRepository.watchCoinHistoryLocal(pageIndex).listen(
-    //         (histories) {
-    //           histories.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    //       state = AsyncValue.data(histories);
-    //     }, onError: (err,stackTr){
-    //     state= AsyncValue.error(err,stackTr);
-    // }
-    // );
-
-    return listCoinHistory;
-  }
-  // next page
-  Future<void> nextPage()  async{
-
-     state=const AsyncValue.loading();
-     listCoinHistory=await userRepository.getCoinHistories(++pageIndex);
-     state=AsyncValue.data(listCoinHistory);
+    return [];
   }
 
-  // back page
-  Future<void> backPage()  async{
 
-    state=const AsyncValue.loading();
-    listCoinHistory=await userRepository.getCoinHistories(--pageIndex);
-    state=AsyncValue.data(listCoinHistory);
-  }
-  // get  page index
-  int indexByPage() {
-    return pageIndex;
-  }
-
-  // delete coin history by Id
-  Future<void> deleteCoinHistory(int id) async{
-    try{
-
-      await userRepository.deleteCoinHistory(id);
-      listCoinHistory=await userRepository.getCoinHistories(pageIndex);
-      // listCoinHistory.removeWhere((e) => e.id == id);
-      state=AsyncValue.data(listCoinHistory);
-
-    } catch (err,stackTr){
-      return Future.error(err, stackTr);
+  Future<void> fetchPage(int pageIndex) async {
+    try {
+        await Future.delayed(const Duration(seconds: 2));
+        final listCoinHistory = await _userRepository.getCoinHistories(pageIndex,pageSize);
+        final currentList = state.value ?? [];
+        state=AsyncValue.data([...currentList, ...listCoinHistory]);
+    } catch (err,stackTr) {
+      state=AsyncValue.error(err,stackTr);
     }
   }
-}
+
+
+  // delete coin history by Id
+  Future<void> deleteCoinHistory(int id,) async {
+    try {
+       await _userRepository.deleteCoinHistory(id);
+       final currentList = state.value ?? [];
+       currentList.removeWhere((e) => e.id == id) ;
+       state = AsyncValue.data([...currentList]);
+    } catch (err, stackTr) {
+      state = AsyncValue.error(err, stackTr);
+    }
+  }
+  }
+
 
 final coinHistoryProvider = AsyncNotifierProvider.autoDispose<
     CoinHistoryNotifier,List<CoinHistoryEntity>>(() => CoinHistoryNotifier());
-

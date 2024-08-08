@@ -198,26 +198,19 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   // get coinHistories by pageIndex
   @override
-  Future<List<CoinHistoryLocal>> getCoinHistories(int pageIndex) async {
+  Future<List<CoinHistoryLocal>> getCoinHistories(int pageIndex, int pageSize) async {
     try {
       final isar = await db;
-
+     final offset = pageIndex*pageSize;
       final thirtyAgo = DateTime.now().subtract(const Duration(days: 30));
 
-      final int offset = pageIndex * 5;
 
       final pageHistories = await isar.coinHistoryLocals
           .where()
           .sortByTimestampDesc()
           .offset(offset)
-          .limit(5)
+          .limit(pageSize)
           .findAll();
-      // .filter()
-      // .timestampGreaterThan(thirtyAgo)
-      // .sortByTimestampDesc()
-      // .findAll();
-
-      // final pageHistories = listHistory.skip(offset).take(5).toList();
 
       return pageHistories;
     } catch (err) {

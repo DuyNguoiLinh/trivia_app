@@ -22,7 +22,7 @@ abstract class UserRepository{
 
   Stream<List<CoinHistoryEntity>>  watchCoinHistoryLocal(int pageIndex);
 
-  Future<List<CoinHistoryEntity>> getCoinHistories(int pageIndex);
+  Future<List<CoinHistoryEntity>> getCoinHistories(int pageIndex,int pageSize);
 
   Future<void> deleteCoinHistory(int id);
 

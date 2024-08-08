@@ -85,10 +85,10 @@ class UserRepositoryImpl implements UserRepository {
  }
 
   @override
-  Future<List<CoinHistoryEntity>> getCoinHistories(int pageIndex) async{
+  Future<List<CoinHistoryEntity>> getCoinHistories(int pageIndex, int pageSize) async{
     try {
 
-      final coinHistoriesLocal = await localDataSource.getCoinHistories(pageIndex);
+      final coinHistoriesLocal = await localDataSource.getCoinHistories(pageIndex,pageSize);
       final coinHistories = coinHistoriesLocal.map((e) => CoinHistoryEntity.fromLocal(e)).toList();
       return coinHistories;
 
