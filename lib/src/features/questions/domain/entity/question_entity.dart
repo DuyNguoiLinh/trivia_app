@@ -47,4 +47,6 @@ class QuestionEntity {
       shuffleAnswer: questionLocal.shuffleAnswer,
     );
   }
+
+
 }

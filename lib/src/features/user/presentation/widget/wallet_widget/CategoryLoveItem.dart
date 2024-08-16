@@ -96,7 +96,7 @@ class CategoryLoveItem extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ViewQuestionScreen()),
+                          builder: (context) => const ViewQuestionScreen()),
                     );
                   },
                   icon: const Icon(Icons.visibility),

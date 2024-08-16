@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/app_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/set_name_screen.dart';
 
 class DrawSetting extends ConsumerWidget {
@@ -30,8 +31,21 @@ class DrawSetting extends ConsumerWidget {
             },
           ),
           ListTile(
-            title: const Text('Item 2'),
+            title: const Text('Sign Out'),
             onTap: () {
+              ref.read(appProvider.notifier).signOut();
+            },
+          ),
+          ListTile(
+            title: const Text('Google account connect'),
+            onTap: () {
+              ref.read(appProvider.notifier).linkGoogleAccount();
+            },
+          ),
+          ListTile(
+            title: const Text('Delete account'),
+            onTap: () {
+              ref.read(appProvider.notifier).deleteAccount();
             },
           ),
         ],

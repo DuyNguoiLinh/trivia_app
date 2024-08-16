@@ -11,11 +11,13 @@ class ListCategory extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
      final categories= ref.watch(categoryFilterProvider);
-
+     if(categories.isEmpty){
+       return const Center(child: CircularProgressIndicator(),);
+     } else {
        return Scaffold(
          body: ListView.builder(
              itemCount: categories.length,
-             itemBuilder:(context,index) {
+             itemBuilder: (context, index) {
                return Padding(
                    padding: const EdgeInsets.symmetric(vertical: 10),
                    child: CategoryItem(categoryEntity: categories[index],)
@@ -23,6 +25,7 @@ class ListCategory extends ConsumerWidget {
              }
          ),
        );
+     }
   }
 
 }

@@ -105,7 +105,7 @@ class QuizRemoteDataSourceImpl implements QuizRemoteDataSource {
   Future<List<CategoryResponse>> getCategories() async{
     try{
        final response = await _dio.get('https://opentdb.com/api_category.php');
-       final categoriesResponse=CategoriesResponse.fromJson(response.data);
+       final categoriesResponse = CategoriesResponse.fromJson(response.data);
        return categoriesResponse.triviaCategories;
     } on DioException catch (e) {
       return Future.error(Exception(e));

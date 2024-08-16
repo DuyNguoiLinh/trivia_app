@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/bottom_navigationbar.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/user_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/Ranking_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/wallet_screen.dart';
 import '../widget/home_widget/draw_setting.dart';
 import '../widget/home_widget/home.dart';
@@ -11,30 +12,34 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     // get info user into local
-    final asyncUser =ref.watch(userProvider);
-    final userInfo =asyncUser.valueOrNull;
-    final index =ref.watch(isSelect);
+
+    final asyncUser = ref.watch(userProvider);
+    final userInfo = asyncUser.valueOrNull;
+    final index = ref.watch(isSelect);
 
     Widget body;
     switch (index) {
       case 1:
         body = const WalletScreen();
         break;
+      case 2:
+        body= const RankingScreen();
+        break;
       case 0:
       default:
         body = const Home();
         break;
     }
-    if(userInfo != null){
+    if (userInfo != null) {
       return Scaffold(
         appBar: AppBar(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(userInfo.coin.toString(),
-                style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    fontSize: 40, fontWeight: FontWeight.bold),
               ),
               const SizedBox(width: 8,),
               Image.asset(
@@ -58,7 +63,6 @@ class HomeScreen extends ConsumerWidget {
         drawer: const DrawSetting(),
         body: body,
         bottomNavigationBar: const QuizBottomNavigationBar(),
-
       );
     } else {
       return const Center(child: CircularProgressIndicator());

@@ -22,10 +22,10 @@ const CoinHistoryLocalSchema = CollectionSchema(
       name: r'amountEarnCoin',
       type: IsarType.double,
     ),
-    r'oldAmount': PropertySchema(
+    r'idTransaction': PropertySchema(
       id: 1,
-      name: r'oldAmount',
-      type: IsarType.double,
+      name: r'idTransaction',
+      type: IsarType.string,
     ),
     r'timestamp': PropertySchema(
       id: 2,
@@ -58,6 +58,7 @@ int _coinHistoryLocalEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.idTransaction.length * 3;
   bytesCount += 3 + object.type.length * 3;
   return bytesCount;
 }
@@ -69,7 +70,7 @@ void _coinHistoryLocalSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDouble(offsets[0], object.amountEarnCoin);
-  writer.writeDouble(offsets[1], object.oldAmount);
+  writer.writeString(offsets[1], object.idTransaction);
   writer.writeDateTime(offsets[2], object.timestamp);
   writer.writeString(offsets[3], object.type);
 }
@@ -82,7 +83,7 @@ CoinHistoryLocal _coinHistoryLocalDeserialize(
 ) {
   final object = CoinHistoryLocal(
     amountEarnCoin: reader.readDouble(offsets[0]),
-    oldAmount: reader.readDouble(offsets[1]),
+    idTransaction: reader.readString(offsets[1]),
     timestamp: reader.readDateTime(offsets[2]),
     type: reader.readString(offsets[3]),
   );
@@ -100,7 +101,7 @@ P _coinHistoryLocalDeserializeProp<P>(
     case 0:
       return (reader.readDouble(offset)) as P;
     case 1:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
       return (reader.readDateTime(offset)) as P;
     case 3:
@@ -327,67 +328,137 @@ extension CoinHistoryLocalQueryFilter
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      oldAmountEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
+      idTransactionEqualTo(
+    String value, {
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'oldAmount',
+        property: r'idTransaction',
         value: value,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      oldAmountGreaterThan(
-    double value, {
+      idTransactionGreaterThan(
+    String value, {
     bool include = false,
-    double epsilon = Query.epsilon,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'oldAmount',
+        property: r'idTransaction',
         value: value,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      oldAmountLessThan(
-    double value, {
+      idTransactionLessThan(
+    String value, {
     bool include = false,
-    double epsilon = Query.epsilon,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'oldAmount',
+        property: r'idTransaction',
         value: value,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
-      oldAmountBetween(
-    double lower,
-    double upper, {
+      idTransactionBetween(
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    double epsilon = Query.epsilon,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'oldAmount',
+        property: r'idTransaction',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      idTransactionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'idTransaction',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      idTransactionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'idTransaction',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      idTransactionContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'idTransaction',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      idTransactionMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'idTransaction',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      idTransactionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'idTransaction',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      idTransactionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'idTransaction',
+        value: '',
       ));
     });
   }
@@ -608,16 +679,16 @@ extension CoinHistoryLocalQuerySortBy
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
-      sortByOldAmount() {
+      sortByIdTransaction() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'oldAmount', Sort.asc);
+      return query.addSortBy(r'idTransaction', Sort.asc);
     });
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
-      sortByOldAmountDesc() {
+      sortByIdTransactionDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'oldAmount', Sort.desc);
+      return query.addSortBy(r'idTransaction', Sort.desc);
     });
   }
 
@@ -679,16 +750,16 @@ extension CoinHistoryLocalQuerySortThenBy
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
-      thenByOldAmount() {
+      thenByIdTransaction() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'oldAmount', Sort.asc);
+      return query.addSortBy(r'idTransaction', Sort.asc);
     });
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
-      thenByOldAmountDesc() {
+      thenByIdTransactionDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'oldAmount', Sort.desc);
+      return query.addSortBy(r'idTransaction', Sort.desc);
     });
   }
 
@@ -730,9 +801,10 @@ extension CoinHistoryLocalQueryWhereDistinct
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QDistinct>
-      distinctByOldAmount() {
+      distinctByIdTransaction({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'oldAmount');
+      return query.addDistinctBy(r'idTransaction',
+          caseSensitive: caseSensitive);
     });
   }
 
@@ -766,9 +838,10 @@ extension CoinHistoryLocalQueryProperty
     });
   }
 
-  QueryBuilder<CoinHistoryLocal, double, QQueryOperations> oldAmountProperty() {
+  QueryBuilder<CoinHistoryLocal, String, QQueryOperations>
+      idTransactionProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'oldAmount');
+      return query.addPropertyName(r'idTransaction');
     });
   }
 

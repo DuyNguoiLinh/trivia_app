@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/repository/quiz_respository.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/view_question_screen.dart';
+import '../../../../user/presentation/controller/router_controller.dart';
 import '../../../domain/entity/question_entity.dart';
 
 class CategoriesLoveNotifier
@@ -16,10 +17,12 @@ class CategoriesLoveNotifier
 
   StreamSubscription<List<CategoryEntity>>? _subscription;
 
-
+ String _uid="";
   @override
   FutureOr<List<CategoryEntity>> build() async {
-    // listCategoryLove = await quizRepository.getCategoryHasQuestion();
+
+    final authState = ref.watch(authStateProvider);
+    _uid = authState.asData?.value?.uid ?? '';
 
     ref.onDispose(() {
       _subscription?.cancel();
@@ -64,12 +67,12 @@ class CategoriesLoveNotifier
 
   //  delete question by id
   Future<void> deleteQuestion(String idQuestion,int idCategory) async{
-     await quizRepository.deleteQuestion(idQuestion,idCategory);
+     await quizRepository.deleteQuestion(idQuestion,idCategory,_uid);
   }
 
   // delete all question
   Future<void> deleteAllQuestion(int idCategory) async{
-    await quizRepository.deleteAllQuestionByIdCategory(idCategory);
+    await quizRepository.deleteAllQuestionByIdCategory(idCategory,_uid);
   }
 
 }

@@ -1,5 +1,7 @@
 import 'package:isar/isar.dart';
 
+import '../../../../user/data/model/firebase_model/question_firestore_model.dart';
+
 part 'question_local.g.dart';
 @Collection()
 class QuestionLocal {
@@ -22,4 +24,17 @@ class QuestionLocal {
     required this.incorrectAnswers,
     required this.shuffleAnswer
   });
+
+  factory QuestionLocal.fromQuestionFirestore(QuestionFirestoreModel questionFirestore) {
+    return QuestionLocal(
+      idQuestion: questionFirestore.id,
+      idCategory: questionFirestore.idCategory,
+      nameCategory: questionFirestore.nameCategory,
+      question: questionFirestore.question,
+      correctAnswer: questionFirestore.correctAnswer,
+      incorrectAnswers: questionFirestore.incorrectAnswers,
+      shuffleAnswer: questionFirestore.shuffleAnswer,
+    );
+  }
+
 }

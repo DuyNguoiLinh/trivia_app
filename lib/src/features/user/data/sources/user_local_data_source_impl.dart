@@ -34,13 +34,19 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   // save user name
   @override
-  Future<void> saveUserName(String name) async {
+  Future<void> saveUserName(String name,double coin ,String uid) async {
     try {
+
       final isar = await db;
-      final infoUser = UserInfoLocal(userName: name);
-      await isar.writeTxn(() async {
-        isar.userInfoLocals.put(infoUser);
-      });
+      final user = await isar.userInfoLocals.filter().uidEqualTo(uid).isEmpty();
+
+      if (user) {
+        final infoUser = UserInfoLocal(userName: name,coin: coin, uid: uid);
+        await isar.writeTxn(() async {
+         await isar.userInfoLocals.put(infoUser);
+        });
+      }
+
     } catch (err) {
       return Future.error(Exception(err));
     }
@@ -48,10 +54,11 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   // change user name
   @override
-  Future<void> changeUserName(String name) async {
+  Future<void> changeUserName(String uid, String name) async {
     try {
       final isar = await db;
-      final infoUser = await isar.userInfoLocals.where().findFirst();
+      final infoUser =
+          await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
       if (infoUser != null) {
         infoUser.userName = name;
         await isar.writeTxn(() async {
@@ -65,11 +72,12 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   // get info
   @override
-  Future<UserInfoLocal> getUser() async {
+  Future<UserInfoLocal?> getUser(String uid) async {
     try {
       final isar = await db;
-      final userLocal = await isar.userInfoLocals.where().findAll();
-      return userLocal.first;
+      final userLocal =
+          await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
+      return userLocal;
     } catch (err) {
       return Future.error(Exception(err));
     }
@@ -77,9 +85,10 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   // update info user
   @override
-  Stream<List<UserInfoLocal>> getInfoUser() async* {
+  Stream<List<UserInfoLocal>> getInfoUser(String uid) async* {
     final isar = await db;
-    Query<UserInfoLocal> userLocal = isar.userInfoLocals.where().build();
+    Query<UserInfoLocal> userLocal =
+        isar.userInfoLocals.filter().uidEqualTo(uid).build();
     yield* userLocal.watch(fireImmediately: true);
   }
 
@@ -99,27 +108,23 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
 //   addition coin
   @override
-  Future<void> addCoin(double coin) async {
+  Future<void> addCoin(double coin, String uid,CoinHistoryLocal coinHistoryLocal) async {
     try {
       final isar = await db;
-      final userInfo = await isar.userInfoLocals.where().findFirst();
+      final userInfo =
+          await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
       if (userInfo == null) {
         return;
       }
 
-      final historyCoin = CoinHistoryLocal(
-          oldAmount: userInfo.coin,
-          amountEarnCoin: coin,
-          timestamp: DateTime.now(),
-          type: 'earn');
-
       userInfo.coin += coin;
-      userInfo.coinHistories.add(historyCoin);
+      userInfo.coinHistories.add(coinHistoryLocal);
 
       await isar.writeTxn(() async {
-        await isar.userInfoLocals.put(userInfo);
 
-        await isar.coinHistoryLocals.put(historyCoin);
+        await isar.coinHistoryLocals.put(coinHistoryLocal);
+
+        await isar.userInfoLocals.put(userInfo);
 
         await userInfo.coinHistories.save();
       });
@@ -130,31 +135,27 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   // subtraction coin
   @override
-  Future<void> subtractionCoin(double coin) async {
+  Future<void> subtractionCoin(double coin, String uid,CoinHistoryLocal coinHistoryLocal) async {
     try {
       final isar = await db;
-      final userInfo = await isar.userInfoLocals.where().findFirst();
+      final userInfo = await isar.userInfoLocals
+          .filter()
+          .uidEqualTo(uid)
+          .findFirst();
 
-      if (userInfo == null) {
-        return;
+      if (userInfo != null) {
+
+        userInfo.coin -= coin;
+        userInfo.coinHistories.add(coinHistoryLocal);
+
+        await isar.writeTxn(() async {
+          await isar.coinHistoryLocals.put(coinHistoryLocal);
+
+          isar.userInfoLocals.put(userInfo);
+
+          await userInfo.coinHistories.save();
+        });
       }
-
-      final historyCoin = CoinHistoryLocal(
-          oldAmount: userInfo.coin,
-          amountEarnCoin: coin,
-          timestamp: DateTime.now(),
-          type: 'fee');
-
-      userInfo.coin -= coin;
-      userInfo.coinHistories.add(historyCoin);
-
-      await isar.writeTxn(() async {
-        await isar.userInfoLocals.put(userInfo);
-
-        await isar.coinHistoryLocals.put(historyCoin);
-
-        await userInfo.coinHistories.save();
-      });
     } catch (err) {
       return Future.error(Exception(err));
     }
@@ -198,35 +199,97 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
 
   // get coinHistories by pageIndex
   @override
-  Future<List<CoinHistoryLocal>> getCoinHistories(int pageIndex, int pageSize) async {
+  Future<List<CoinHistoryLocal>> getCoinHistories(
+      int pageIndex, int pageSize, String uid) async {
     try {
       final isar = await db;
-     final offset = pageIndex*pageSize;
+      final offset = pageIndex * pageSize;
       final thirtyAgo = DateTime.now().subtract(const Duration(days: 30));
+      final userInfo =
+          await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
 
+      if (userInfo != null) {
+        final pageHistories = await userInfo.coinHistories
+            .filter()
+            .sortByTimestampDesc()
+            .offset(offset)
+            .limit(pageSize)
+            .findAll();
+        return pageHistories;
+      } else {
+        return [];
+      }
 
-      final pageHistories = await isar.coinHistoryLocals
-          .where()
-          .sortByTimestampDesc()
-          .offset(offset)
-          .limit(pageSize)
-          .findAll();
-
-      return pageHistories;
     } catch (err) {
       return Future.error(Exception(err));
     }
   }
 
+  // save coin History
+  @override
+  Future<void> saveCoinHistories(List<CoinHistoryLocal> listCoinHistory,String uid) async{
+    try {
+      final isar = await db;
+
+       final coinHistories =await isar.coinHistoryLocals.where().isEmpty();
+       if(coinHistories) {
+          final userInfo =await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
+          if(userInfo == null) {
+            return;
+          }
+            userInfo.coinHistories.addAll(listCoinHistory);
+           await isar.writeTxn(() async {
+           await isar.coinHistoryLocals.putAll(listCoinHistory);
+           await userInfo.coinHistories.save();
+         });
+       }
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
+
+
+
   //  Delete coin history by id
   @override
-  Future<void> deleteCoinHistory(int id) async {
+  Future<void> deleteCoinHistory(String idTransaction) async {
     try {
       final isar = await db;
 
       await isar.writeTxn(() async {
-        isar.coinHistoryLocals.delete(id);
+        isar.coinHistoryLocals.filter().idTransactionEqualTo(idTransaction).deleteAll();
       });
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
+
+  @override
+  Future<void> deleteLocalData(String uid) async{
+    try {
+      final isar =await db;
+
+      await isar.writeTxn(() async {
+        await isar.clear();
+      });
+
+      // final userInfo = await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
+
+      // if(userInfo != null ) {
+      //   final listCoinHistory = userInfo.coinHistories.toList();
+      //   final questions = userInfo.questions.toList();
+      //   await isar.writeTxn(() async {
+      //     for (final e in listCoinHistory) {
+      //       await isar.coinHistoryLocals.delete(e.id);
+      //     //   clear alll
+      //     }
+      //     for(final e in questions ){
+      //       await isar.questionLocals.delete(e.id);
+      //     }
+      //     await isar.userInfoLocals.delete(userInfo.id);
+      //   });
+      //
+      // }
     } catch (err) {
       return Future.error(Exception(err));
     }

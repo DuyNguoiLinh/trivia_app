@@ -1,30 +1,53 @@
-
 import '../../../questions/domain/entity/question_entity.dart';
+import '../../data/model/firebase_model/coin_history_firestore_model.dart';
+import '../../data/model/firebase_model/question_firestore_model.dart';
 import '../../data/repository/user_repository_impl.dart';
 import '../entity/coin_history_entity.dart';
 import '../entity/user_entity.dart';
 
-abstract class UserRepository{
+abstract class UserRepository {
 
-  Stream<UserEntity> getInfoUser();
+  //  ****firebase auth*****
+  Future<void> signUp(String email, String passWord, String userName);
 
-  Future<void> saveUserName(String name);
+  Future<void> login(String email, String passWord);
 
-  Future<void> changeUserName(String name);
+  Future<void> signOut(String uid);
 
-  Future<UserEntity> getUser();
+  Future<void> signInWithGoogle();
+
+  Future<void> linkGoogleAccount();
+
+  Future<void> deleteAccount(String uid);
+
+  Future<void> sendPasswordResetEmail(String email);
+
+  // **** firestore *****
+
+  Future<List<UserEntity>> fetchUserSortedByCoin(
+      int pageIndex, int pageSize);
+
+  // ****Local ****
+  Stream<UserEntity> getInfoUser(String uid);
+
+  Future<void> saveUserName(String name, double coin, String uid);
+
+  Future<void> changeUserName(String uid, String name);
+
+  Future<UserEntity> getUser(String uid);
 
   Future<void> deleteInfo();
 
-  Future<void> additionCoin(double coin);
+  Future<void> addCoin(double coin, String uid);
 
-  Future<void> subtractionCoin(double coin);
+  Future<void> subtractionCoin(double coin, String uid);
 
-  Stream<List<CoinHistoryEntity>>  watchCoinHistoryLocal(int pageIndex);
+  Stream<List<CoinHistoryEntity>> watchCoinHistoryLocal(int pageIndex);
 
-  Future<List<CoinHistoryEntity>> getCoinHistories(int pageIndex,int pageSize);
+  Future<List<CoinHistoryEntity>> getCoinHistories(
+      int pageIndex, int pageSize, String uid);
 
-  Future<void> deleteCoinHistory(int id);
+  Future<void> deleteCoinHistory(String idTranSaction,String uid);
 
   factory UserRepository.create() {
     return UserRepositoryImpl();

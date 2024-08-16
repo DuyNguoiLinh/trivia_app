@@ -32,7 +32,7 @@ class _ListCoinHistoriesState extends ConsumerState<ListCoinHistories> {
     next.when(
       data: (newItems) {
         if (newItems.isNotEmpty) {
-          final isLastPage = newItems.length < 10;
+          final isLastPage = newItems.length < 5;
 
           if (isLastPage) {
             _pagingController.value = PagingState<int, CoinHistoryEntity>(
@@ -41,7 +41,6 @@ class _ListCoinHistoriesState extends ConsumerState<ListCoinHistories> {
           }
           else {
             final nextPageKey =  _pagingController.nextPageKey! + 1;
-
 
             _pagingController.value = PagingState<int, CoinHistoryEntity>(
                 nextPageKey: nextPageKey,
@@ -64,9 +63,10 @@ class _ListCoinHistoriesState extends ConsumerState<ListCoinHistories> {
           itemBuilder: (context, item, index) => CoinHistoryItem(
             coinHistoryEntity: item,
             onPressed: () {
-              ref.read(coinHistoryProvider.notifier).deleteCoinHistory(item.id);
+              ref.read(coinHistoryProvider.notifier).deleteCoinHistory(item.idTransaction);
             },
           ),
+          firstPageProgressIndicatorBuilder: (context) => SizedBox(),
           newPageProgressIndicatorBuilder: (context) =>
               const Center(child: CircularProgressIndicator()),
         ));

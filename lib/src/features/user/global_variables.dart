@@ -1,0 +1,1 @@
+double coin =0 ;

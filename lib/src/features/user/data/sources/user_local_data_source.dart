@@ -5,25 +5,29 @@ import '../model/user_info_local.dart';
 
 abstract class  UserLocalDataSource{
 
-  Future<void>  saveUserName(String name);
+  Future<void>  saveUserName(String name,double coin, String uid);
 
-  Future<void> changeUserName(String name);
+  Future<void> changeUserName(String uid,String name);
 
-  Stream<List<UserInfoLocal>> getInfoUser();
+  Stream<List<UserInfoLocal>> getInfoUser(String uid);
 
-  Future<UserInfoLocal> getUser();
+  Future<UserInfoLocal?> getUser(String uid);
 
   Future<void> deleteInfoUser();
 
-  Future<void> addCoin(double coin);
+  Future<void> addCoin(double coin,String uid,CoinHistoryLocal coinHistoryLocal);
 
-  Future<void> subtractionCoin(double coin);
+  Future<void> subtractionCoin(double coin,String uid,CoinHistoryLocal coinHistoryLocal);
 
   Stream<List<CoinHistoryLocal>> watchCoinHistoryInThirtyDays(int pageIndex);
 
-  Future<List<CoinHistoryLocal>> getCoinHistories(int pageIndex,int pageSize);
+  Future<List<CoinHistoryLocal>> getCoinHistories(int pageIndex,int pageSize,String uid);
 
-  Future<void> deleteCoinHistory(int id);
+  Future<void> saveCoinHistories(List<CoinHistoryLocal> listCoinHistory,String uid);
+
+  Future<void> deleteCoinHistory(String idTransaction);
+
+  Future<void> deleteLocalData(String uid);
 
   factory UserLocalDataSource.create() {
     return UserLocalDataSourceImpl();

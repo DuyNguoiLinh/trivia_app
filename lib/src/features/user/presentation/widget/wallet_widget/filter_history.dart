@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/app_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/filter_controller.dart';
 
 class FilterHistory extends ConsumerWidget {
@@ -43,6 +44,7 @@ class FilterHistory extends ConsumerWidget {
           child: TextButton(
             onPressed: () {
               ref.read(filterWalletProvider.notifier).state=1;
+              // ref.read(appProvider.notifier).fetchQuestionFavorite();
             },
             child: const Row(
               children: [

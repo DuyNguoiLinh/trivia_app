@@ -24,6 +24,7 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
           CategoryLocalSchema,
           ResultLocalSchema,
           CoinHistoryLocalSchema,
+          QuestionLocalSchema
         ],
         directory: dir.path,
       );
@@ -70,7 +71,7 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
 
   //  save or not question
   @override
-  Future<void> toggleSaveQuestion(QuestionLocal questionLocal) async {
+  Future<void> toggleSaveQuestion(QuestionLocal questionLocal,String uid) async {
     try {
 
       final isar = await db;
@@ -79,8 +80,12 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
           .filter()
           .idCategoryEqualTo(questionLocal.idCategory)
           .findFirst();
+      final userInfo = await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
 
       if (category == null) {
+        return;
+      }
+      if(userInfo == null){
         return;
       }
 
@@ -92,17 +97,55 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
       if (question == null) {
 
         category.questions.add(questionLocal);
+        userInfo.questions.add(questionLocal);
 
         await isar.writeTxn(() async {
           await isar.questionLocals.put(questionLocal);
           await category.questions.save();
+          await userInfo.questions.save();
         });
-
       } else {
 
         await isar.writeTxn(() async {
           isar.questionLocals.deleteByIdQuestion(questionLocal.idQuestion);
         });
+
+      }
+    } catch (err) {
+      return Future.error(Exception(err));
+    }
+  }
+
+  // save question favorite
+  @override
+  Future<void> saveQuestionFavorite(List<QuestionLocal> questionFavorite,String uid) async{
+    try {
+      final isar = await db;
+      final questions =await isar.questionLocals.where().isEmpty();
+      if(questions) {
+        final userInfo = await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
+        if(userInfo == null){
+          return;
+        }
+        for(final question in questionFavorite) {
+
+          final category = await isar.categoryLocals
+              .filter()
+              .idCategoryEqualTo(question.idCategory)
+              .findFirst();
+          if (category == null) {
+            return;
+          }
+          category.questions.add(question);
+          userInfo.questions.add(question);
+
+          await isar.writeTxn(() async {
+            await isar.questionLocals.put(question);
+            await category.questions.save();
+            await userInfo.questions.save();
+          });
+
+          }
 
       }
     } catch (err) {
@@ -137,15 +180,20 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
 
    //  watch question local
   @override
-  Stream<List<QuestionLocal>>  watchQuestionLocal(int idCategory) async* {
+  Stream<List<QuestionLocal>>  watchQuestionLocal(int idCategory,String uid) async* {
     final isar =await db;
-    Query<QuestionLocal> questions =isar.questionLocals.filter().idCategoryEqualTo(idCategory).build();
+    final userInfo =await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
+    if(userInfo == null){
+      return;
+    }
+    Query<QuestionLocal> questions = userInfo.questions.filter().idCategoryEqualTo(idCategory).build();
+    // Query<QuestionLocal> questions =isar.questionLocals.filter().idCategoryEqualTo(idCategory).build();
     yield* questions.watch(fireImmediately: true);
   }
 
    // delete question by id
    @override
-  Future<void>  deleteQuestion(String idQuestion,int idCategory) async{
+  Future<void>  deleteQuestion(String idQuestion,int idCategory,String uid) async{
      try {
         final isar =await db;
         final category = await isar.categoryLocals
@@ -155,10 +203,15 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
         if(category == null){
           return;
         }
+        final userInfo =await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
+        if(userInfo == null){
+          return;
+        }
         // category.questions.removeWhere((element) => element.idQuestion == idQuestion,);
           await isar.writeTxn(() async {
           await isar.questionLocals.deleteByIdQuestion(idQuestion);
           await category.questions.save();
+          await userInfo.questions.save();
         });
      } catch (err) {
        return Future.error(Exception(err));
@@ -167,11 +220,16 @@ class QuizLocalDataSourceImpl implements QuizLocalDataSource {
 
 //    delete all question
   @override
-  Future<void>  deleteAllQuestionByIdCategory(int idCateGory)  async {
+  Future<void>  deleteAllQuestionByIdCategory(int idCateGory,String uid)  async {
     try {
       final isar =await db;
+      final userInfo =await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
+      if(userInfo == null){
+        return;
+      }
       await isar.writeTxn(() async {
-        isar.questionLocals.filter().idCategoryEqualTo(idCateGory).deleteAll();
+        await isar.questionLocals.filter().idCategoryEqualTo(idCateGory).deleteAll();
+        await userInfo.questions.save();
       });
     } catch (err) {
       return Future.error(Exception(err));

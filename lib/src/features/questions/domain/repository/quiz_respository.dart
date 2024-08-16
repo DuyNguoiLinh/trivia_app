@@ -7,22 +7,26 @@ abstract class QuizRepository {
   Future<List<QuestionEntity>> fetchQuestions(
       int amount, int idCategory, String? difficulty, String? type);
 
-  Future<List<CategoryEntity>> fetchCategories();
+  Future<List<CategoryEntity>> fetchCategories(String uid);
 
   Future<void> saveResultQuiz(ResultEntity resultEntity);
 
   Future<void> toggleSaveQuestion(
-      QuestionEntity questionEntity, int idCategory, String nameCategory);
+      QuestionEntity questionEntity, int idCategory, String nameCategory,String uid);
 
-  // Future<List<CategoryEntity>> getCategoryHasQuestion();
+  Future<void> fetchAndSaveQuestionFavorite(String uid);
+
 
   Stream<List<CategoryEntity>> watchCategoryLocal();
 
-  Stream<List<QuestionEntity>>  watchQuestionLocal(int idCategory);
+  Stream<List<QuestionEntity>>  watchQuestionLocal(int idCategory,String uid);
 
-  Future<void> deleteQuestion(String idQuestion,int idCategory);
+  Future<void> addQuestionFavorite(QuestionEntity questionEntity,
+      int idCategory, String nameCategory, String uid);
 
-  Future<void> deleteAllQuestionByIdCategory(int idCateGory);
+  Future<void> deleteQuestion(String idQuestion,int idCategory,String uid);
+
+  Future<void> deleteAllQuestionByIdCategory(int idCateGory,String uid);
 
   factory QuizRepository.create() {
     return QuizRepositoryImpl();

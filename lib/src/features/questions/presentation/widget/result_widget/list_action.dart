@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/result_widget/action_button.dart';
+import '../../../../user/global_variables.dart';
 import '../../controller/question_controller/question_controller.dart';
 import '../../controller/result_controller/action_controller.dart';
-import '../../screen/home_screen.dart';
-import '../../screen/review_screen.dart';
+import '../question_widget/warning_dialog.dart';
 
 class ListAction extends ConsumerWidget {
   const ListAction({super.key});
@@ -65,17 +66,29 @@ class ListAction extends ConsumerWidget {
                               onPressed: () {
                                 // play again
 
-                                Navigator.pop(context);
+                                GoRouter.of(context).pop();
 
                               },
                               child: const Text('Cancel',style: TextStyle(color: Colors.red),)),
+
                           TextButton(
                               onPressed: () {
-                                // play again
-                                ref.read(questionProvider.notifier).playAgainQuiz();
+                                if(coin < 3){
+                                  GoRouter.of(context).pop();
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return const WarningDialog(optionName: 'Play again');
+                                    },
+                                  );
+                                } else {
+                                  // play again
+                                  ref.read(questionProvider.notifier).playAgainQuiz();
 
-                                Navigator.pop(context);
-                                Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+
+                                }
 
                               },
                               child: const Text('Okay'))
@@ -86,10 +99,8 @@ class ListAction extends ConsumerWidget {
               },),
               ActionButton(nameAction: 'Review Answer',onPressed: () {
                 ref.read(notReviewProvider.notifier).state = false;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ReviewScreen()),
-                );
+
+                GoRouter.of(context).push("/review");
               },),
               ActionButton(nameAction: 'Share',onPressed: () {},),
             ],
@@ -103,11 +114,12 @@ class ListAction extends ConsumerWidget {
               const Spacer(),
               ActionButton(nameAction: 'Home',onPressed: () {
 
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                      (Route<dynamic> route) => false,
-                );
+                GoRouter.of(context).go('/');
+                // Navigator.pushAndRemoveUntil(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => const HomeScreen()),
+                //       (Route<dynamic> route) => false,
+                // );
 
               },),
               const Spacer(),

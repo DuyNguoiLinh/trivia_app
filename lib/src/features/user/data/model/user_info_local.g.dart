@@ -22,8 +22,13 @@ const UserInfoLocalSchema = CollectionSchema(
       name: r'coin',
       type: IsarType.double,
     ),
-    r'userName': PropertySchema(
+    r'uid': PropertySchema(
       id: 1,
+      name: r'uid',
+      type: IsarType.string,
+    ),
+    r'userName': PropertySchema(
+      id: 2,
       name: r'userName',
       type: IsarType.string,
     )
@@ -46,6 +51,19 @@ const UserInfoLocalSchema = CollectionSchema(
           caseSensitive: true,
         )
       ],
+    ),
+    r'uid': IndexSchema(
+      id: 8193695471701937315,
+      name: r'uid',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'uid',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
     )
   },
   links: {
@@ -53,6 +71,12 @@ const UserInfoLocalSchema = CollectionSchema(
       id: 7088160925093364011,
       name: r'coinHistories',
       target: r'CoinHistoryLocal',
+      single: false,
+    ),
+    r'questions': LinkSchema(
+      id: 8576210939815796632,
+      name: r'questions',
+      target: r'QuestionLocal',
       single: false,
     )
   },
@@ -69,6 +93,7 @@ int _userInfoLocalEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.uid.length * 3;
   bytesCount += 3 + object.userName.length * 3;
   return bytesCount;
 }
@@ -80,7 +105,8 @@ void _userInfoLocalSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDouble(offsets[0], object.coin);
-  writer.writeString(offsets[1], object.userName);
+  writer.writeString(offsets[1], object.uid);
+  writer.writeString(offsets[2], object.userName);
 }
 
 UserInfoLocal _userInfoLocalDeserialize(
@@ -91,7 +117,8 @@ UserInfoLocal _userInfoLocalDeserialize(
 ) {
   final object = UserInfoLocal(
     coin: reader.readDoubleOrNull(offsets[0]) ?? 0.0,
-    userName: reader.readString(offsets[1]),
+    uid: reader.readString(offsets[1]),
+    userName: reader.readString(offsets[2]),
   );
   object.id = id;
   return object;
@@ -108,6 +135,8 @@ P _userInfoLocalDeserializeProp<P>(
       return (reader.readDoubleOrNull(offset) ?? 0.0) as P;
     case 1:
       return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -118,7 +147,7 @@ Id _userInfoLocalGetId(UserInfoLocal object) {
 }
 
 List<IsarLinkBase<dynamic>> _userInfoLocalGetLinks(UserInfoLocal object) {
-  return [object.coinHistories];
+  return [object.coinHistories, object.questions];
 }
 
 void _userInfoLocalAttach(
@@ -126,6 +155,8 @@ void _userInfoLocalAttach(
   object.id = id;
   object.coinHistories.attach(
       col, col.isar.collection<CoinHistoryLocal>(), r'coinHistories', id);
+  object.questions
+      .attach(col, col.isar.collection<QuestionLocal>(), r'questions', id);
 }
 
 extension UserInfoLocalByIndex on IsarCollection<UserInfoLocal> {
@@ -180,6 +211,59 @@ extension UserInfoLocalByIndex on IsarCollection<UserInfoLocal> {
   List<Id> putAllByUserNameSync(List<UserInfoLocal> objects,
       {bool saveLinks = true}) {
     return putAllByIndexSync(r'userName', objects, saveLinks: saveLinks);
+  }
+
+  Future<UserInfoLocal?> getByUid(String uid) {
+    return getByIndex(r'uid', [uid]);
+  }
+
+  UserInfoLocal? getByUidSync(String uid) {
+    return getByIndexSync(r'uid', [uid]);
+  }
+
+  Future<bool> deleteByUid(String uid) {
+    return deleteByIndex(r'uid', [uid]);
+  }
+
+  bool deleteByUidSync(String uid) {
+    return deleteByIndexSync(r'uid', [uid]);
+  }
+
+  Future<List<UserInfoLocal?>> getAllByUid(List<String> uidValues) {
+    final values = uidValues.map((e) => [e]).toList();
+    return getAllByIndex(r'uid', values);
+  }
+
+  List<UserInfoLocal?> getAllByUidSync(List<String> uidValues) {
+    final values = uidValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'uid', values);
+  }
+
+  Future<int> deleteAllByUid(List<String> uidValues) {
+    final values = uidValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'uid', values);
+  }
+
+  int deleteAllByUidSync(List<String> uidValues) {
+    final values = uidValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'uid', values);
+  }
+
+  Future<Id> putByUid(UserInfoLocal object) {
+    return putByIndex(r'uid', object);
+  }
+
+  Id putByUidSync(UserInfoLocal object, {bool saveLinks = true}) {
+    return putByIndexSync(r'uid', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByUid(List<UserInfoLocal> objects) {
+    return putAllByIndex(r'uid', objects);
+  }
+
+  List<Id> putAllByUidSync(List<UserInfoLocal> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'uid', objects, saveLinks: saveLinks);
   }
 }
 
@@ -307,6 +391,51 @@ extension UserInfoLocalQueryWhere
       }
     });
   }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause> uidEqualTo(
+      String uid) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'uid',
+        value: [uid],
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause> uidNotEqualTo(
+      String uid) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uid',
+              lower: [],
+              upper: [uid],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uid',
+              lower: [uid],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uid',
+              lower: [uid],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uid',
+              lower: [],
+              upper: [uid],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
 }
 
 extension UserInfoLocalQueryFilter
@@ -425,6 +554,140 @@ extension UserInfoLocalQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      uidGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'uid',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      uidStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'uid',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      uidIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'uid',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      uidIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'uid',
+        value: '',
       ));
     });
   }
@@ -631,6 +894,67 @@ extension UserInfoLocalQueryLinks
           r'coinHistories', lower, includeLower, upper, includeUpper);
     });
   }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> questions(
+      FilterQuery<QuestionLocal> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'questions');
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'questions', lower, includeLower, upper, includeUpper);
+    });
+  }
 }
 
 extension UserInfoLocalQuerySortBy
@@ -644,6 +968,18 @@ extension UserInfoLocalQuerySortBy
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByCoinDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coin', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByUid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uid', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByUidDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uid', Sort.desc);
     });
   }
 
@@ -687,6 +1023,18 @@ extension UserInfoLocalQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByUid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uid', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByUidDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uid', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByUserName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'userName', Sort.asc);
@@ -709,6 +1057,13 @@ extension UserInfoLocalQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> distinctByUid(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'uid', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> distinctByUserName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -728,6 +1083,12 @@ extension UserInfoLocalQueryProperty
   QueryBuilder<UserInfoLocal, double, QQueryOperations> coinProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'coin');
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, String, QQueryOperations> uidProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'uid');
     });
   }
 

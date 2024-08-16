@@ -3,12 +3,16 @@ import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/result_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/sources/firestore_data_source.dart';
+import '../../../user/data/model/firebase_model/question_firestore_model.dart';
 import '../../domain/repository/quiz_respository.dart';
 import '../models/local/category_local.dart';
 import '../models/local/question_local.dart';
 import '../models/local/result_local.dart';
 
 class QuizRepositoryImpl implements QuizRepository {
+
+  final firestoreDataSource = FirestoreDataSource.create();
   final localDataSource = QuizLocalDataSource.create();
   final remoteDataSource = QuizRemoteDataSource.create();
 
@@ -40,7 +44,7 @@ class QuizRepositoryImpl implements QuizRepository {
 
   // fetch category
   @override
-  Future<List<CategoryEntity>> fetchCategories() async {
+  Future<List<CategoryEntity>> fetchCategories(String uid) async {
     try {
 
       final categoriesLocal = await localDataSource.getCategories();
@@ -55,7 +59,7 @@ class QuizRepositoryImpl implements QuizRepository {
 
       } else {
 
-        final dataCategories = await _fetchAndSaveCategories();
+        final dataCategories = await _fetchAndSaveCategories(uid);
         return dataCategories;
 
       }
@@ -65,7 +69,7 @@ class QuizRepositoryImpl implements QuizRepository {
   }
 
   //  get categories local or api
-  Future<List<CategoryEntity>> _fetchAndSaveCategories() async {
+  Future<List<CategoryEntity>> _fetchAndSaveCategories(String uid) async {
     try {
 
       final categories = await remoteDataSource.getCategories();
@@ -84,7 +88,7 @@ class QuizRepositoryImpl implements QuizRepository {
             .toList();
 
         await localDataSource.saveCategory(categoryLocal);
-
+        await fetchAndSaveQuestionFavorite(uid);
         return listCategories;
 
       } else {
@@ -120,7 +124,7 @@ class QuizRepositoryImpl implements QuizRepository {
   //   save question into Local
   @override
   Future<void> toggleSaveQuestion(QuestionEntity questionEntity, int idCategory,
-      String nameCategory) async {
+      String nameCategory,String uid) async {
 
     final questionLocal = QuestionLocal(
       idQuestion: questionEntity.id,
@@ -131,27 +135,9 @@ class QuizRepositoryImpl implements QuizRepository {
       incorrectAnswers: questionEntity.incorrectAnswers,
       shuffleAnswer: questionEntity.shuffleAnswer!,
     );
-
-    await localDataSource.toggleSaveQuestion(questionLocal);
+    await  addQuestionFavorite(questionEntity, idCategory, nameCategory, uid);
+    await localDataSource.toggleSaveQuestion(questionLocal,uid);
   }
-
-// //   get category has question
-//   @override
-//   Future<List<CategoryEntity>> getCategoryHasQuestion() async {
-//     try {
-//       final listCategory = await localDataSource.getCategoryHasQuestion();
-//       if (listCategory.isNotEmpty) {
-//         final dataCategories = listCategory
-//             .map((e) => CategoryEntity.fromCategoryLocal(e))
-//             .toList();
-//         return dataCategories;
-//       } else {
-//         return List<CategoryEntity>.empty(growable: true);
-//       }
-//     } catch (err) {
-//       return Future.error(err);
-//     }
-//   }
 
 //  watch  categories have question
   @override
@@ -170,11 +156,24 @@ class QuizRepositoryImpl implements QuizRepository {
     });
   }
 
+  // fetch question favorite
+  @override
+  Future<void> fetchAndSaveQuestionFavorite(String uid) async {
+    final questionFromFirestore =
+    await firestoreDataSource.fetchQuestionFavorite(uid);
+    final questionFavorite = questionFromFirestore
+        .map((e) => QuestionLocal.fromQuestionFirestore(e))
+        .toList();
+
+    await localDataSource.saveQuestionFavorite(questionFavorite, uid);
+  }
+
+
 //   watch questionLocal
   @override
-  Stream<List<QuestionEntity>>  watchQuestionLocal(int idCategory) {
+  Stream<List<QuestionEntity>>  watchQuestionLocal(int idCategory,String uid) {
 
-    return localDataSource.watchQuestionLocal(idCategory).map((listQuestionLocal) {
+    return localDataSource.watchQuestionLocal(idCategory,uid).map((listQuestionLocal) {
       return listQuestionLocal.map((e) => QuestionEntity.fromQuestionLocal(e)).toList();
     });
   }
@@ -182,21 +181,36 @@ class QuizRepositoryImpl implements QuizRepository {
 
 //   delete question by id
   @override
-  Future<void> deleteQuestion(String idQuestion,int idCategory) async {
+  Future<void> deleteQuestion(String idQuestion,int idCategory,String uid) async {
     try {
 
-      await localDataSource.deleteQuestion(idQuestion,idCategory);
+      await localDataSource.deleteQuestion(idQuestion,idCategory,uid);
+      await firestoreDataSource.deleteQuestionFavorite(uid, idQuestion);
 
     } catch (err) {
       return Future.error(err);
     }
   }
 
+  @override
+  Future<void> addQuestionFavorite(QuestionEntity questionEntity,
+      int idCategory, String nameCategory, String uid) async {
+    final question = QuestionFirestoreModel(
+        id: questionEntity.id,
+        idCategory: idCategory,
+        nameCategory: nameCategory,
+        question: questionEntity.question,
+        correctAnswer: questionEntity.correctAnswer,
+        incorrectAnswers: questionEntity.incorrectAnswers,
+        shuffleAnswer: questionEntity.shuffleAnswer!);
+    await firestoreDataSource.addQuestionFavorite(question, uid);
+  }
+
 //   delete all question
   @override
-  Future<void> deleteAllQuestionByIdCategory(int idCateGory) async {
+  Future<void> deleteAllQuestionByIdCategory(int idCateGory,String uid) async {
     try {
-      await localDataSource.deleteAllQuestionByIdCategory(idCateGory);
+      await localDataSource.deleteAllQuestionByIdCategory(idCateGory,uid);
     } catch (err) {
       return Future.error(err);
     }

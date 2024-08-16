@@ -11,16 +11,17 @@ abstract class  QuizLocalDataSource{
 
   Future<void>  saveResultQuiz(ResultLocal resultLocal);
 
-  Future<void> toggleSaveQuestion(QuestionLocal questionLocal);
+  Future<void> toggleSaveQuestion(QuestionLocal questionLocal,String uid);
 
-  // Future<List<CategoryLocal>> getCategoryHasQuestion();
+  Future<void> saveQuestionFavorite(List<QuestionLocal> questionFavorite,String uid);
+
   Stream<List<CategoryLocal>> watchCategories();
 
-  Future<void>  deleteQuestion(String idQuestion,int idCategory);
+  Future<void>  deleteQuestion(String idQuestion,int idCategory,String uid);
 
-  Stream<List<QuestionLocal>>  watchQuestionLocal(int idCategory);
+  Stream<List<QuestionLocal>>  watchQuestionLocal(int idCategory,String uid);
 
-  Future<void>  deleteAllQuestionByIdCategory(int idCateGory);
+  Future<void>  deleteAllQuestionByIdCategory(int idCateGory,String uid);
 
   factory QuizLocalDataSource.create() {
      return QuizLocalDataSourceImpl();
