@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/home_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/start_widget/forgot_password.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/auth_error.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/app_controller.dart';

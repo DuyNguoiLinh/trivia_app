@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:trivia_app_with_flutter/src/features/user/domain/entity/model_with_pagination.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/coin_history_controller.dart';
 import '../../../domain/entity/coin_history_entity.dart';
 import 'coin_history_item.dart';
+
+
 
 class ListCoinHistories extends ConsumerStatefulWidget {
   const ListCoinHistories({super.key});
@@ -21,32 +24,31 @@ class _ListCoinHistoriesState extends ConsumerState<ListCoinHistories> {
   void initState() {
     super.initState();
     _pagingController.addPageRequestListener((pageKey) {
+
+      if(pageKey != 0) {
         ref.read(coinHistoryProvider.notifier).fetchPage(pageKey);
+      }
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
 
-    ref.listen<AsyncValue<List<CoinHistoryEntity>>>(coinHistoryProvider, (previous, next) {
+    ref.listen(coinHistoryProvider, (previous, next) {
     next.when(
       data: (newItems) {
-        if (newItems.isNotEmpty) {
-          final isLastPage = newItems.length < 5;
+          // final isLastPage = newItems.data.length < 5;
 
-          if (isLastPage) {
+          if ( newItems.nextPageKey == null) {
             _pagingController.value = PagingState<int, CoinHistoryEntity>(
                 nextPageKey: null,
-                itemList: newItems);
-          }
-          else {
-            final nextPageKey =  _pagingController.nextPageKey! + 1;
-
+                itemList: newItems.data);
+          } else {
             _pagingController.value = PagingState<int, CoinHistoryEntity>(
-                nextPageKey: nextPageKey,
-                itemList: newItems);
+                nextPageKey: newItems.nextPageKey,
+                itemList: newItems.data);
           }
-        }
       },
       loading: () => {
         _pagingController.value = const PagingState<int, CoinHistoryEntity>(
@@ -66,7 +68,7 @@ class _ListCoinHistoriesState extends ConsumerState<ListCoinHistories> {
               ref.read(coinHistoryProvider.notifier).deleteCoinHistory(item.idTransaction);
             },
           ),
-          firstPageProgressIndicatorBuilder: (context) => SizedBox(),
+          firstPageProgressIndicatorBuilder: (context) => const Center(child: CircularProgressIndicator()),
           newPageProgressIndicatorBuilder: (context) =>
               const Center(child: CircularProgressIndicator()),
         ));

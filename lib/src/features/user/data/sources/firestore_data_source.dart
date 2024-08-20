@@ -9,19 +9,19 @@ abstract class FirestoreDataSource {
 
   Future<UserFirestoreModel?> getUserByUid(String uid);
 
-  Future<void> addCoin(String uid, double coinToAdd);
+  Future<void> addCoin(String uid, double coinToAdd,CoinHistoryFirestoreModel coinHistory);
 
-  Future<void> subtractCoin(String uid, double coinToSubtract);
+  Future<void> subtractCoin(String uid, double coinToSubtract,CoinHistoryFirestoreModel coinHistory);
 
   Future<void> addQuestionFavorite(QuestionFirestoreModel question,String uid);
 
-  Future<void> transactionCoin(CoinHistoryFirestoreModel coinHistory,String uid);
+  // Future<void> transactionCoin(CoinHistoryFirestoreModel coinHistory,String uid);
 
   Future<void> deleteCoinTransaction(String uid, String idTransaction);
 
   Future<void> deleteQuestionFavorite(String uid, String idQuestion);
 
-  Future<List<UserFirestoreModel>> fetchUserSortedByCoin(
+  Future<List<UserFirestoreModel>> getTopUser(
       int pageIndex, int pageSize);
 
   Future<List<CoinHistoryFirestoreModel>> fetchCoinHistories( String uid);

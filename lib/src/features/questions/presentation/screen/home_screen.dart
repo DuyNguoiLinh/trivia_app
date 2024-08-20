@@ -16,21 +16,22 @@ class HomeScreen extends ConsumerWidget {
 
     final asyncUser = ref.watch(userProvider);
     final userInfo = asyncUser.valueOrNull;
-    final index = ref.watch(isSelect);
+    // final index = ref.watch(isSelect);
 
-    Widget body;
-    switch (index) {
-      case 1:
-        body = const WalletScreen();
-        break;
-      case 2:
-        body= const RankingScreen();
-        break;
-      case 0:
-      default:
-        body = const Home();
-        break;
-    }
+    // Widget body;
+    // switch (index) {
+    //   case 1:
+    //     body = const WalletScreen();
+    //     break;
+    //   case 2:
+    //     body= const RankingScreen();
+    //     break;
+    //   case 0:
+    //   default:
+    //     body = const Home();
+    //     break;
+    // }
+
     if (userInfo != null) {
       return Scaffold(
         appBar: AppBar(
@@ -61,8 +62,7 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
         drawer: const DrawSetting(),
-        body: body,
-        bottomNavigationBar: const QuizBottomNavigationBar(),
+        body: const Home(),
       );
     } else {
       return const Center(child: CircularProgressIndicator());

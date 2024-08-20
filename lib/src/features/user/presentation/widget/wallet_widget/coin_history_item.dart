@@ -21,10 +21,12 @@ class CoinHistoryItem extends ConsumerWidget {
 
     final pageIndex = ref.watch(pageIndexProvider);
 
+    final isGift=coinHistoryEntity.type.contains('gift');
+
     return Container(
       height: 100,
       decoration: BoxDecoration(
-        color: coinHistoryEntity.type == 'fee' ? Colors.red.withOpacity(0.8) : Colors.green,
+        color: coinHistoryEntity.type.contains('fee') ? Colors.red.withOpacity(0.8) : Colors.green,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -41,13 +43,14 @@ class CoinHistoryItem extends ConsumerWidget {
           width: 10,
         ),
         Container(
-          width: 40.0,
-          height: 40.0,
+          width: 50.0,
+          height: 50.0,
           decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
             image: DecorationImage(
               image: AssetImage(
+                isGift ? 'assets/images/giftbox.png' :
                   coinHistoryEntity.type == 'fee'
                   ? 'assets/images/down.png'
                   : 'assets/images/up .png'),

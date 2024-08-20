@@ -1,5 +1,7 @@
 import 'package:trivia_app_with_flutter/src/features/questions/domain/repository/quiz_respository.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/user_realtime_database_model.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/firestore_data_source.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/sources/realtime_database_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/coin_history_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/user_entity.dart';
 import '../../domain/repository/user_repository.dart';
@@ -8,22 +10,25 @@ import '../sources/auth_data_source.dart';
 import '../sources/user_local_data_source.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  final quizDataSource = QuizRepository.create();
-  final localDataSource = UserLocalDataSource.create();
+  final _quizDataSource = QuizRepository.create();
+  final _localDataSource = UserLocalDataSource.create();
 
-  ///
-  final authDataSource = AuthDataSource.create();
-  final firestoreDataSource = FirestoreDataSource.create();
+  ///firebase
+  final _authDataSource = AuthDataSource.create();
+  final _firestoreDataSource = FirestoreDataSource.create();
+  final _realtimeDatabase = RealtimeDatabaseDataSource.create();
 
   // Sign up
   @override
   Future<void> signUp(String email, String passWord, String userName) async {
-    final user = await authDataSource.signUpUser(email, passWord, userName);
+    final user = await _authDataSource.signUpUser(email, passWord, userName);
 
     if (user != null) {
       // add user to firestore
       final userResponse = UserFirestoreModel(uid: user.uid, name: userName);
-      firestoreDataSource.addUser(userResponse);
+      final userRealtime = UserRealtimeDatabaseModel(uid: user.uid, name: userName, email: email);
+      _firestoreDataSource.addUser(userResponse);
+      _realtimeDatabase.addUser(userRealtime);
       // save user to local
       saveUserName(userName, 0, user.uid);
     }
@@ -32,10 +37,10 @@ class UserRepositoryImpl implements UserRepository {
   //Sign in and get user to firestore
   @override
   Future<void> login(String email, String passWord) async {
-    final user = await authDataSource.signInUser(email, passWord);
+    final user = await _authDataSource.signInUser(email, passWord);
 
     if (user != null) {
-      final userResponse = await firestoreDataSource.getUserByUid(user.uid);
+      final userResponse = await _firestoreDataSource.getUserByUid(user.uid);
 
       if (userResponse != null) {
         await saveUserName(
@@ -47,50 +52,60 @@ class UserRepositoryImpl implements UserRepository {
   // Sign out
   @override
   Future<void> signOut(String uid) async {
-    await authDataSource.signOut();
-    await localDataSource.deleteLocalData(uid);
+    await _authDataSource.signOut();
+    await _localDataSource.deleteLocalData(uid);
   }
 
   // sign in with google
   @override
   Future<void> signInWithGoogle() async {
-    final user = await authDataSource.signInWithGoogle();
+    try {
+      final user = await _authDataSource.signInWithGoogle();
 
-    if (user != null) {
-      final userResponse = await firestoreDataSource.getUserByUid(user.uid);
+      if (user != null) {
+        final userResponse = await _firestoreDataSource.getUserByUid(user.uid);
 
-      if (userResponse != null) {
-        saveUserName(userResponse.name, userResponse.coin, userResponse.uid);
-      } else {
-        final name = user.displayName;
-        if (name != null) {
-          // push user to firestore
-          final userResponse = UserFirestoreModel(uid: user.uid, name: name);
-          firestoreDataSource.addUser(userResponse);
+        if (userResponse != null) {
+         await saveUserName(userResponse.name, userResponse.coin, userResponse.uid);
 
-          await saveUserName(name, 0, user.uid);
+        } else {
+          final name = user.displayName;
+          if (name != null) {
+            // push user to firestore
+            final userResponse = UserFirestoreModel(uid: user.uid, name: name);
+            _firestoreDataSource.addUser(userResponse);
+
+            final userRealtime = UserRealtimeDatabaseModel(uid: user.uid, name: name, email: user.email!);
+            _realtimeDatabase.addUser(userRealtime);
+
+            await saveUserName(name, 0, user.uid);
+          }
         }
       }
+    } catch (err) {
+      return Future.error(err);
     }
+
   }
 
   // Connect google account
   @override
   Future<void> linkGoogleAccount() async {
-    await authDataSource.linkGoogleAccount();
+    await _authDataSource.linkGoogleAccount();
   }
 
   //  delete account
   @override
   Future<void> deleteAccount(String uid) async {
-    await firestoreDataSource.deleteUserData(uid);
-    await localDataSource.deleteLocalData(uid);
-    await authDataSource.deleteAccount(uid);
+    await _firestoreDataSource.deleteUserData(uid);
+    await _realtimeDatabase.deleteUser(uid);
+    await _localDataSource.deleteLocalData(uid);
+    await _authDataSource.deleteAccount(uid);
   }
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {
-    await authDataSource.sendPasswordResetEmail(email);
+    await _authDataSource.sendPasswordResetEmail(email);
   }
 
   //  ****Fire Store ******
@@ -101,44 +116,15 @@ class UserRepositoryImpl implements UserRepository {
   Future<List<UserEntity>> fetchUserSortedByCoin(
       int pageIndex, int pageSize) async {
     final listUser =
-        await firestoreDataSource.fetchUserSortedByCoin(pageIndex, pageSize);
+        await _firestoreDataSource.getTopUser(pageIndex, pageSize);
     return listUser.map((e) => UserEntity.fromFirestore(e)).toList();
   }
 
-  // ****Local******
-
-  // save user name
-  @override
-  Future<void> saveUserName(String name, double coin, String uid) async {
-    await localDataSource.saveUserName(name, coin, uid);
-    final coinHistoryFromFirestore =
-        await firestoreDataSource.fetchCoinHistories(uid);
-    final coinHistoryLocal = coinHistoryFromFirestore
-        .map((e) => CoinHistoryEntity.fromFirestore(e).toLocal())
-        .toList();
-    await localDataSource.saveCoinHistories(coinHistoryLocal, uid);
-  }
-
-  // change user name
-  @override
-  Future<void> changeUserName(String uid, String name) async {
-    await firestoreDataSource.changeName(uid, name);
-    await localDataSource.changeUserName(uid, name);
-  }
-
-  // update coin
-  @override
-  Stream<UserEntity> getInfoUser(String uid) {
-    return localDataSource.getInfoUser(uid).map((userLocal) {
-      return userLocal.map((user) => UserEntity.fromLocal(user)).toList().first;
-    });
-  }
-
-  // get info user in local
+  // get info user to fire store
   @override
   Future<UserEntity> getUser(String uid) async {
     try {
-      final userLocal = await localDataSource.getUser(uid);
+      final userLocal = await _localDataSource.getUser(uid);
       final userInfo = UserEntity.fromLocal(userLocal!);
       return userInfo;
     } catch (err) {
@@ -146,11 +132,66 @@ class UserRepositoryImpl implements UserRepository {
     }
   }
 
+  //  send coin
+  @override
+  Future<void> sendCoin(String senderUid, String receiverUid, double amountCoin) async {
+    try {
+      await _realtimeDatabase.sendCoin(senderUid, receiverUid, amountCoin);
+
+     await addCoin(amountCoin, receiverUid,gift: true);
+     await subtractCoin(amountCoin, senderUid,gift: true);
+
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+  //  stream update coin Ui
+  @override
+  Stream<double> listenToCoinChanges(String uid) {
+    return _realtimeDatabase.listenToCoinChanges(uid);
+  }
+  // ****Local******
+
+  // save user name
+  @override
+  Future<void> saveUserName(String name, double coin, String uid) async {
+    await _localDataSource.saveUserName(name, coin, uid);
+    final coinHistoryFromFirestore =
+        await _firestoreDataSource.fetchCoinHistories(uid);
+    final coinHistoryLocal = coinHistoryFromFirestore
+        .map((e) => CoinHistoryEntity.fromFirestore(e).toLocal())
+        .toList();
+    await _localDataSource.saveCoinHistories(coinHistoryLocal, uid);
+  }
+
+  // change user name
+  @override
+  Future<void> changeUserName(String uid, String name) async {
+    await _firestoreDataSource.changeName(uid, name);
+    await _localDataSource.changeUserName(uid, name);
+  }
+
+  // updated coin
+
+  @override
+  Future<void>  updatedCoin(String uid , double newAmountCoin) async {
+    await _localDataSource.updatedCoin(uid, newAmountCoin);
+  }
+
+  // update coin
+  @override
+  Stream<UserEntity> getInfoUser(String uid) {
+    return _localDataSource.getInfoUser(uid).map((userLocal) {
+      return userLocal.map((user) => UserEntity.fromLocal(user)).toList().first;
+    });
+  }
+
+
   //  delete info user in local
   @override
   Future<void> deleteInfo() async {
     try {
-      await localDataSource.deleteInfoUser();
+      await _localDataSource.deleteInfoUser();
     } catch (err) {
       return Future.error(err);
     }
@@ -158,19 +199,23 @@ class UserRepositoryImpl implements UserRepository {
 
   //   addition  coin
   @override
-  Future<void> addCoin(double coin, String uid) async {
+  Future<void> addCoin(double coin, String uid,{bool gift=false}) async {
     try {
       final coinHistoryEntity = CoinHistoryEntity(
         amountEarnCoin: coin,
         timestamp: DateTime.now(),
-        type: 'earn',
+        type: gift == true ? 'earn-gift' : 'earn',
       );
-      await localDataSource.addCoin(coin, uid, coinHistoryEntity.toLocal());
 
-      await firestoreDataSource.transactionCoin(
-          coinHistoryEntity.toFireStore(), uid);
 
-      await firestoreDataSource.addCoin(uid, coin);
+      await _firestoreDataSource.addCoin(uid, coin, coinHistoryEntity.toFireStore());
+
+      if(!gift){
+        await _localDataSource.addCoin(coin, uid, coinHistoryEntity.toLocal());
+        await _realtimeDatabase.addCoin(uid, coin);
+      }
+
+
     } catch (err) {
       return Future.error(err);
     }
@@ -178,21 +223,23 @@ class UserRepositoryImpl implements UserRepository {
 
   // subtraction coin
   @override
-  Future<void> subtractionCoin(double coin, String uid) async {
+  Future<void> subtractCoin(double coin, String uid,{bool gift=false}) async {
     try {
       final coinHistoryEntity = CoinHistoryEntity(
         amountEarnCoin: coin,
         timestamp: DateTime.now(),
-        type: 'fee',
+        type: gift == true ? 'fee-gift' : 'fee',
       );
 
-      await localDataSource.subtractionCoin(
+      await _localDataSource.subtractionCoin(
           coin, uid, coinHistoryEntity.toLocal());
 
-      await firestoreDataSource.transactionCoin(
-          coinHistoryEntity.toFireStore(), uid);
 
-      await firestoreDataSource.subtractCoin(uid, coin);
+      await _firestoreDataSource.subtractCoin(uid, coin, coinHistoryEntity.toFireStore());
+      if(!gift){
+        await _realtimeDatabase.subtractCoin(uid, coin);
+      }
+
     } catch (err) {
       return Future.error(err);
     }
@@ -200,7 +247,7 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Stream<List<CoinHistoryEntity>> watchCoinHistoryLocal(int pageIndex) {
-    return localDataSource
+    return _localDataSource
         .watchCoinHistoryInThirtyDays(pageIndex)
         .map((listCoinHistory) {
       return listCoinHistory
@@ -215,7 +262,7 @@ class UserRepositoryImpl implements UserRepository {
       int pageIndex, int pageSize, String uid) async {
     try {
       final coinHistoriesLocal =
-          await localDataSource.getCoinHistories(pageIndex, pageSize, uid);
+          await _localDataSource.getCoinHistories(pageIndex, pageSize, uid);
       final coinHistories = coinHistoriesLocal
           .map((e) => CoinHistoryEntity.fromLocal(e))
           .toList();
@@ -229,8 +276,8 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> deleteCoinHistory(String idTransaction, String uid) async {
     try {
-      await firestoreDataSource.deleteCoinTransaction(uid, idTransaction);
-      await localDataSource.deleteCoinHistory(idTransaction);
+      await _firestoreDataSource.deleteCoinTransaction(uid, idTransaction);
+      await _localDataSource.deleteCoinHistory(idTransaction);
     } catch (err) {
       return Future.error(err);
     }

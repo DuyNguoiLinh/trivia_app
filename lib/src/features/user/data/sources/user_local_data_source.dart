@@ -9,6 +9,8 @@ abstract class  UserLocalDataSource{
 
   Future<void> changeUserName(String uid,String name);
 
+  Future<void>  updatedCoin(String uid , double newAmountCoin);
+
   Stream<List<UserInfoLocal>> getInfoUser(String uid);
 
   Future<UserInfoLocal?> getUser(String uid);

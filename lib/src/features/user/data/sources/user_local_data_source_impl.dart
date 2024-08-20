@@ -70,6 +70,24 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     }
   }
 
+  // updated Coin
+  @override
+  Future<void>  updatedCoin(String uid , double newAmountCoin) async{
+    try{
+      final isar = await db;
+      final infoUser =
+      await isar.userInfoLocals.filter().uidEqualTo(uid).findFirst();
+      if (infoUser != null) {
+        infoUser.coin = newAmountCoin;
+        await isar.writeTxn(() async {
+          isar.userInfoLocals.put(infoUser);
+        });
+      }
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
   // get info
   @override
   Future<UserInfoLocal?> getUser(String uid) async {

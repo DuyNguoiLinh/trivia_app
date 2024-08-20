@@ -160,7 +160,7 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
       }
 
       state=AsyncValue.data(listQuestion.first);
-      await _userRepository.subtractionCoin(3,_uid);
+      await _userRepository.subtractCoin(3,_uid);
     } catch (err, stackTr) {
       return Future.error(err, stackTr);
     }
@@ -183,7 +183,7 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
         }
       }
       state=AsyncValue.data(questionEntity);
-      await _userRepository.subtractionCoin(1.0,_uid);
+      await _userRepository.subtractCoin(1.0,_uid);
 
     } catch (err, stackTr) {
       return Future.error(err, stackTr);

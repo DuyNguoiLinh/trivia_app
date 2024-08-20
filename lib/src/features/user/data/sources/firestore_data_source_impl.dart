@@ -30,7 +30,7 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
 
   //   update coin
   @override
-  Future<void> addCoin(String uid, double coinToAdd) async {
+  Future<void> addCoin(String uid, double coinToAdd,CoinHistoryFirestoreModel coinHistory) async {
     try {
       DocumentReference userDoc = _firestore.collection('users').doc(uid);
 
@@ -38,9 +38,14 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
         DocumentSnapshot snapshot = await transaction.get(userDoc);
 
         if (snapshot.exists) {
+
+          final currentCoinHistories =
+          snapshot.get('coinHistories') as List<dynamic>;
+          currentCoinHistories.add(coinHistory.toJson());
+          transaction.update(userDoc, {'coinHistories': currentCoinHistories});
+
           double currentCoin = snapshot.get('coin') ?? 0;
           double newCoinValue = currentCoin + coinToAdd;
-
           transaction.update(userDoc, {'coin': newCoinValue});
         }
       });
@@ -51,7 +56,7 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
 
   // Subtract coin
   @override
-  Future<void> subtractCoin(String uid, double coinToSubtract) async {
+  Future<void> subtractCoin(String uid, double coinToSubtract,CoinHistoryFirestoreModel coinHistory) async {
     try {
       DocumentReference userDoc = _firestore.collection('users').doc(uid);
 
@@ -59,6 +64,11 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
         DocumentSnapshot snapshot = await transaction.get(userDoc);
 
         if (snapshot.exists) {
+          final currentCoinHistories =
+          snapshot.get('coinHistories') as List<dynamic>;
+          currentCoinHistories.add(coinHistory.toJson());
+          transaction.update(userDoc, {'coinHistories': currentCoinHistories});
+
           double currentCoin = snapshot.get('coin') ?? 0;
           double newCoinValue = currentCoin -coinToSubtract;
 
@@ -99,26 +109,26 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
     }
   }
 
-  // transaction coin
-  @override
-  Future<void> transactionCoin(
-      CoinHistoryFirestoreModel coinHistory, String uid) async {
-    try {
-      DocumentReference userDoc = _firestore.collection('users').doc(uid);
-      await _firestore.runTransaction((transaction) async {
-        DocumentSnapshot snapshot = await transaction.get(userDoc);
-
-        if (snapshot.exists) {
-          final currentCoinHistories =
-              snapshot.get('coinHistories') as List<dynamic>;
-          currentCoinHistories.add(coinHistory.toJson());
-          transaction.update(userDoc, {'coinHistories': currentCoinHistories});
-        }
-      });
-    } catch (err) {
-      return Future.error(err);
-    }
-  }
+  // // transaction coin
+  // @override
+  // Future<void> transactionCoin(
+  //     CoinHistoryFirestoreModel coinHistory, String uid) async {
+  //   try {
+  //     DocumentReference userDoc = _firestore.collection('users').doc(uid);
+  //     await _firestore.runTransaction((transaction) async {
+  //       DocumentSnapshot snapshot = await transaction.get(userDoc);
+  //
+  //       if (snapshot.exists) {
+  //         final currentCoinHistories =
+  //             snapshot.get('coinHistories') as List<dynamic>;
+  //         currentCoinHistories.add(coinHistory.toJson());
+  //         transaction.update(userDoc, {'coinHistories': currentCoinHistories});
+  //       }
+  //     });
+  //   } catch (err) {
+  //     return Future.error(err);
+  //   }
+  // }
 
   // delete coin history
   @override
@@ -167,7 +177,7 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
   DocumentSnapshot? _lastDocumentSnapshot;
 
   @override
-  Future<List<UserFirestoreModel>> fetchUserSortedByCoin(
+  Future<List<UserFirestoreModel>> getTopUser(
       int pageIndex, int pageSize) async {
     try {
       Query query = _firestore
@@ -197,6 +207,7 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
       return Future.error(err);
     }
   }
+
 
 
 

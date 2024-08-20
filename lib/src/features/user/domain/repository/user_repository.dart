@@ -27,6 +27,10 @@ abstract class UserRepository {
   Future<List<UserEntity>> fetchUserSortedByCoin(
       int pageIndex, int pageSize);
 
+  Future<void> sendCoin(String senderUid, String receiverUid, double amountCoin);
+
+  Stream<double> listenToCoinChanges(String uid);
+
   // ****Local ****
   Stream<UserEntity> getInfoUser(String uid);
 
@@ -34,13 +38,15 @@ abstract class UserRepository {
 
   Future<void> changeUserName(String uid, String name);
 
+  Future<void>  updatedCoin(String uid , double newAmountCoin);
+
   Future<UserEntity> getUser(String uid);
 
   Future<void> deleteInfo();
 
   Future<void> addCoin(double coin, String uid);
 
-  Future<void> subtractionCoin(double coin, String uid);
+  Future<void> subtractCoin(double coin, String uid);
 
   Stream<List<CoinHistoryEntity>> watchCoinHistoryLocal(int pageIndex);
 

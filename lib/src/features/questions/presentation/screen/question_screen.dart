@@ -37,7 +37,7 @@ class QuestionScreen extends ConsumerWidget {
                      TextButton(
                        onPressed: () {
                          Navigator.pop(ctx);
-                        GoRouter.of(context).go("/");
+                         GoRouter.of(context).go("/");
                        },
                        child: const Text('Exit', style: TextStyle(fontSize: 24, color: Colors.red)),
                      ),
