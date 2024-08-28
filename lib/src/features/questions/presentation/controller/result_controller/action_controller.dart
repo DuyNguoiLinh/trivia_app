@@ -13,7 +13,7 @@ final iconActionProvider = Provider.autoDispose<Map<String, IconData>>((ref) {
     'Share': Icons.share,
     'Screenshot': Icons.camera_alt,
     'Home': Icons.home,
-    'Feedback': Icons.feedback,
+    'Continue': Icons.refresh,
   };
 });
 
@@ -25,6 +25,6 @@ final colorActionProvider = Provider.autoDispose<Map<String, Color>>((ref) {
     'Share':  Colors.indigo,
     'Screenshot': Colors.greenAccent,
     'Home':  Colors.limeAccent,
-    'Feedback': Colors.grey,
+    'Continue': Colors.grey,
   };
 });

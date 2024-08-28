@@ -6,7 +6,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/domain/repository
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/home_controller/category_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/list_question_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
-import '../../../../user/presentation/controller/router_controller.dart';
+import '../../../../user/global_variables.dart';
 import 'answer_controller.dart';
 
 
@@ -18,12 +18,9 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
   final _userRepository =UserRepository.create();
 
   final  _quizRepository = QuizRepository.create();
-   String _uid ='';
+
   @override
   FutureOr<QuestionEntity?> build() {
-
-    final authState = ref.watch(authStateProvider);
-    _uid = authState.asData?.value?.uid ?? '';
 
     return _initQuestion();
   }
@@ -81,11 +78,11 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
   //  update question by click identifier
   Future<void> updateQuestionByIdentifier(String id) async {
     try {
-      for (final question in listQuestion) {
+      for (int i=0 ;i<listQuestion.length;i++) {
 
-        if (question.id == id) {
-
-          state = AsyncValue.data(question);
+        if (listQuestion[i].id == id) {
+          currentQuestionIndex= i ;
+          state = AsyncValue.data(listQuestion[i]);
           break;
         }
       }
@@ -160,7 +157,7 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
       }
 
       state=AsyncValue.data(listQuestion.first);
-      await _userRepository.subtractCoin(3,_uid);
+      await _userRepository.subtractCoin(3,uidGlobal);
     } catch (err, stackTr) {
       return Future.error(err, stackTr);
     }
@@ -183,7 +180,7 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
         }
       }
       state=AsyncValue.data(questionEntity);
-      await _userRepository.subtractCoin(1.0,_uid);
+      await _userRepository.subtractCoin(1.0,uidGlobal);
 
     } catch (err, stackTr) {
       return Future.error(err, stackTr);
@@ -199,7 +196,7 @@ class QuestionNotifier extends AutoDisposeAsyncNotifier<QuestionEntity?> {
 
      final nameCategory=ref.watch(nameCategoryProvider);
 
-     await _quizRepository.toggleSaveQuestion(questionEntity,id,nameCategory,_uid);
+     await _quizRepository.toggleSaveQuestion(questionEntity,id,nameCategory,uidGlobal);
    } catch (err, stackTr) {
      return Future.error(err, stackTr);
    }

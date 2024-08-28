@@ -1,2 +1,2 @@
-double coin =0 ;
-String uid='';
+double coinGlobal =0 ;
+String uidGlobal='';

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/user_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/info_User_screen.dart';
 
 class UserItem extends ConsumerWidget {
   const UserItem({super.key, required this.userEntity, required this.index});
@@ -10,7 +12,9 @@ class UserItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
      String? assetImage;
+
     if (index == 1) {
       assetImage = 'assets/images/first.png';
     } else if (index == 2) {
@@ -18,6 +22,7 @@ class UserItem extends ConsumerWidget {
     } else if (index == 3) {
       assetImage = 'assets/images/3rd.png';
     }
+
     final Color backgroundColor;
     if (index == 1) {
       backgroundColor = Colors.green;
@@ -30,7 +35,7 @@ class UserItem extends ConsumerWidget {
     }
 
     return Container(
-      height: 150,
+      height: 100,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       decoration: BoxDecoration(
@@ -39,7 +44,7 @@ class UserItem extends ConsumerWidget {
           color: Colors.grey,
           width: 2.0,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.3),
@@ -49,46 +54,66 @@ class UserItem extends ConsumerWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          if (index <= 3 && assetImage != null)
-            Image.asset(
-              assetImage,
-              width: 60,
-              height: 60,
-            ),
-          if (index > 3)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Text(
-                index.toString(),
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ),
-         const SizedBox(width: 60,),
-          Expanded(
-            child: Text(
-              userEntity.userName,
-              style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Row(
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => InfoUserScreen(userEntity: userEntity)),
+          );
+        },
+          child: Row(
             children: [
-              Text(
-                userEntity.coin.toString(),
-                style: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+              if (index <= 3 && assetImage != null)
+                Image.asset(
+                  assetImage,
+                  width: 60,
+                  height: 60,
+                ),
+              if (index > 3)
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    index.toString(),
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+            const SizedBox(width: 20,),
+            Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(50),
               ),
-              const SizedBox(width: 4),
-              Image.asset(
-                'assets/images/bitcoin.png',
-                width: 24,
-                height: 24,
+              child: userEntity.avatarUrl == null ?  Image.asset('assets/images/user.png') :
+                   Image.network(userEntity.avatarUrl!)
+            ),
+             const SizedBox(width: 20,),
+              Expanded(
+                child: Text(
+                  userEntity.userName,
+                  style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    userEntity.coin.toString(),
+                    style: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 4),
+
+                  Image.asset(
+                    'assets/images/bitcoin.png',
+                    width: 24,
+                    height: 24,
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        ),
     );
   }
 }

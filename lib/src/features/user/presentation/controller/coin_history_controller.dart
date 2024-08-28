@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/coin_history_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/model_with_pagination.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
-import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/router_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/user/presentation/widget/wallet_widget/coin_history_item.dart';
+
+import '../../global_variables.dart';
 
 // page Index Provider
 
@@ -15,16 +15,44 @@ class CoinHistoryNotifier
   final int pageSize = 5;
 
   final _userRepository = UserRepository.create();
-
-  String _uid = '';
+  StreamSubscription<List<CoinHistoryEntity>>? _subscription;
 
   @override
   FutureOr<ModelWithPagination<CoinHistoryEntity>> build() async {
-    final authState = ref.watch(authStateProvider);
-    _uid = authState.asData?.value?.uid ?? '';
+
+    ref.onDispose(() {
+      _subscription?.cancel();
+    },);
+
+    _subscription = _userRepository.watchCoinHistoryInThirtyDays(uidGlobal).listen(
+            (newCoinHistory) {
+
+              if(newCoinHistory.isNotEmpty){
+                final currentList = List<CoinHistoryEntity>.empty(growable: true);
+
+                final currentData = state.valueOrNull;
+
+                currentList.addAll(
+                    currentData?.data ?? List<CoinHistoryEntity>.empty(growable: true));
+
+                if(currentData?.data.first.idTransaction != newCoinHistory.first.idTransaction){
+                  currentList.insertAll(0,newCoinHistory);
+
+                  final newPage = ModelWithPagination(
+                      nextPageKey: currentData?.nextPageKey, data: currentList);
+                  state = AsyncValue.data(newPage);
+
+                }
+              }
+
+
+        }, onError: (err,stackTr){
+
+    }
+    );
 
     final listCoinHistory =
-        await _userRepository.getCoinHistories(0, pageSize, _uid);
+        await _userRepository.getCoinHistories(0, pageSize, uidGlobal);
 
     return ModelWithPagination(nextPageKey: 1, data: listCoinHistory);
   }
@@ -32,7 +60,7 @@ class CoinHistoryNotifier
   Future<void> fetchPage(int pageIndex) async {
     try {
       final listCoinHistory =
-          await _userRepository.getCoinHistories(pageIndex, pageSize, _uid);
+          await _userRepository.getCoinHistories(pageIndex, pageSize, uidGlobal);
 
       final currentList = List<CoinHistoryEntity>.empty(growable: true);
 
@@ -48,6 +76,7 @@ class CoinHistoryNotifier
 
         state = AsyncValue.data(nextPage);
       } else {
+        currentList.addAll(listCoinHistory);
         final lastPage =
             ModelWithPagination(nextPageKey: null, data: currentList);
 
@@ -70,7 +99,7 @@ class CoinHistoryNotifier
           nextPageKey: currentData?.nextPageKey, data: newList);
       state = AsyncValue.data(newPage);
 
-      await _userRepository.deleteCoinHistory(id, _uid);
+      await _userRepository.deleteCoinHistory(id, uidGlobal);
     } catch (err, stackTr) {
       state = AsyncValue.error(err, stackTr);
     }

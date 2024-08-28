@@ -81,7 +81,7 @@ class ListAnswer extends ConsumerWidget{
                                 child: const Text('Cancel')),
                             TextButton(
                                 onPressed: () {
-                                  if(coin<1){
+                                  if(coinGlobal<1){
                                     GoRouter.of(context).pop();
                                     showDialog(
                                       context: context,

@@ -9,6 +9,7 @@ class UserFirestoreModel {
   final String uid;
   final String name;
   final double coin;
+  final String? avatarUrl;
   final List<CoinHistoryFirestoreModel> coinHistories;
   final List<QuestionFirestoreModel> questionsFavorite;
 
@@ -16,6 +17,7 @@ class UserFirestoreModel {
     required this.uid,
     required this.name,
     this.coin = 0,
+    this.avatarUrl,
     this.coinHistories = const <CoinHistoryFirestoreModel>[],
     this.questionsFavorite = const <QuestionFirestoreModel>[],
   });

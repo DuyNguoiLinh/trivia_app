@@ -49,7 +49,7 @@ class QuestionApiNotifier
   }
 }
 
-final questionApiProvider = AsyncNotifierProvider.autoDispose<
+final quizProvider = AsyncNotifierProvider.autoDispose<
     QuestionApiNotifier, List<QuestionEntity>>(() {
   return QuestionApiNotifier();
 });

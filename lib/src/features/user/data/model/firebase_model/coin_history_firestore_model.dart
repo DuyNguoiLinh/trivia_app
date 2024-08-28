@@ -8,12 +8,14 @@ part 'coin_history_firestore_model.g.dart';
 @JsonSerializable()
 class CoinHistoryFirestoreModel {
   final String idTransaction;
+  final String? message;
   final double amountEarnCoin;
   final DateTime timestamp;
   final String type;
 
   CoinHistoryFirestoreModel({
     required this.idTransaction,
+    this.message,
     required this.amountEarnCoin,
     required this.timestamp,
     required this.type,

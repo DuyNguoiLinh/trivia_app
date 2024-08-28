@@ -9,6 +9,10 @@ abstract class FirestoreDataSource {
 
   Future<UserFirestoreModel?> getUserByUid(String uid);
 
+  Future<void> changeAvatar(String uid , String avatarUrl);
+
+  Future<bool> checkReceiverCoin(String uid);
+
   Future<void> addCoin(String uid, double coinToAdd,CoinHistoryFirestoreModel coinHistory);
 
   Future<void> subtractCoin(String uid, double coinToSubtract,CoinHistoryFirestoreModel coinHistory);
@@ -16,6 +20,8 @@ abstract class FirestoreDataSource {
   Future<void> addQuestionFavorite(QuestionFirestoreModel question,String uid);
 
   // Future<void> transactionCoin(CoinHistoryFirestoreModel coinHistory,String uid);
+
+  Stream<List<CoinHistoryFirestoreModel>> streamCoinHistories(String uid);
 
   Future<void> deleteCoinTransaction(String uid, String idTransaction);
 

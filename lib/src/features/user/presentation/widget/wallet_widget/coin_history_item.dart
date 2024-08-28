@@ -24,7 +24,7 @@ class CoinHistoryItem extends ConsumerWidget {
     final isGift=coinHistoryEntity.type.contains('gift');
 
     return Container(
-      height: 100,
+      height: 150,
       decoration: BoxDecoration(
         color: coinHistoryEntity.type.contains('fee') ? Colors.red.withOpacity(0.8) : Colors.green,
         borderRadius: BorderRadius.circular(20),
@@ -38,56 +38,75 @@ class CoinHistoryItem extends ConsumerWidget {
         ],
       ),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      child: Row(children: [
-        const SizedBox(
-          width: 10,
-        ),
-        Container(
-          width: 50.0,
-          height: 50.0,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: AssetImage(
-                isGift ? 'assets/images/giftbox.png' :
-                  coinHistoryEntity.type == 'fee'
-                  ? 'assets/images/down.png'
-                  : 'assets/images/up .png'),
-              fit: BoxFit.cover,
+      padding:  const EdgeInsets.only(left: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 10,),
+          Container(
+            width: 50.0,
+            height: 50.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage(
+                    isGift ? 'assets/images/giftbox.png' :
+                    coinHistoryEntity.type == 'fee'
+                        ? 'assets/images/down.png'
+                        : 'assets/images/up .png'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-        ),
-        const Spacer(),
-        Text(
-          formatDate(coinHistoryEntity.timestamp),
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.white70,
-          ),
-        ),
-        const Spacer(),
-        Text(
-          coinHistoryEntity.type == 'fee' ?
-          ' - ${(coinHistoryEntity.amountEarnCoin).toString()} coin'
-           :  ' + ${(coinHistoryEntity.amountEarnCoin).toString()} coin',
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        IconButton(
-          icon: const Icon(Icons.delete),
-          onPressed: () {
-            onPressed();
-          },
-          color: Colors.black54,
-          iconSize: 30.0,
-        ),
-      ]),
+              Row(children: [
+                const SizedBox(
+                  width: 10,
+                ),
+                const Spacer(),
+                Column(
+                  children: [
+                    if(coinHistoryEntity.message != null)
+
+                      Text(coinHistoryEntity.message!, style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white70,
+                      ),),
+
+                    Text(
+                      formatDate(coinHistoryEntity.timestamp),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Text(
+                  coinHistoryEntity.type.contains('fee')  ?
+                  ' - ${(coinHistoryEntity.amountEarnCoin).toString()} '
+                      :  ' + ${(coinHistoryEntity.amountEarnCoin).toString()}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    onPressed();
+                  },
+                  color: Colors.black54,
+                  iconSize: 30.0,
+                ),
+              ])
+            ],
+
+      ),
     );
   }
 }

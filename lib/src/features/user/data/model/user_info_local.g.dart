@@ -17,18 +17,23 @@ const UserInfoLocalSchema = CollectionSchema(
   name: r'UserInfoLocal',
   id: 4546886641457929965,
   properties: {
-    r'coin': PropertySchema(
+    r'avatarUrl': PropertySchema(
       id: 0,
+      name: r'avatarUrl',
+      type: IsarType.string,
+    ),
+    r'coin': PropertySchema(
+      id: 1,
       name: r'coin',
       type: IsarType.double,
     ),
     r'uid': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'uid',
       type: IsarType.string,
     ),
     r'userName': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'userName',
       type: IsarType.string,
     )
@@ -93,6 +98,12 @@ int _userInfoLocalEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.avatarUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.uid.length * 3;
   bytesCount += 3 + object.userName.length * 3;
   return bytesCount;
@@ -104,9 +115,10 @@ void _userInfoLocalSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDouble(offsets[0], object.coin);
-  writer.writeString(offsets[1], object.uid);
-  writer.writeString(offsets[2], object.userName);
+  writer.writeString(offsets[0], object.avatarUrl);
+  writer.writeDouble(offsets[1], object.coin);
+  writer.writeString(offsets[2], object.uid);
+  writer.writeString(offsets[3], object.userName);
 }
 
 UserInfoLocal _userInfoLocalDeserialize(
@@ -116,9 +128,10 @@ UserInfoLocal _userInfoLocalDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = UserInfoLocal(
-    coin: reader.readDoubleOrNull(offsets[0]) ?? 0.0,
-    uid: reader.readString(offsets[1]),
-    userName: reader.readString(offsets[2]),
+    avatarUrl: reader.readStringOrNull(offsets[0]),
+    coin: reader.readDoubleOrNull(offsets[1]) ?? 0.0,
+    uid: reader.readString(offsets[2]),
+    userName: reader.readString(offsets[3]),
   );
   object.id = id;
   return object;
@@ -132,10 +145,12 @@ P _userInfoLocalDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDoubleOrNull(offset) ?? 0.0) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readDoubleOrNull(offset) ?? 0.0) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -440,6 +455,160 @@ extension UserInfoLocalQueryWhere
 
 extension UserInfoLocalQueryFilter
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'avatarUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'avatarUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'avatarUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'avatarUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'avatarUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'avatarUrl',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> coinEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -959,6 +1128,19 @@ extension UserInfoLocalQueryLinks
 
 extension UserInfoLocalQuerySortBy
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QSortBy> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByAvatarUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'avatarUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy>
+      sortByAvatarUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'avatarUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByCoin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coin', Sort.asc);
@@ -999,6 +1181,19 @@ extension UserInfoLocalQuerySortBy
 
 extension UserInfoLocalQuerySortThenBy
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QSortThenBy> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByAvatarUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'avatarUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy>
+      thenByAvatarUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'avatarUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByCoin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coin', Sort.asc);
@@ -1051,6 +1246,13 @@ extension UserInfoLocalQuerySortThenBy
 
 extension UserInfoLocalQueryWhereDistinct
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> distinctByAvatarUrl(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'avatarUrl', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> distinctByCoin() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'coin');
@@ -1077,6 +1279,12 @@ extension UserInfoLocalQueryProperty
   QueryBuilder<UserInfoLocal, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, String?, QQueryOperations> avatarUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'avatarUrl');
     });
   }
 

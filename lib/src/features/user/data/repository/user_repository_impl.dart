@@ -1,12 +1,17 @@
+import 'dart:async';
+import 'package:image_picker/image_picker.dart';
+import 'package:ntp/ntp.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/repository/quiz_respository.dart';
-import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/user_realtime_database_model.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/coin_realtime_database_model.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/firestore_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/realtime_database_data_source.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/sources/storage_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/coin_history_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/user_entity.dart';
 import '../../domain/repository/user_repository.dart';
 import '../model/firebase_model/user_firestore_model.dart';
 import '../sources/auth_data_source.dart';
+import '../sources/send_coin_error.dart';
 import '../sources/user_local_data_source.dart';
 
 class UserRepositoryImpl implements UserRepository {
@@ -17,6 +22,7 @@ class UserRepositoryImpl implements UserRepository {
   final _authDataSource = AuthDataSource.create();
   final _firestoreDataSource = FirestoreDataSource.create();
   final _realtimeDatabase = RealtimeDatabaseDataSource.create();
+  final _storageDataSource = StorageDataSource.create();
 
   // Sign up
   @override
@@ -26,11 +32,10 @@ class UserRepositoryImpl implements UserRepository {
     if (user != null) {
       // add user to firestore
       final userResponse = UserFirestoreModel(uid: user.uid, name: userName);
-      final userRealtime = UserRealtimeDatabaseModel(uid: user.uid, name: userName, email: email);
+
       _firestoreDataSource.addUser(userResponse);
-      _realtimeDatabase.addUser(userRealtime);
       // save user to local
-      saveUserName(userName, 0, user.uid);
+      await saveUserInfo(userName, 0, user.uid, null);
     }
   }
 
@@ -43,8 +48,8 @@ class UserRepositoryImpl implements UserRepository {
       final userResponse = await _firestoreDataSource.getUserByUid(user.uid);
 
       if (userResponse != null) {
-        await saveUserName(
-            userResponse.name, userResponse.coin, userResponse.uid);
+        await saveUserInfo(userResponse.name, userResponse.coin,
+            userResponse.uid, userResponse.avatarUrl);
       }
     }
   }
@@ -66,8 +71,8 @@ class UserRepositoryImpl implements UserRepository {
         final userResponse = await _firestoreDataSource.getUserByUid(user.uid);
 
         if (userResponse != null) {
-         await saveUserName(userResponse.name, userResponse.coin, userResponse.uid);
-
+          await saveUserInfo(userResponse.name, userResponse.coin, user.uid,
+              userResponse.avatarUrl);
         } else {
           final name = user.displayName;
           if (name != null) {
@@ -75,17 +80,13 @@ class UserRepositoryImpl implements UserRepository {
             final userResponse = UserFirestoreModel(uid: user.uid, name: name);
             _firestoreDataSource.addUser(userResponse);
 
-            final userRealtime = UserRealtimeDatabaseModel(uid: user.uid, name: name, email: user.email!);
-            _realtimeDatabase.addUser(userRealtime);
-
-            await saveUserName(name, 0, user.uid);
+            await saveUserInfo(name, 0, user.uid, null);
           }
         }
       }
     } catch (err) {
       return Future.error(err);
     }
-
   }
 
   // Connect google account
@@ -98,7 +99,6 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> deleteAccount(String uid) async {
     await _firestoreDataSource.deleteUserData(uid);
-    await _realtimeDatabase.deleteUser(uid);
     await _localDataSource.deleteLocalData(uid);
     await _authDataSource.deleteAccount(uid);
   }
@@ -110,23 +110,49 @@ class UserRepositoryImpl implements UserRepository {
 
   //  ****Fire Store ******
 
-
   //  Fetch user
   @override
   Future<List<UserEntity>> fetchUserSortedByCoin(
       int pageIndex, int pageSize) async {
-    final listUser =
-        await _firestoreDataSource.getTopUser(pageIndex, pageSize);
+    final listUser = await _firestoreDataSource.getTopUser(pageIndex, pageSize);
     return listUser.map((e) => UserEntity.fromFirestore(e)).toList();
   }
 
   // get info user to fire store
   @override
-  Future<UserEntity> getUser(String uid) async {
+  Future<UserEntity?> getUser(String uid) async {
     try {
-      final userLocal = await _localDataSource.getUser(uid);
-      final userInfo = UserEntity.fromLocal(userLocal!);
-      return userInfo;
+      final userFirestore = await _firestoreDataSource.getUserByUid(uid);
+
+      if (userFirestore != null) {
+        final userInfo = UserEntity.fromFirestore(userFirestore);
+
+        final coinHistoryLocal = userFirestore.coinHistories
+            .map((e) => CoinHistoryEntity.fromFirestore(e).toLocal())
+            .toList();
+
+        await _localDataSource.saveUserInfo(
+            userInfo.userName, userInfo.coin, uid, userInfo.avatarUrl);
+        await _localDataSource.saveCoinHistories(coinHistoryLocal, uid);
+
+        return userInfo;
+      }
+      return null;
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
+  // get user name when input wallet address
+  @override
+  Future<String?> getUserNameByUid(String uid) async {
+    try {
+      final userFirestore = await _firestoreDataSource.getUserByUid(uid);
+      if (userFirestore != null) {
+        return userFirestore.name;
+      } else {
+        return null;
+      }
     } catch (err) {
       return Future.error(err);
     }
@@ -134,30 +160,90 @@ class UserRepositoryImpl implements UserRepository {
 
   //  send coin
   @override
-  Future<void> sendCoin(String senderUid, String receiverUid, double amountCoin) async {
+  Future<void> sendCoin(String senderUid, String receiverUid, double amountCoin,
+      String message) async {
     try {
-      await _realtimeDatabase.sendCoin(senderUid, receiverUid, amountCoin);
+      final receiverValid =
+          await _firestoreDataSource.checkReceiverCoin(receiverUid);
+      if (!receiverValid) {
+        final sendError = SendCoinError("Wallet adress not Valid");
+        return Future.error(sendError);
+      } else {
+        final ntpTime = await NTP.now();
+        final now = ntpTime.millisecondsSinceEpoch;
 
-     await addCoin(amountCoin, receiverUid,gift: true);
-     await subtractCoin(amountCoin, senderUid,gift: true);
+        final newCoin = CoinRealtimeDatabaseModel(
+          uidSender: senderUid,
+          coin: amountCoin,
+          ts:  now,
+        );
+        await _realtimeDatabase.sendCoinRealtime(receiverUid, newCoin);
 
+        await subtractCoin(amountCoin, senderUid, gift: true);
+        await addCoin(amountCoin, receiverUid, gift: true, message: message);
+      }
     } catch (err) {
       return Future.error(err);
     }
   }
+
+  // upload avatar
+  @override
+  Future<void> uploadAvatar(XFile pickerFile, String uid) async {
+    try {
+      final avatarUrl = await _storageDataSource.uploadAvatar(pickerFile);
+      await _firestoreDataSource.changeAvatar(uid, avatarUrl);
+      await _localDataSource.changeAvatar(uid, avatarUrl);
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
+  //  change avatar
+  @override
+  Future<void> changeAvatar(
+      XFile newPickerFile, String currentAvatarUrl, String uid) async {
+    try {
+      final newAvatarUrl = await _storageDataSource.changeAvatar(
+          newPickerFile, currentAvatarUrl);
+      await _firestoreDataSource.changeAvatar(uid, newAvatarUrl);
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
+  //****Local****
+  // Stream
+  @override
+  Stream<List<CoinHistoryEntity>> streamCoinHistories(String uid) {
+    return _firestoreDataSource.streamCoinHistories(uid).map((coinHistory) {
+      return coinHistory
+          .map((e) => CoinHistoryEntity.fromFirestore(e))
+          .toList();
+    });
+  }
+
   //  stream update coin Ui
   @override
-  Stream<double> listenToCoinChanges(String uid) {
-    return _realtimeDatabase.listenToCoinChanges(uid);
+  Stream<CoinRealtimeDatabaseModel?> listenToCoinChanges(String uid, int now) {
+    return _realtimeDatabase.listenToCoinChanges(uid, now);
   }
+
   // ****Local******
 
   // save user name
   @override
-  Future<void> saveUserName(String name, double coin, String uid) async {
-    await _localDataSource.saveUserName(name, coin, uid);
+  Future<void> saveUserInfo(
+    String name,
+    double coin,
+    String uid,
+    String? avatarUrl,
+  ) async {
+    await _localDataSource.saveUserInfo(name, coin, uid, avatarUrl);
+
     final coinHistoryFromFirestore =
         await _firestoreDataSource.fetchCoinHistories(uid);
+
     final coinHistoryLocal = coinHistoryFromFirestore
         .map((e) => CoinHistoryEntity.fromFirestore(e).toLocal())
         .toList();
@@ -168,24 +254,24 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> changeUserName(String uid, String name) async {
     await _firestoreDataSource.changeName(uid, name);
+    // await _realtimeDatabase.changeName(uid, name);
     await _localDataSource.changeUserName(uid, name);
   }
 
   // updated coin
 
   @override
-  Future<void>  updatedCoin(String uid , double newAmountCoin) async {
+  Future<void> updatedCoin(String uid, double newAmountCoin) async {
     await _localDataSource.updatedCoin(uid, newAmountCoin);
   }
 
   // update coin
   @override
-  Stream<UserEntity> getInfoUser(String uid) {
+  Stream<UserEntity> watchInfoUser(String uid) {
     return _localDataSource.getInfoUser(uid).map((userLocal) {
       return userLocal.map((user) => UserEntity.fromLocal(user)).toList().first;
     });
   }
-
 
   //  delete info user in local
   @override
@@ -199,23 +285,22 @@ class UserRepositoryImpl implements UserRepository {
 
   //   addition  coin
   @override
-  Future<void> addCoin(double coin, String uid,{bool gift=false}) async {
+  Future<void> addCoin(double coin, String uid,
+      {bool gift = false, String message = ''}) async {
     try {
       final coinHistoryEntity = CoinHistoryEntity(
+        message: message,
         amountEarnCoin: coin,
         timestamp: DateTime.now(),
         type: gift == true ? 'earn-gift' : 'earn',
       );
 
-
-      await _firestoreDataSource.addCoin(uid, coin, coinHistoryEntity.toFireStore());
-
-      if(!gift){
+      if (!gift) {
         await _localDataSource.addCoin(coin, uid, coinHistoryEntity.toLocal());
-        await _realtimeDatabase.addCoin(uid, coin);
       }
 
-
+      await _firestoreDataSource.addCoin(
+          uid, coin, coinHistoryEntity.toFireStore());
     } catch (err) {
       return Future.error(err);
     }
@@ -223,32 +308,36 @@ class UserRepositoryImpl implements UserRepository {
 
   // subtraction coin
   @override
-  Future<void> subtractCoin(double coin, String uid,{bool gift=false}) async {
+  Future<void> subtractCoin(double coin, String uid,
+      {bool gift = false, String message = ''}) async {
     try {
       final coinHistoryEntity = CoinHistoryEntity(
+        message: message,
         amountEarnCoin: coin,
         timestamp: DateTime.now(),
         type: gift == true ? 'fee-gift' : 'fee',
       );
 
-      await _localDataSource.subtractionCoin(
-          coin, uid, coinHistoryEntity.toLocal());
+      await _localDataSource.subtractCoin(
+        coin,
+        uid,
+        coinHistoryEntity.toLocal(),
+      );
 
-
-      await _firestoreDataSource.subtractCoin(uid, coin, coinHistoryEntity.toFireStore());
-      if(!gift){
-        await _realtimeDatabase.subtractCoin(uid, coin);
-      }
-
+      await _firestoreDataSource.subtractCoin(
+        uid,
+        coin,
+        coinHistoryEntity.toFireStore(),
+      );
     } catch (err) {
       return Future.error(err);
     }
   }
 
   @override
-  Stream<List<CoinHistoryEntity>> watchCoinHistoryLocal(int pageIndex) {
+  Stream<List<CoinHistoryEntity>> watchCoinHistoryInThirtyDays(String uid) {
     return _localDataSource
-        .watchCoinHistoryInThirtyDays(pageIndex)
+        .watchCoinHistoryInThirtyDays(uid)
         .map((listCoinHistory) {
       return listCoinHistory
           .map((e) => CoinHistoryEntity.fromLocal(e))
@@ -270,6 +359,13 @@ class UserRepositoryImpl implements UserRepository {
     } catch (err) {
       return Future.error(err);
     }
+  }
+
+  @override
+  Future<void> saveCoinHistories(
+      List<CoinHistoryEntity> listCoinHistory, String uid) async {
+    final coinHistoriesLocal = listCoinHistory.map((e) => e.toLocal()).toList();
+    await _localDataSource.saveCoinHistories(coinHistoriesLocal, uid);
   }
 
   // delete CoinHistory

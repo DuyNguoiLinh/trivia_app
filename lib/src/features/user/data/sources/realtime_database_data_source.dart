@@ -1,20 +1,21 @@
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/realtime_database_data_source_impl.dart';
 
-import '../model/firebase_model/user_realtime_database_model.dart';
+import '../model/firebase_model/coin_realtime_database_model.dart';
+
 
 abstract class RealtimeDatabaseDataSource {
 
-  Future<void>  addUser(UserRealtimeDatabaseModel user);
+  // Future<void> addCoin(String uid , double coin);
 
-  Future<void> addCoin(String uid , double coin);
+  // Future<void> changeName(String uid, String newUserName);
 
-  Future<void> subtractCoin(String uid , double coin);
+  // Future<void> subtractCoin(String uid , double coin);
 
-  Future<void> sendCoin(String senderUid, String receiverUid, double amountCoin);
+  Future<void> sendCoinRealtime(String uid, CoinRealtimeDatabaseModel newCoin);
 
-  Stream<double> listenToCoinChanges(String uid);
+  Stream<CoinRealtimeDatabaseModel?> listenToCoinChanges(String uid, int now);
 
-  Future<void> deleteUser(String uid);
+  // Future<void> deleteUser(String uid);
 
   factory RealtimeDatabaseDataSource.create() {
     return RealtimeDatabaseDataSourceImpl();

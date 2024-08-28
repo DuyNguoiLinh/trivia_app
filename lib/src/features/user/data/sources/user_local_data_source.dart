@@ -5,9 +5,11 @@ import '../model/user_info_local.dart';
 
 abstract class  UserLocalDataSource{
 
-  Future<void>  saveUserName(String name,double coin, String uid);
+  Future<void>  saveUserInfo(String name,double coin, String uid,String? avatarUrl);
 
   Future<void> changeUserName(String uid,String name);
+
+  Future<void> changeAvatar(String uid, String avatarUrl);
 
   Future<void>  updatedCoin(String uid , double newAmountCoin);
 
@@ -19,9 +21,9 @@ abstract class  UserLocalDataSource{
 
   Future<void> addCoin(double coin,String uid,CoinHistoryLocal coinHistoryLocal);
 
-  Future<void> subtractionCoin(double coin,String uid,CoinHistoryLocal coinHistoryLocal);
+  Future<void> subtractCoin(double coin,String uid,CoinHistoryLocal coinHistoryLocal);
 
-  Stream<List<CoinHistoryLocal>> watchCoinHistoryInThirtyDays(int pageIndex);
+  Stream<List<CoinHistoryLocal>> watchCoinHistoryInThirtyDays(String uid);
 
   Future<List<CoinHistoryLocal>> getCoinHistories(int pageIndex,int pageSize,String uid);
 

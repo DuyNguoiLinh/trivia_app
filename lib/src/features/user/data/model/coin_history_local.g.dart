@@ -27,13 +27,18 @@ const CoinHistoryLocalSchema = CollectionSchema(
       name: r'idTransaction',
       type: IsarType.string,
     ),
-    r'timestamp': PropertySchema(
+    r'message': PropertySchema(
       id: 2,
+      name: r'message',
+      type: IsarType.string,
+    ),
+    r'timestamp': PropertySchema(
+      id: 3,
       name: r'timestamp',
       type: IsarType.dateTime,
     ),
     r'type': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'type',
       type: IsarType.string,
     )
@@ -43,7 +48,21 @@ const CoinHistoryLocalSchema = CollectionSchema(
   deserialize: _coinHistoryLocalDeserialize,
   deserializeProp: _coinHistoryLocalDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'idTransaction': IndexSchema(
+      id: 8537940135064520224,
+      name: r'idTransaction',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'idTransaction',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _coinHistoryLocalGetId,
@@ -59,6 +78,12 @@ int _coinHistoryLocalEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.idTransaction.length * 3;
+  {
+    final value = object.message;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.type.length * 3;
   return bytesCount;
 }
@@ -71,8 +96,9 @@ void _coinHistoryLocalSerialize(
 ) {
   writer.writeDouble(offsets[0], object.amountEarnCoin);
   writer.writeString(offsets[1], object.idTransaction);
-  writer.writeDateTime(offsets[2], object.timestamp);
-  writer.writeString(offsets[3], object.type);
+  writer.writeString(offsets[2], object.message);
+  writer.writeDateTime(offsets[3], object.timestamp);
+  writer.writeString(offsets[4], object.type);
 }
 
 CoinHistoryLocal _coinHistoryLocalDeserialize(
@@ -84,8 +110,9 @@ CoinHistoryLocal _coinHistoryLocalDeserialize(
   final object = CoinHistoryLocal(
     amountEarnCoin: reader.readDouble(offsets[0]),
     idTransaction: reader.readString(offsets[1]),
-    timestamp: reader.readDateTime(offsets[2]),
-    type: reader.readString(offsets[3]),
+    message: reader.readStringOrNull(offsets[2]),
+    timestamp: reader.readDateTime(offsets[3]),
+    type: reader.readString(offsets[4]),
   );
   object.id = id;
   return object;
@@ -103,8 +130,10 @@ P _coinHistoryLocalDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
+      return (reader.readDateTime(offset)) as P;
+    case 4:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -122,6 +151,63 @@ List<IsarLinkBase<dynamic>> _coinHistoryLocalGetLinks(CoinHistoryLocal object) {
 void _coinHistoryLocalAttach(
     IsarCollection<dynamic> col, Id id, CoinHistoryLocal object) {
   object.id = id;
+}
+
+extension CoinHistoryLocalByIndex on IsarCollection<CoinHistoryLocal> {
+  Future<CoinHistoryLocal?> getByIdTransaction(String idTransaction) {
+    return getByIndex(r'idTransaction', [idTransaction]);
+  }
+
+  CoinHistoryLocal? getByIdTransactionSync(String idTransaction) {
+    return getByIndexSync(r'idTransaction', [idTransaction]);
+  }
+
+  Future<bool> deleteByIdTransaction(String idTransaction) {
+    return deleteByIndex(r'idTransaction', [idTransaction]);
+  }
+
+  bool deleteByIdTransactionSync(String idTransaction) {
+    return deleteByIndexSync(r'idTransaction', [idTransaction]);
+  }
+
+  Future<List<CoinHistoryLocal?>> getAllByIdTransaction(
+      List<String> idTransactionValues) {
+    final values = idTransactionValues.map((e) => [e]).toList();
+    return getAllByIndex(r'idTransaction', values);
+  }
+
+  List<CoinHistoryLocal?> getAllByIdTransactionSync(
+      List<String> idTransactionValues) {
+    final values = idTransactionValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'idTransaction', values);
+  }
+
+  Future<int> deleteAllByIdTransaction(List<String> idTransactionValues) {
+    final values = idTransactionValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'idTransaction', values);
+  }
+
+  int deleteAllByIdTransactionSync(List<String> idTransactionValues) {
+    final values = idTransactionValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'idTransaction', values);
+  }
+
+  Future<Id> putByIdTransaction(CoinHistoryLocal object) {
+    return putByIndex(r'idTransaction', object);
+  }
+
+  Id putByIdTransactionSync(CoinHistoryLocal object, {bool saveLinks = true}) {
+    return putByIndexSync(r'idTransaction', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByIdTransaction(List<CoinHistoryLocal> objects) {
+    return putAllByIndex(r'idTransaction', objects);
+  }
+
+  List<Id> putAllByIdTransactionSync(List<CoinHistoryLocal> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'idTransaction', objects, saveLinks: saveLinks);
+  }
 }
 
 extension CoinHistoryLocalQueryWhereSort
@@ -199,6 +285,51 @@ extension CoinHistoryLocalQueryWhere
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterWhereClause>
+      idTransactionEqualTo(String idTransaction) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'idTransaction',
+        value: [idTransaction],
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterWhereClause>
+      idTransactionNotEqualTo(String idTransaction) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'idTransaction',
+              lower: [],
+              upper: [idTransaction],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'idTransaction',
+              lower: [idTransaction],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'idTransaction',
+              lower: [idTransaction],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'idTransaction',
+              lower: [],
+              upper: [idTransaction],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }
@@ -464,6 +595,160 @@ extension CoinHistoryLocalQueryFilter
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'message',
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'message',
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'message',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'message',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'message',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'message',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'message',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'message',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'message',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'message',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'message',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
+      messageIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'message',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterFilterCondition>
       timestampEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -693,6 +978,20 @@ extension CoinHistoryLocalQuerySortBy
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
+      sortByMessage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'message', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
+      sortByMessageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'message', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
       sortByTimestamp() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timestamp', Sort.asc);
@@ -764,6 +1063,20 @@ extension CoinHistoryLocalQuerySortThenBy
   }
 
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
+      thenByMessage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'message', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
+      thenByMessageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'message', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QAfterSortBy>
       thenByTimestamp() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timestamp', Sort.asc);
@@ -808,6 +1121,13 @@ extension CoinHistoryLocalQueryWhereDistinct
     });
   }
 
+  QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QDistinct> distinctByMessage(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'message', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<CoinHistoryLocal, CoinHistoryLocal, QDistinct>
       distinctByTimestamp() {
     return QueryBuilder.apply(this, (query) {
@@ -842,6 +1162,12 @@ extension CoinHistoryLocalQueryProperty
       idTransactionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'idTransaction');
+    });
+  }
+
+  QueryBuilder<CoinHistoryLocal, String?, QQueryOperations> messageProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'message');
     });
   }
 

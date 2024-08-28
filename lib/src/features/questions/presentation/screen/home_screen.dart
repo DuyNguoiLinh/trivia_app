@@ -18,20 +18,6 @@ class HomeScreen extends ConsumerWidget {
     final userInfo = asyncUser.valueOrNull;
     // final index = ref.watch(isSelect);
 
-    // Widget body;
-    // switch (index) {
-    //   case 1:
-    //     body = const WalletScreen();
-    //     break;
-    //   case 2:
-    //     body= const RankingScreen();
-    //     break;
-    //   case 0:
-    //   default:
-    //     body = const Home();
-    //     break;
-    // }
-
     if (userInfo != null) {
       return Scaffold(
         appBar: AppBar(
@@ -51,11 +37,28 @@ class HomeScreen extends ConsumerWidget {
             ],
           ),
           actions: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(30.0),
+            ClipOval(
+              // borderRadius: BorderRadius.circular(30.0),
+
               child: IconButton(
                 onPressed: () {},
-                icon: Image.asset('assets/images/logo1.png'),
+                icon: userInfo.avatarUrl == null ?  Image.asset('assets/images/user.png') :
+                 Image.network(userInfo.avatarUrl!,
+                 loadingBuilder: (context,child,loadingProgress) {
+                   if (loadingProgress == null) {
+                     return child;
+                   } else {
+                     return Center(
+                       child: CircularProgressIndicator(
+                         value: loadingProgress.expectedTotalBytes != null
+                             ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                             : null,
+                       ),
+                     );
+                   }
+                 },
+
+                 ),
                 iconSize: 50,
               ),
             )

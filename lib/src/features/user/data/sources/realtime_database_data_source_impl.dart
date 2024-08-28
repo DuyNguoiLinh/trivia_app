@@ -1,117 +1,109 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/user_realtime_database_model.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/coin_realtime_database_model.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/realtime_database_data_source.dart';
-import 'package:trivia_app_with_flutter/src/features/user/data/sources/send_coin_error.dart';
+import '../model/firebase_model/follow_realtime_database_model.dart';
 
 class RealtimeDatabaseDataSourceImpl implements RealtimeDatabaseDataSource {
 
-  final DatabaseReference _userRef = FirebaseDatabase.instance.ref().child('user');
+  final DatabaseReference _coinRef = FirebaseDatabase.instance.ref().child('coin');
+  final DatabaseReference _followingRef = FirebaseDatabase.instance.ref().child('following');
+
 
   @override
-  Future<void>  addUser(UserRealtimeDatabaseModel user) async {
-  try {
-     await _userRef.child(user.uid).set(user.toJson());
-  } catch (err) {
-    return Future.error(err);
-  }
-  }
-
-  @override
-  Future<void> addCoin(String uid , double coin) async {
+  Future<void> sendCoinRealtime(String uid, CoinRealtimeDatabaseModel newCoin) async {
     try {
-       final snapshot = await _userRef.child(uid).child('coin').get();
-
-       if(snapshot.exists) {
-         var coinValue = snapshot.value;
-         if(coinValue is int) {
-           coinValue= coinValue.toDouble() +coin;
-         } else if(coinValue is double){
-           coinValue= coinValue +coin;
-         }
-
-         await _userRef.child(uid).update({'coin' : coinValue});
-       }
-    } catch (err) {
-      return Future.error(err);
-    }
-  }
-
-  @override
-  Future<void> subtractCoin(String uid , double coin) async {
-    try {
-      final snapshot = await _userRef.child(uid).child('coin').get();
-
-      if(snapshot.exists) {
-        var coinValue = snapshot.value;
-        if(coinValue is int) {
-          coinValue= coinValue.toDouble() -coin;
-        } else if(coinValue is double){
-          coinValue= coinValue -coin;
-        }
-
-        await _userRef.child(uid).update({'coin' : coinValue});
-      }
+        await _coinRef.child(uid).push().set(newCoin.toJson());
     } catch (err) {
       return Future.error(err);
     }
   }
 
 
-  Future<bool> _checkReceiverCoin(String uid) async {
-    try {
-      final receiverRef = _userRef.child(uid);
-      final snapshot = await receiverRef.get();
-
-      if (!snapshot.exists) {
-        return false;
-      }
-      return true;
-    } catch (err) {
-      return Future.error(err);
-    }
-  }
-
-  @override
-  Future<void> sendCoin(String senderUid, String receiverUid, double amountCoin) async{
+  Future<void> follow(String uid , FollowRealtimeDatabaseModel follow) async {
     try{
-      final snapshot = await _userRef.child(senderUid).child('coin').get();
-      if(snapshot.exists) {
-
-        final receiverValid = await  _checkReceiverCoin(receiverUid);
-        if(receiverValid) {
-          await subtractCoin(senderUid, amountCoin);
-          await addCoin(receiverUid, amountCoin);
-        } else {
-          final sendError = SendCoinError("Wallet adress not Valid");
-          return Future.error(sendError);
-        }
-      }
-    } catch(err) {
+      await _followingRef.child(follow.uidFollower).set(follow.toJson());
+    } catch (err) {
       return Future.error(err);
     }
   }
-  //  listen coin change
+
   @override
-  Stream<double> listenToCoinChanges(String uid)  {
-    return _userRef.child(uid).child('coin').onValue.map((event) {
-      final newAmountCoin = event.snapshot.value;
-      if(newAmountCoin is int ){
-        return newAmountCoin.toDouble();
-      } else if(newAmountCoin is double ) {
-        return newAmountCoin;
+  Stream<CoinRealtimeDatabaseModel?> listenToCoinChanges(String uid,int now) {
+
+     return _coinRef.child(uid).orderByChild('ts').startAfter(now).onChildAdded.map((event) {
+      final coinData = event.snapshot.value as Map?;
+      if (coinData != null) {
+        return CoinRealtimeDatabaseModel.fromJson(Map<String, dynamic>.from(coinData));
       } else {
-        return 0.0 ;
+        return null;
       }
     });
   }
 
-  // delete User
-  @override
-  Future<void> deleteUser(String uid) async {
-    try {
-      await _userRef.child(uid).remove();
-    } catch (err) {
-      return Future.error(err);
-    }
-  }
+  // Stream<FollowRealtimeDatabaseModel?> listenToFollower(String uid) {
+  //
+  // }
+
+  // @override
+  // Future<void> addCoin(String uid , double coin) async {
+  //   try {
+  //      final snapshot = await _coinRef.child(uid).child('coin').get();
+  //
+  //      if(snapshot.exists) {
+  //        var coinValue = snapshot.value;
+  //
+  //        if(coinValue is int) {
+  //          coinValue= coinValue.toDouble() +coin;
+  //        } else if(coinValue is double){
+  //          coinValue= coinValue +coin;
+  //        }
+  //
+  //        await _coinRef.child(uid).update({'coin' : coinValue});
+  //      }
+  //   } catch (err) {
+  //     return Future.error(err);
+  //   }
+  // }
+
+  // @override
+  // Future<void> subtractCoin(String uid , double coin) async {
+  //   try {
+  //     final snapshot = await _coinRef.child(uid).child('coin').get();
+  //
+  //     if(snapshot.exists) {
+  //       var coinValue = snapshot.value;
+  //       if(coinValue is int) {
+  //         coinValue= coinValue.toDouble() -coin;
+  //       } else if(coinValue is double){
+  //         coinValue= coinValue -coin;
+  //       }
+  //
+  //       await _coinRef.child(uid).update({'coin' : coinValue});
+  //     }
+  //   } catch (err) {
+  //     return Future.error(err);
+  //   }
+  // }
+
+
+
+  // // delete User
+  // @override
+  // Future<void> deleteUser(String uid) async {
+  //   try {
+  //     await _coinRef.child(uid).remove();
+  //   } catch (err) {
+  //     return Future.error(err);
+  //   }
+  // }
 }
+//
+// Future<void>  saveLastKey(String lastKey) async {
+//   final SharedPreferences prefs = await SharedPreferences.getInstance();
+//   await prefs.setString('lastKey', lastKey);
+// }
+//
+// Future<String?> getLastKey() async {
+//   final SharedPreferences prefs = await SharedPreferences.getInstance();
+//   return prefs.getString('lastKey');
+// }

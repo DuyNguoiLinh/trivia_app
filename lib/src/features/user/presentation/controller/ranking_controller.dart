@@ -7,21 +7,20 @@ class RankingNotifier extends AutoDisposeAsyncNotifier<List<UserEntity>> {
 
   final _userRepository = UserRepository.create();
   int nextPagekey = 1;
+ final int _pageSize = 5;
 
   @override
   FutureOr<List<UserEntity>> build() async {
-    ref.onDispose(() => print("RankingNotifier disposeeeeeeeee"),);
-    // final listUserSort = await _userRepository.fetchUserSortedByCoin(nextPagekey, 3);
-    final listUserSort = await _userRepository.fetchUserSortedByCoin(0, 3);
-    // return listUserSort;
+
+    final listUserSort = await _userRepository.fetchUserSortedByCoin(0, 5);
+
     return listUserSort;
   }
 
-  Future<void> fetchPageUser(int pageIndex, int pageSize) async {
+  Future<void> fetchPageUser(int pageIndex) async {
     try {
       // await Future.delayed(const Duration(seconds: 5));
-      final listUserSort = await _userRepository.fetchUserSortedByCoin(pageIndex, pageSize);
-      // final currentListUser = state.value ?? [];
+      final listUserSort = await _userRepository.fetchUserSortedByCoin(pageIndex, _pageSize);
 
       state = AsyncValue.data([...listUserSort]);
         nextPagekey++;

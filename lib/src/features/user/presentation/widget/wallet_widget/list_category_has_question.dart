@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/wallet_controller/list_category_favorite_controller.dart';
 
-import 'CategoryLoveItem.dart';
+import 'category_love_item.dart';
 
 class ListCategoryHasQuestion extends ConsumerWidget {
   const ListCategoryHasQuestion({super.key});

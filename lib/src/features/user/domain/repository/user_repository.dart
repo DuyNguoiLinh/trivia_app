@@ -1,3 +1,6 @@
+import 'package:image_picker/image_picker.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/coin_realtime_database_model.dart';
+
 import '../../../questions/domain/entity/question_entity.dart';
 import '../../data/model/firebase_model/coin_history_firestore_model.dart';
 import '../../data/model/firebase_model/question_firestore_model.dart';
@@ -27,20 +30,31 @@ abstract class UserRepository {
   Future<List<UserEntity>> fetchUserSortedByCoin(
       int pageIndex, int pageSize);
 
-  Future<void> sendCoin(String senderUid, String receiverUid, double amountCoin);
+  Future<void> sendCoin(String senderUid, String receiverUid, double amountCoin,String message);
 
-  Stream<double> listenToCoinChanges(String uid);
+  Stream<CoinRealtimeDatabaseModel?> listenToCoinChanges(String uid,int now);
+
+  Stream<List<CoinHistoryEntity>> streamCoinHistories(String uid);
+
+  Future<String?> getUserNameByUid(String uid);
+
+  Future<void>  uploadAvatar(XFile pickerFile,String uid);
+
+  Future<void>  changeAvatar(XFile newPickerFile, String currentAvatarUrl,String uid );
 
   // ****Local ****
-  Stream<UserEntity> getInfoUser(String uid);
+  Stream<UserEntity> watchInfoUser(String uid);
 
-  Future<void> saveUserName(String name, double coin, String uid);
+  Future<void> saveUserInfo(String name, double coin, String uid,String? avatarUrl);
 
   Future<void> changeUserName(String uid, String name);
 
   Future<void>  updatedCoin(String uid , double newAmountCoin);
 
-  Future<UserEntity> getUser(String uid);
+  Future<UserEntity?> getUser(String uid);
+
+  Future<void> saveCoinHistories(
+      List<CoinHistoryEntity> listCoinHistory, String uid);
 
   Future<void> deleteInfo();
 
@@ -48,7 +62,7 @@ abstract class UserRepository {
 
   Future<void> subtractCoin(double coin, String uid);
 
-  Stream<List<CoinHistoryEntity>> watchCoinHistoryLocal(int pageIndex);
+  Stream<List<CoinHistoryEntity>> watchCoinHistoryInThirtyDays(String uid);
 
   Future<List<CoinHistoryEntity>> getCoinHistories(
       int pageIndex, int pageSize, String uid);

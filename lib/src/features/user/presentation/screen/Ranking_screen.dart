@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/bottom_navigationbar.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/widget/ranking_widget/ranking.dart';
 
 class RankingScreen extends ConsumerWidget {

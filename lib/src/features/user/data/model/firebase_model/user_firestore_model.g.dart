@@ -11,6 +11,7 @@ UserFirestoreModel _$UserFirestoreModelFromJson(Map<String, dynamic> json) =>
       uid: json['uid'] as String,
       name: json['name'] as String,
       coin: (json['coin'] as num?)?.toDouble() ?? 0,
+      avatarUrl: json['avatarUrl'] as String?,
       coinHistories: (json['coinHistories'] as List<dynamic>?)
               ?.map((e) =>
                   CoinHistoryFirestoreModel.fromJson(e as Map<String, dynamic>))
@@ -28,6 +29,7 @@ Map<String, dynamic> _$UserFirestoreModelToJson(UserFirestoreModel instance) =>
       'uid': instance.uid,
       'name': instance.name,
       'coin': instance.coin,
+      'avatarUrl': instance.avatarUrl,
       'coinHistories': instance.coinHistories,
       'questionsFavorite': instance.questionsFavorite,
     };

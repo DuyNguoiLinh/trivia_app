@@ -17,25 +17,25 @@ class Ranking extends ConsumerStatefulWidget {
 class _RankingState extends ConsumerState<Ranking> {
   final PagingController<int, UserEntity> _pagingController =
       PagingController(firstPageKey: 0);
-  final _pageSize = 3;
 
   @override
   void initState() {
     super.initState();
     _pagingController.addPageRequestListener((pageKey) async {
       if (pageKey != 0) {
-        await ref.read(rankingProvider.notifier).fetchPageUser(pageKey, _pageSize) ;
+        await ref.read(rankingProvider.notifier).fetchPageUser(pageKey) ;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
     ref.listen<AsyncValue<List<UserEntity>>>(rankingProvider, (previous, next) {
       next.when(
         data: (newItems) {
           if (newItems.isNotEmpty) {
-            final isLastPage = newItems.length < _pageSize;
+            final isLastPage = newItems.length < 5;
             if (isLastPage) {
               _pagingController.appendLastPage(newItems);
             } else {

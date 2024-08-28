@@ -16,7 +16,7 @@ class AsyncListQuestionNotifier extends AutoDisposeAsyncNotifier<List<QuestionEn
     switch (indexType) {
 
       case 0 :
-        final questions = await ref.watch(questionApiProvider.future);
+        final questions = await ref.watch(quizProvider.future);
         return questions;
 
       case 1 :

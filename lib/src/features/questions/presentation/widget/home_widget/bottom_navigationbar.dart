@@ -34,9 +34,14 @@ class QuizBottomNavigationBar extends ConsumerWidget {
                   color: indexSelect == 2 ? Colors.purple : Colors.black38),
               label: 'Ranking'),
           BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_outlined,
+                  size: 25,
+                  color: indexSelect == 3 ? Colors.purple : Colors.black38),
+              label: 'Ranking'),
+          BottomNavigationBarItem(
               icon: Icon(Icons.card_giftcard_rounded,
               size: 20,
-              color: indexSelect == 3 ? Colors.purple : Colors.black38,),
+              color: indexSelect == 4 ? Colors.purple : Colors.black38,),
               label: 'Gift'
           ),
         ],
