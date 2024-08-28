@@ -17,13 +17,23 @@ const UserInfoLocalSchema = CollectionSchema(
   name: r'UserInfoLocal',
   id: 4546886641457929965,
   properties: {
-    r'coin': PropertySchema(
+    r'avatarUrl': PropertySchema(
       id: 0,
+      name: r'avatarUrl',
+      type: IsarType.string,
+    ),
+    r'coin': PropertySchema(
+      id: 1,
       name: r'coin',
       type: IsarType.double,
     ),
+    r'uid': PropertySchema(
+      id: 2,
+      name: r'uid',
+      type: IsarType.string,
+    ),
     r'userName': PropertySchema(
-      id: 1,
+      id: 3,
       name: r'userName',
       type: IsarType.string,
     )
@@ -46,9 +56,35 @@ const UserInfoLocalSchema = CollectionSchema(
           caseSensitive: true,
         )
       ],
+    ),
+    r'uid': IndexSchema(
+      id: 8193695471701937315,
+      name: r'uid',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'uid',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
     )
   },
-  links: {},
+  links: {
+    r'coinHistories': LinkSchema(
+      id: 7088160925093364011,
+      name: r'coinHistories',
+      target: r'CoinHistoryLocal',
+      single: false,
+    ),
+    r'questions': LinkSchema(
+      id: 8576210939815796632,
+      name: r'questions',
+      target: r'QuestionLocal',
+      single: false,
+    )
+  },
   embeddedSchemas: {},
   getId: _userInfoLocalGetId,
   getLinks: _userInfoLocalGetLinks,
@@ -62,6 +98,13 @@ int _userInfoLocalEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.avatarUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  bytesCount += 3 + object.uid.length * 3;
   bytesCount += 3 + object.userName.length * 3;
   return bytesCount;
 }
@@ -72,8 +115,10 @@ void _userInfoLocalSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDouble(offsets[0], object.coin);
-  writer.writeString(offsets[1], object.userName);
+  writer.writeString(offsets[0], object.avatarUrl);
+  writer.writeDouble(offsets[1], object.coin);
+  writer.writeString(offsets[2], object.uid);
+  writer.writeString(offsets[3], object.userName);
 }
 
 UserInfoLocal _userInfoLocalDeserialize(
@@ -83,8 +128,10 @@ UserInfoLocal _userInfoLocalDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = UserInfoLocal(
-    coin: reader.readDoubleOrNull(offsets[0]) ?? 0.0,
-    userName: reader.readString(offsets[1]),
+    avatarUrl: reader.readStringOrNull(offsets[0]),
+    coin: reader.readDoubleOrNull(offsets[1]) ?? 0.0,
+    uid: reader.readString(offsets[2]),
+    userName: reader.readString(offsets[3]),
   );
   object.id = id;
   return object;
@@ -98,8 +145,12 @@ P _userInfoLocalDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDoubleOrNull(offset) ?? 0.0) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
+      return (reader.readDoubleOrNull(offset) ?? 0.0) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -111,12 +162,16 @@ Id _userInfoLocalGetId(UserInfoLocal object) {
 }
 
 List<IsarLinkBase<dynamic>> _userInfoLocalGetLinks(UserInfoLocal object) {
-  return [];
+  return [object.coinHistories, object.questions];
 }
 
 void _userInfoLocalAttach(
     IsarCollection<dynamic> col, Id id, UserInfoLocal object) {
   object.id = id;
+  object.coinHistories.attach(
+      col, col.isar.collection<CoinHistoryLocal>(), r'coinHistories', id);
+  object.questions
+      .attach(col, col.isar.collection<QuestionLocal>(), r'questions', id);
 }
 
 extension UserInfoLocalByIndex on IsarCollection<UserInfoLocal> {
@@ -171,6 +226,59 @@ extension UserInfoLocalByIndex on IsarCollection<UserInfoLocal> {
   List<Id> putAllByUserNameSync(List<UserInfoLocal> objects,
       {bool saveLinks = true}) {
     return putAllByIndexSync(r'userName', objects, saveLinks: saveLinks);
+  }
+
+  Future<UserInfoLocal?> getByUid(String uid) {
+    return getByIndex(r'uid', [uid]);
+  }
+
+  UserInfoLocal? getByUidSync(String uid) {
+    return getByIndexSync(r'uid', [uid]);
+  }
+
+  Future<bool> deleteByUid(String uid) {
+    return deleteByIndex(r'uid', [uid]);
+  }
+
+  bool deleteByUidSync(String uid) {
+    return deleteByIndexSync(r'uid', [uid]);
+  }
+
+  Future<List<UserInfoLocal?>> getAllByUid(List<String> uidValues) {
+    final values = uidValues.map((e) => [e]).toList();
+    return getAllByIndex(r'uid', values);
+  }
+
+  List<UserInfoLocal?> getAllByUidSync(List<String> uidValues) {
+    final values = uidValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'uid', values);
+  }
+
+  Future<int> deleteAllByUid(List<String> uidValues) {
+    final values = uidValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'uid', values);
+  }
+
+  int deleteAllByUidSync(List<String> uidValues) {
+    final values = uidValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'uid', values);
+  }
+
+  Future<Id> putByUid(UserInfoLocal object) {
+    return putByIndex(r'uid', object);
+  }
+
+  Id putByUidSync(UserInfoLocal object, {bool saveLinks = true}) {
+    return putByIndexSync(r'uid', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByUid(List<UserInfoLocal> objects) {
+    return putAllByIndex(r'uid', objects);
+  }
+
+  List<Id> putAllByUidSync(List<UserInfoLocal> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'uid', objects, saveLinks: saveLinks);
   }
 }
 
@@ -298,10 +406,209 @@ extension UserInfoLocalQueryWhere
       }
     });
   }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause> uidEqualTo(
+      String uid) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'uid',
+        value: [uid],
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterWhereClause> uidNotEqualTo(
+      String uid) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uid',
+              lower: [],
+              upper: [uid],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uid',
+              lower: [uid],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uid',
+              lower: [uid],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uid',
+              lower: [],
+              upper: [uid],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
 }
 
 extension UserInfoLocalQueryFilter
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'avatarUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'avatarUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'avatarUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'avatarUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'avatarUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'avatarUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      avatarUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'avatarUrl',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> coinEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -416,6 +723,140 @@ extension UserInfoLocalQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      uidGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'uid',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      uidStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'uid',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> uidMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'uid',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      uidIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'uid',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      uidIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'uid',
+        value: '',
       ));
     });
   }
@@ -561,10 +1002,145 @@ extension UserInfoLocalQueryObject
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {}
 
 extension UserInfoLocalQueryLinks
-    on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {}
+    on QueryBuilder<UserInfoLocal, UserInfoLocal, QFilterCondition> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistories(FilterQuery<CoinHistoryLocal> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'coinHistories');
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'coinHistories', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'coinHistories', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'coinHistories', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'coinHistories', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'coinHistories', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      coinHistoriesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'coinHistories', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition> questions(
+      FilterQuery<QuestionLocal> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'questions');
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterFilterCondition>
+      questionsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'questions', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension UserInfoLocalQuerySortBy
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QSortBy> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByAvatarUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'avatarUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy>
+      sortByAvatarUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'avatarUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByCoin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coin', Sort.asc);
@@ -574,6 +1150,18 @@ extension UserInfoLocalQuerySortBy
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByCoinDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coin', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByUid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uid', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> sortByUidDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uid', Sort.desc);
     });
   }
 
@@ -593,6 +1181,19 @@ extension UserInfoLocalQuerySortBy
 
 extension UserInfoLocalQuerySortThenBy
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QSortThenBy> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByAvatarUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'avatarUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy>
+      thenByAvatarUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'avatarUrl', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByCoin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coin', Sort.asc);
@@ -617,6 +1218,18 @@ extension UserInfoLocalQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByUid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uid', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByUidDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uid', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QAfterSortBy> thenByUserName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'userName', Sort.asc);
@@ -633,9 +1246,23 @@ extension UserInfoLocalQuerySortThenBy
 
 extension UserInfoLocalQueryWhereDistinct
     on QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> {
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> distinctByAvatarUrl(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'avatarUrl', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> distinctByCoin() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'coin');
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, UserInfoLocal, QDistinct> distinctByUid(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'uid', caseSensitive: caseSensitive);
     });
   }
 
@@ -655,9 +1282,21 @@ extension UserInfoLocalQueryProperty
     });
   }
 
+  QueryBuilder<UserInfoLocal, String?, QQueryOperations> avatarUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'avatarUrl');
+    });
+  }
+
   QueryBuilder<UserInfoLocal, double, QQueryOperations> coinProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'coin');
+    });
+  }
+
+  QueryBuilder<UserInfoLocal, String, QQueryOperations> uidProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'uid');
     });
   }
 

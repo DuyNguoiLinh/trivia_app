@@ -10,7 +10,9 @@ final parameterProvider =
 
 class ParameterNotifier extends StateNotifier<Map<String, dynamic>> {
   ParameterNotifier() : super({});
+
   final Map<String, dynamic> parameter = {};
+
   // Use map
   void addParameter(String key, dynamic value) {
     parameter[key] = value;
@@ -20,16 +22,11 @@ class ParameterNotifier extends StateNotifier<Map<String, dynamic>> {
 
   //  check option
   bool checkParameter() {
-    if (parameter.containsKey('difficulty') &&
+    return parameter.containsKey('difficulty') &&
         parameter.containsKey('type') &&
-        parameter.containsKey('amount')) {
-      return true;
-    } else{
-      return false;
-    }
+        parameter.containsKey('amount') ;
+
   }
-  String getNameCategory() {
-    return parameter['nameCategory'];
-  }
+
 
 }

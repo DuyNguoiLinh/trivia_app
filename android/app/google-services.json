@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "491322462039",
+    "project_id": "trivia-app-with-flutter-9819e",
+    "storage_bucket": "trivia-app-with-flutter-9819e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491322462039:android:8059e8893725c651e1f812",
+        "android_client_info": {
+          "package_name": "com.example.trivia_app_with_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAB6m74iELzdCDnsuQCmqPTcgr0t4nQ2ZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/answer_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/list_question_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/question_controller.dart';
-import '../../controller/question_controller/answer_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/warning_dialog.dart';
+import 'package:trivia_app_with_flutter/src/features/user/global_variables.dart';
 import 'answer_button.dart';
 
 class ListAnswer extends ConsumerWidget{
@@ -13,8 +17,11 @@ class ListAnswer extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
+    final isSave =ref.watch(isSaveProvider(questionEntity.id));
+     final indexTypeSource =ref.watch(typeSourceProvider);
 
     if(questionEntity.shuffleAnswer != null){
+
       return Column(
           children: [
             SizedBox(
@@ -31,6 +38,7 @@ class ListAnswer extends ConsumerWidget{
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 if(questionEntity.shuffleAnswer!.length >2)
+                  if(indexTypeSource == 0)
                 TextButton(
                   onPressed: () {
 
@@ -73,10 +81,21 @@ class ListAnswer extends ConsumerWidget{
                                 child: const Text('Cancel')),
                             TextButton(
                                 onPressed: () {
-                                  // use 50 : 50
-                                  ref.read(questionProvider.notifier).useAssistance(questionEntity);
-                                  // play again
-                                  Navigator.pop(context);
+                                  if(coinGlobal<1){
+                                    GoRouter.of(context).pop();
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                       return const WarningDialog(optionName: '50:50');
+                                      },
+                                    );
+                                  } else {
+                                    // use 50 : 50
+                                    ref.read(questionProvider.notifier).useAssistance(questionEntity);
+                                    // play again
+                                    GoRouter.of(context).pop();
+                                  }
+
 
                                 },
                                 child: const Text('Okay'))
@@ -91,17 +110,24 @@ class ListAnswer extends ConsumerWidget{
                 ),
 
                 if(questionEntity.shuffleAnswer!.length == 2)
+
                   const SizedBox(width: 50,),
 
+
+                if(indexTypeSource == 0)
+
                 IconButton(
-                  color: Colors.red,
-                  icon: SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: Image.asset('assets/icons/save.png',),
-                  ),
+                    icon : SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: Image.asset('assets/icons/save.png',color: isSave ? Colors.red :  Colors.black,),
+                    ),
+
                   onPressed: () {
-                      ref.read(questionProvider.notifier).saveOrNotQuestion(questionEntity);
+
+                      // save question or not
+                      ref.read(questionProvider.notifier).toggleSaveQuestion(questionEntity);
+                      ref.read(isSaveProvider(questionEntity.id).notifier).state=!isSave;
                   },
                 ),
               ],

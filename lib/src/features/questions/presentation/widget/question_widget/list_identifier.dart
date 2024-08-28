@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/quiz_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/question_controller/list_question_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/question_widget/identifier_question.dart';
 
 class ListIdentifier extends ConsumerWidget {
@@ -9,7 +9,7 @@ class ListIdentifier extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final questions = ref.watch(quizProvider).valueOrNull ?? List.empty();
+     final questions = ref.watch(listQuestionProvider).valueOrNull ?? List.empty();
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),

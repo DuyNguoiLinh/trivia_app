@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../screen/result_screen.dart';
 
 class SubmitButton extends ConsumerWidget {
@@ -14,10 +15,8 @@ class SubmitButton extends ConsumerWidget {
       onPressed: () {
 
         if (answeredAll) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ResultScreen()),
-          );
+
+         GoRouter.of(context).push("/result");
 
         } else {
 

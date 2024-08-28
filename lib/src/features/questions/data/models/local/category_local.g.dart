@@ -39,7 +39,14 @@ const CategoryLocalSchema = CollectionSchema(
   deserializeProp: _categoryLocalDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'questions': LinkSchema(
+      id: 4321804820688909081,
+      name: r'questions',
+      target: r'QuestionLocal',
+      single: false,
+    )
+  },
   embeddedSchemas: {},
   getId: _categoryLocalGetId,
   getLinks: _categoryLocalGetLinks,
@@ -107,12 +114,14 @@ Id _categoryLocalGetId(CategoryLocal object) {
 }
 
 List<IsarLinkBase<dynamic>> _categoryLocalGetLinks(CategoryLocal object) {
-  return [];
+  return [object.questions];
 }
 
 void _categoryLocalAttach(
     IsarCollection<dynamic> col, Id id, CategoryLocal object) {
   object.id = id;
+  object.questions
+      .attach(col, col.isar.collection<QuestionLocal>(), r'questions', id);
 }
 
 extension CategoryLocalQueryWhereSort
@@ -585,7 +594,68 @@ extension CategoryLocalQueryObject
     on QueryBuilder<CategoryLocal, CategoryLocal, QFilterCondition> {}
 
 extension CategoryLocalQueryLinks
-    on QueryBuilder<CategoryLocal, CategoryLocal, QFilterCondition> {}
+    on QueryBuilder<CategoryLocal, CategoryLocal, QFilterCondition> {
+  QueryBuilder<CategoryLocal, CategoryLocal, QAfterFilterCondition> questions(
+      FilterQuery<QuestionLocal> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'questions');
+    });
+  }
+
+  QueryBuilder<CategoryLocal, CategoryLocal, QAfterFilterCondition>
+      questionsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<CategoryLocal, CategoryLocal, QAfterFilterCondition>
+      questionsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<CategoryLocal, CategoryLocal, QAfterFilterCondition>
+      questionsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<CategoryLocal, CategoryLocal, QAfterFilterCondition>
+      questionsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<CategoryLocal, CategoryLocal, QAfterFilterCondition>
+      questionsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'questions', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<CategoryLocal, CategoryLocal, QAfterFilterCondition>
+      questionsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'questions', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension CategoryLocalQuerySortBy
     on QueryBuilder<CategoryLocal, CategoryLocal, QSortBy> {

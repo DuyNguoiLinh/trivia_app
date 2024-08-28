@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class QuestionIdentifier extends ConsumerWidget{
   const QuestionIdentifier({super.key,required this.isTrue,required this.index});
+
   final bool isTrue;
   final int index;
   @override

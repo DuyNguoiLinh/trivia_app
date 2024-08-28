@@ -1,11 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
+import '../../../../user/presentation/controller/router_controller.dart';
 import '../../../domain/repository/quiz_respository.dart';
+
+// get name category
+final nameCategoryProvider= StateProvider<String>((ref) => '');
+// get id category
+final idCategoryProvider =StateProvider<int>((ref) => 0);
+
 
 final categoryProvider = FutureProvider.autoDispose<List<CategoryEntity>>((ref) async {
   try {
+    final authState = ref.watch(authStateProvider);
+   final _uid = authState.asData?.value?.uid ?? '';
     final quizRepository= QuizRepository.create();
-    final  listCategory=await quizRepository.fetchCategories();
+
+    final  listCategory=await quizRepository.fetchCategories(_uid);
+
     return listCategory;
   } catch (e) {
     throw Exception('Failed to fetch categories: $e');
@@ -13,6 +24,7 @@ final categoryProvider = FutureProvider.autoDispose<List<CategoryEntity>>((ref) 
 });
 
 final iconCategoryProvider = Provider.autoDispose<Map<int,String>>((ref) {
+
   return {
     9 : 'assets/icons/brain.png',
     10 : 'assets/icons/book.png',

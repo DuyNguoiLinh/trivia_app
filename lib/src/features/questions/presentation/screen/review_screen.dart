@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/controller/result_controller/data_result_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/review_widget/questions_summary.dart';
 
 class ReviewScreen extends ConsumerWidget {
