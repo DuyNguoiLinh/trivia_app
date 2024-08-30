@@ -1,15 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/coin_history_firestore_model.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/follower_firestore_model.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/question_firestore_model.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/user_firestore_model.dart';
-import 'firestore_data_source.dart';
+import 'package:trivia_app_with_flutter/src/features/user/global_variables.dart';
+import 'firestore_user_data_source.dart';
 
-class FirestoreDataSourceImpl implements FirestoreDataSource {
+class FirestoreUserDataSourceImpl implements FirestoreUserDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Future<void> addUser(UserFirestoreModel user) async {
     await _firestore.collection('users').doc(user.uid).set(user.toJson());
+  }
+
+  //  delete user data
+  @override
+  Future<void> deleteUserData(String uid) async {
+    try {
+      await _firestore.collection('users').doc(uid).delete();
+    } catch (err) {
+      return Future.error(err);
+    }
   }
 
   // get user by uid
@@ -146,6 +158,34 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
     }
   }
 
+  //  add follower
+  @override
+  Future<void> addFollower(String uid,FollowerFirestoreModel follower) async {
+    try {
+      DocumentReference userDoc = _firestore.collection('users').doc(uid);
+      await _firestore.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(userDoc);
+
+        if (snapshot.exists) {
+
+          final currentFollowers =
+          snapshot.get('followers') as List<dynamic>;
+
+          bool followerExits =
+          currentFollowers.any((e) => e['followId'] == follower.followId);
+          if (followerExits) {
+            currentFollowers.removeWhere((e) => e['followId'] == follower.followId);
+          } else {
+            currentFollowers.add(follower.toJson());
+          }
+          transaction.update(userDoc, {'followers': currentFollowers});
+        }
+      });
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
   //
   @override
   Stream<List<CoinHistoryFirestoreModel>> streamCoinHistories(String uid) {
@@ -240,6 +280,69 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
     }
   }
 
+  // get list follower
+  @override
+  Future<List<UserFirestoreModel>> getListFollower (
+      int pageIndex, int pageSize,List<String> followerUid ) async {
+    try {
+
+       List<UserFirestoreModel>  listFollower = [];
+
+      for(int i= 0 ; i< pageSize && i< followerUid.length; i++) {
+
+           final follower = await getUserByUid(followerUid[i]);
+
+           if(follower != null) {
+             listFollower.add(follower);
+           }
+      }
+      return listFollower;
+
+    } catch (err) {return Future.error(err);
+    }
+  }
+
+  DocumentSnapshot? _lastTopFollowingDocumentSnapshot;
+
+   @override
+  Future<List<UserFirestoreModel>> getTopFollowing(
+      int pageIndex, int pageSize, List<String> uidList) async {
+
+    try {
+      uidList.add(uidGlobal);
+        print(uidList.length);
+      Query query = _firestore
+          .collection('users')
+          .where(FieldPath.documentId, whereIn: uidList)
+          .orderBy('coin', descending: true)
+          .limit(pageSize);
+
+      if (_lastTopFollowingDocumentSnapshot != null && pageIndex > 0) {
+        query = query.startAfterDocument(_lastTopFollowingDocumentSnapshot!);
+      }
+      if( (pageIndex+1) * pageSize <= 20 ) {
+
+        QuerySnapshot snapshot = await query.get();
+
+        List<UserFirestoreModel> listUser = snapshot.docs.map((e) {
+          return UserFirestoreModel.fromJson(e.data() as Map<String, dynamic>);
+        }).toList();
+
+        if (snapshot.docs.length < pageSize) {
+          _lastTopFollowingDocumentSnapshot = null;
+        } else {
+          _lastTopFollowingDocumentSnapshot = snapshot.docs.last;
+        }
+
+        return listUser;
+      } else {
+        return [];
+      }
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
   //  fetch coin histories
   @override
   Future<List<CoinHistoryFirestoreModel>> fetchCoinHistories(String uid) async {
@@ -307,13 +410,6 @@ class FirestoreDataSourceImpl implements FirestoreDataSource {
     }
   }
 
-  //  delete user data
-  @override
-  Future<void> deleteUserData(String uid) async {
-    try {
-      await _firestore.collection('users').doc(uid).delete();
-    } catch (err) {
-      return Future.error(err);
-    }
-  }
+
+
 }

@@ -2,6 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/coin_history_firestore_model.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/question_firestore_model.dart';
 
+import 'follower_firestore_model.dart';
+
 part 'user_firestore_model.g.dart';
 
 @JsonSerializable()
@@ -12,6 +14,7 @@ class UserFirestoreModel {
   final String? avatarUrl;
   final List<CoinHistoryFirestoreModel> coinHistories;
   final List<QuestionFirestoreModel> questionsFavorite;
+  final List<FollowerFirestoreModel> followers;
 
   UserFirestoreModel({
     required this.uid,
@@ -20,11 +23,11 @@ class UserFirestoreModel {
     this.avatarUrl,
     this.coinHistories = const <CoinHistoryFirestoreModel>[],
     this.questionsFavorite = const <QuestionFirestoreModel>[],
+    this.followers = const <FollowerFirestoreModel>[],
   });
 
-
-  factory UserFirestoreModel.fromJson(Map<String, dynamic> json) => _$UserFirestoreModelFromJson(json);
-
+  factory UserFirestoreModel.fromJson(Map<String, dynamic> json) =>
+      _$UserFirestoreModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserFirestoreModelToJson(this);
 }

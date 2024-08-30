@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../controller/user_controller.dart';
+import 'package:trivia_app_with_flutter/src/features/follower/presentation/widget/text_follow_button.dart';
+import 'package:trivia_app_with_flutter/src/features/user/domain/entity/user_entity.dart';
+import 'package:trivia_app_with_flutter/src/features/user/global_variables.dart';
+import '../../../user/presentation/controller/user_controller.dart';
 
 class MyselfScreen extends ConsumerWidget {
   const MyselfScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncUser = ref.watch(userProvider);
-    final userInfo = asyncUser.valueOrNull;
 
-    if (userInfo != null) {
       return Scaffold(
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -20,9 +20,9 @@ class MyselfScreen extends ConsumerWidget {
               decoration: const BoxDecoration(color: Colors.black54),
               width: double.infinity,
               height: 200,
-              child: userInfo.avatarUrl == null
+              child: avatarUrlGlobal == null
                   ? Image.asset('assets/images/user.png')
-                  : Image.network(userInfo.avatarUrl!),
+                  : Image.network(avatarUrlGlobal!),
             ),
             const SizedBox(
               height: 20,
@@ -33,7 +33,7 @@ class MyselfScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    userInfo.userName,
+                    userNameGlobal,
                     style: const TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -55,7 +55,7 @@ class MyselfScreen extends ConsumerWidget {
                         const Icon(Icons.wallet, size: 24.0),
                         Expanded(
                           child: Text(
-                            userInfo.uid,
+                             uidGlobal,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(fontSize: 16.0),
                           ),
@@ -64,7 +64,7 @@ class MyselfScreen extends ConsumerWidget {
                           icon: const Icon(Icons.copy),
                           onPressed: () {
                             Clipboard.setData(
-                                ClipboardData(text: userInfo.uid));
+                                ClipboardData(text: uidGlobal));
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text('Address copied to clipboard')),
@@ -82,23 +82,7 @@ class MyselfScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Follow 10',
-                            style: TextStyle(fontSize: 20,color: Colors.black),
-                          )),
-                      TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            '20 Follower',
-                            style: TextStyle(fontSize: 20,color:  Colors.black),
-                          )),
-                    ],
-                  ),
+                  TextFollowButton(userEntity: UserEntity(uid: uidGlobal, userName: userNameGlobal, coin: coinGlobal)),
                   const SizedBox(
                     height: 10,
                   ),
@@ -141,10 +125,5 @@ class MyselfScreen extends ConsumerWidget {
           ],
         ),
       );
-    } else {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
   }
 }

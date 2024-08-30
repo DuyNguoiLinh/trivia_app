@@ -9,7 +9,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/scre
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/bottom_navigationbar.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/Ranking_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/gift_screen.dart';
-import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/myself_screen.dart';
+import 'package:trivia_app_with_flutter/src/features/follower/presentation/screen/myself_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/wallet_screen.dart';
 import '../../../questions/presentation/screen/home_screen.dart';
 import '../../../questions/presentation/screen/start_screen.dart';

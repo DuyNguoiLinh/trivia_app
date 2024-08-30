@@ -2,28 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/user_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/ranking_controller.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/widget/ranking_widget/user_item.dart';
 
-class Ranking extends ConsumerStatefulWidget {
-  const Ranking({super.key});
+import '../controller/ranking_following_controller.dart';
+
+class RankingFollowing extends ConsumerStatefulWidget {
+  const RankingFollowing({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
-    return _RankingState();
+    return _RankingFollowingState();
   }
 }
 
-class _RankingState extends ConsumerState<Ranking>  with AutomaticKeepAliveClientMixin {
+class _RankingFollowingState extends ConsumerState<RankingFollowing> {
+
   final PagingController<int, UserEntity> _pagingController =
-      PagingController(firstPageKey: 0);
+  PagingController(firstPageKey: 0);
 
   @override
   void initState() {
     super.initState();
     _pagingController.addPageRequestListener((pageKey) async {
       if (pageKey != 0) {
-        await ref.read(rankingProvider.notifier).fetchPageUser(pageKey) ;
+        await ref.read(rankingFollowingProvider.notifier).fetchPageTopFollowing(pageKey);
       }
     });
   }
@@ -31,7 +33,7 @@ class _RankingState extends ConsumerState<Ranking>  with AutomaticKeepAliveClien
   @override
   Widget build(BuildContext context) {
 
-    ref.listen<AsyncValue<List<UserEntity>>>(rankingProvider, (previous, next) {
+    ref.listen<AsyncValue<List<UserEntity>>>(rankingFollowingProvider, (previous, next) {
       next.when(
         data: (newItems) {
           if (newItems.isNotEmpty) {
@@ -62,7 +64,7 @@ class _RankingState extends ConsumerState<Ranking>  with AutomaticKeepAliveClien
           ),
           firstPageProgressIndicatorBuilder: (context) => const SizedBox(),
           newPageProgressIndicatorBuilder: (context) =>
-              const Center(child: CircularProgressIndicator()),
+          const Center(child: CircularProgressIndicator()),
         ));
   }
 
@@ -72,7 +74,4 @@ class _RankingState extends ConsumerState<Ranking>  with AutomaticKeepAliveClien
     super.dispose();
   }
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive =>true;
 }

@@ -1,9 +1,10 @@
 import '../model/firebase_model/coin_history_firestore_model.dart';
+import '../model/firebase_model/follower_firestore_model.dart';
 import '../model/firebase_model/question_firestore_model.dart';
 import '../model/firebase_model/user_firestore_model.dart';
-import 'firestore_data_source_impl.dart';
+import 'firestore_user_data_source_impl.dart';
 
-abstract class FirestoreDataSource {
+abstract class FirestoreUserDataSource {
 
   Future<void> addUser(UserFirestoreModel user);
 
@@ -19,6 +20,8 @@ abstract class FirestoreDataSource {
 
   Future<void> addQuestionFavorite(QuestionFirestoreModel question,String uid);
 
+  Future<void> addFollower(String uid,FollowerFirestoreModel follower);
+
   // Future<void> transactionCoin(CoinHistoryFirestoreModel coinHistory,String uid);
 
   Stream<List<CoinHistoryFirestoreModel>> streamCoinHistories(String uid);
@@ -30,6 +33,13 @@ abstract class FirestoreDataSource {
   Future<List<UserFirestoreModel>> getTopUser(
       int pageIndex, int pageSize);
 
+  Future<List<UserFirestoreModel>> getListFollower (
+      int pageIndex, int pageSize,List<String> followerUid );
+
+  Future<List<UserFirestoreModel>> getTopFollowing(
+      int pageIndex, int pageSize, List<String> uidList);
+
+
   Future<List<CoinHistoryFirestoreModel>> fetchCoinHistories( String uid);
 
   Future<List<QuestionFirestoreModel>> fetchQuestionFavorite(String uid);
@@ -38,8 +48,9 @@ abstract class FirestoreDataSource {
 
   Future<void> deleteUserData(String uid);
 
-  factory FirestoreDataSource.create() {
-    return FirestoreDataSourceImpl();
+
+  factory FirestoreUserDataSource.create() {
+    return FirestoreUserDataSourceImpl();
   }
 
 }
