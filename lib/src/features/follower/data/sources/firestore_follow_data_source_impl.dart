@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trivia_app_with_flutter/src/features/user/global_variables.dart';
 import 'package:uuid/uuid.dart';
 import '../model/follow_firestore_model.dart';
 import 'firestore_follow_data_source.dart';

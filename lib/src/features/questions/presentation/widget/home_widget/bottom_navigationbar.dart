@@ -47,7 +47,7 @@ class QuizBottomNavigationBar extends ConsumerWidget {
           BottomNavigationBarItem(
               icon: Icon(Icons.card_giftcard_rounded,
               size: 20,
-              color: indexSelect == 4 ? Colors.purple : Colors.black38,),
+              color: indexSelect == 5 ? Colors.purple : Colors.black38,),
               label: 'Gift'
           ),
         ],
