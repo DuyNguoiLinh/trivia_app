@@ -1,8 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:trivia_app_with_flutter/src/features/message/presentation/screen/Setting_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/message/presentation/screen/message_screen.dart';
+import 'package:trivia_app_with_flutter/src/features/message/presentation/screen/page_route_builder.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/option_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/question_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/result_screen.dart';
@@ -110,6 +115,85 @@ final goRouterProvider = Provider.autoDispose<GoRouter>((ref) {
         ],
       ),
       GoRoute(path: '/auth', builder: (context, state) => const StartScreen()),
+
+      // GoRoute(
+      //   path: '/setting',
+      //   pageBuilder: (context, state) => CustomTransitionPage(
+      //     key: state.pageKey,
+      //     child: const SettingScreen(),
+      //     transitionDuration: const Duration(milliseconds: 500),
+      //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      //
+      //       final slideAnimation = Tween<Offset>(
+      //         begin: const Offset(0.0, 0.0),
+      //         end: const Offset(0.0, 1.0),
+      //       ).animate(animation);
+      //
+      //       final fadeAnimation = Tween<double>(
+      //         begin: 1.0,
+      //         end: 0.0,
+      //       ).animate(animation);
+      //
+      //       return SlideTransition(
+      //         position: slideAnimation,
+      //         child: FadeTransition(
+      //           opacity: fadeAnimation,
+      //           child: child,
+      //         ),
+      //       );
+      //     },
+      //   ),
+      // ),
+
+      GoRoute(
+        path: '/setting',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const SettingScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final fadeAnimation = Tween<double>(
+                      begin: 0.7,
+                      end: 1,
+                    ).animate(animation);
+
+            final fadeOutAnimation = Tween<double>(
+              begin: 0,
+              end: 1,
+            ).animate(CurvedAnimation(parent: animation, curve: Curves.easeIn));
+
+            final slideUpAnimation = Tween<Offset>(
+              begin: const Offset(0.0, 0.08),
+              end: Offset.zero,
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeInOut,
+            ));
+
+            final slideDownAnimation = Tween<Offset>(
+              // begin: Offset.zero,
+              // end: Offset(0.0 , 0.1),
+              begin:  const Offset(0.0, 0.1),
+              end:  const Offset(0.0,0.0),
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeInOut,
+            ));
+
+            return SlideTransition(
+              position: animation.status == AnimationStatus.reverse
+                  ? slideDownAnimation
+                  : slideUpAnimation,
+              child: FadeTransition(
+                opacity: animation.status == AnimationStatus.reverse ? fadeOutAnimation :fadeAnimation,
+                child: child,
+              ),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+          reverseTransitionDuration: const Duration(milliseconds: 230),
+        ),
+      ),
+
 
       GoRoute(
           path: '/options', builder: (context, state) => const OptionScreen()),

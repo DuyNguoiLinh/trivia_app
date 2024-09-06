@@ -15,6 +15,7 @@ class ListCategory extends ConsumerWidget {
        return const Center(child: CircularProgressIndicator(),);
      } else {
        return Scaffold(
+         backgroundColor: Colors.blueGrey,
          body: ListView.builder(
              itemCount: categories.length,
              itemBuilder: (context, index) {

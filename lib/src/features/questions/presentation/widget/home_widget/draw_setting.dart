@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/user_controller.dart';
+import '../../../../message/presentation/screen/Setting_screen.dart';
 import '../../../../user/presentation/controller/app_controller.dart';
 import '../../../../user/presentation/screen/set_name_screen.dart';
 import '../../../../user/presentation/screen/wallet_address_screen.dart';
@@ -25,6 +27,7 @@ class _DrawSettingState extends ConsumerState<DrawSetting> {
 
     if(userInfo != null) {
       return Drawer(
+        backgroundColor: Colors.blueGrey,
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -59,7 +62,7 @@ class _DrawSettingState extends ConsumerState<DrawSetting> {
                 )
               ),
               decoration: const BoxDecoration(
-                color: Colors.blue,
+                color: Colors.black26,
               ),
             ),
             ListTile(
@@ -96,7 +99,7 @@ class _DrawSettingState extends ConsumerState<DrawSetting> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => WalletAddressScreen()),
+                      builder: (context) => const WalletAddressScreen()),
                 );
               },
             ),
@@ -109,14 +112,14 @@ class _DrawSettingState extends ConsumerState<DrawSetting> {
             ListTile(
               title: const Text('Settings'),
               onTap: () {
-
+                GoRouter.of(context).push('/setting');
               },
             ),
           ],
         ),
       );
     } else {
-      return Center(child: CircularProgressIndicator(),);
+      return const Center(child: CircularProgressIndicator(),);
     }
   }
 }
