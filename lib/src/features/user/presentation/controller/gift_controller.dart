@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/coin_realtime_database_model.dart';
-import 'package:trivia_app_with_flutter/src/features/user/data/sources/realtime_database_data_source_impl.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/repository/user_repository.dart';
-
 import '../../domain/entity/coin_history_entity.dart';
 import '../../global_variables.dart';
 

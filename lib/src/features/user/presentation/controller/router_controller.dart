@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trivia_app_with_flutter/src/features/message/presentation/screen/message_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/option_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/question_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/screen/result_screen.dart';
@@ -9,11 +10,10 @@ import 'package:trivia_app_with_flutter/src/features/questions/presentation/scre
 import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/bottom_navigationbar.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/Ranking_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/gift_screen.dart';
-import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/myself_screen.dart';
+import 'package:trivia_app_with_flutter/src/features/follower/presentation/screen/myself_screen.dart';
 import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/wallet_screen.dart';
 import '../../../questions/presentation/screen/home_screen.dart';
 import '../../../questions/presentation/screen/start_screen.dart';
-import 'app_controller.dart';
 
 final authStateProvider = StreamProvider((ref) {
   return FirebaseAuth.instance.authStateChanges();
@@ -29,6 +29,7 @@ final goRouterProvider = Provider.autoDispose<GoRouter>((ref) {
   final _shellNavigatorWalletKey = GlobalKey<NavigatorState>(debugLabel: 'wallet');
   final _shellNavigatorRankingKey = GlobalKey<NavigatorState>(debugLabel: 'ranking');
   final _shellNavigatorSelfKey = GlobalKey<NavigatorState>(debugLabel: 'self');
+  final _shellNavigatorMessKey = GlobalKey<NavigatorState>(debugLabel: 'mess');
   final _shellNavigatorGiftKey = GlobalKey<NavigatorState>(debugLabel: 'gift');
 
   return GoRouter(
@@ -80,6 +81,17 @@ final goRouterProvider = Provider.autoDispose<GoRouter>((ref) {
                 path: '/myself',
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: MyselfScreen(),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _shellNavigatorMessKey,
+            routes: [
+              GoRoute(
+                path: '/mess',
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child:  MessageScreen(),
                 ),
               ),
             ],

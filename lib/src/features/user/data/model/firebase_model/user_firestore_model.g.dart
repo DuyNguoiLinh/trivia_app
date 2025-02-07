@@ -22,6 +22,11 @@ UserFirestoreModel _$UserFirestoreModelFromJson(Map<String, dynamic> json) =>
                   QuestionFirestoreModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <QuestionFirestoreModel>[],
+      followers: (json['followers'] as List<dynamic>?)
+              ?.map((e) =>
+                  FollowerFirestoreModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <FollowerFirestoreModel>[],
     );
 
 Map<String, dynamic> _$UserFirestoreModelToJson(UserFirestoreModel instance) =>
@@ -32,4 +37,5 @@ Map<String, dynamic> _$UserFirestoreModelToJson(UserFirestoreModel instance) =>
       'avatarUrl': instance.avatarUrl,
       'coinHistories': instance.coinHistories,
       'questionsFavorite': instance.questionsFavorite,
+      'followers': instance.followers,
     };

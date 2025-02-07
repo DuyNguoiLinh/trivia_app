@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ntp/ntp.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/repository/quiz_respository.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/model/firebase_model/coin_realtime_database_model.dart';
-import 'package:trivia_app_with_flutter/src/features/user/data/sources/firestore_data_source.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/sources/firestore_user_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/realtime_database_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/user/data/sources/storage_data_source.dart';
 import 'package:trivia_app_with_flutter/src/features/user/domain/entity/coin_history_entity.dart';
@@ -15,12 +15,13 @@ import '../sources/send_coin_error.dart';
 import '../sources/user_local_data_source.dart';
 
 class UserRepositoryImpl implements UserRepository {
+
   final _quizDataSource = QuizRepository.create();
   final _localDataSource = UserLocalDataSource.create();
 
   ///firebase
   final _authDataSource = AuthDataSource.create();
-  final _firestoreDataSource = FirestoreDataSource.create();
+  final _firestoreDataSource = FirestoreUserDataSource.create();
   final _realtimeDatabase = RealtimeDatabaseDataSource.create();
   final _storageDataSource = StorageDataSource.create();
 

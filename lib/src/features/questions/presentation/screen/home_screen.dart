@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trivia_app_with_flutter/src/features/questions/presentation/widget/home_widget/bottom_navigationbar.dart';
-import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/user_controller.dart';
-import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/Ranking_screen.dart';
-import 'package:trivia_app_with_flutter/src/features/user/presentation/screen/wallet_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';import 'package:trivia_app_with_flutter/src/features/user/presentation/controller/user_controller.dart';
 import '../widget/home_widget/draw_setting.dart';
 import '../widget/home_widget/home.dart';
 
@@ -57,7 +53,6 @@ class HomeScreen extends ConsumerWidget {
                      );
                    }
                  },
-
                  ),
                 iconSize: 50,
               ),

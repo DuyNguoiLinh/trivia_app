@@ -3,7 +3,7 @@ import 'package:trivia_app_with_flutter/src/features/questions/data/sources/quiz
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/category_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/question_entity.dart';
 import 'package:trivia_app_with_flutter/src/features/questions/domain/entity/result_entity.dart';
-import 'package:trivia_app_with_flutter/src/features/user/data/sources/firestore_data_source.dart';
+import 'package:trivia_app_with_flutter/src/features/user/data/sources/firestore_user_data_source.dart';
 import '../../../user/data/model/firebase_model/question_firestore_model.dart';
 import '../../domain/repository/quiz_respository.dart';
 import '../models/local/category_local.dart';
@@ -12,7 +12,7 @@ import '../models/local/result_local.dart';
 
 class QuizRepositoryImpl implements QuizRepository {
 
-  final firestoreDataSource = FirestoreDataSource.create();
+  final firestoreDataSource = FirestoreUserDataSource.create();
   final localDataSource = QuizLocalDataSource.create();
   final remoteDataSource = QuizRemoteDataSource.create();
 

@@ -106,6 +106,12 @@ class _DrawSettingState extends ConsumerState<DrawSetting> {
                 ref.read(appProvider.notifier).deleteAccount();
               },
             ),
+            ListTile(
+              title: const Text('Settings'),
+              onTap: () {
+
+              },
+            ),
           ],
         ),
       );
