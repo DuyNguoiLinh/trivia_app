@@ -68,7 +68,7 @@ class _GiftScreenState extends ConsumerState<GiftScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Send your gift Success')),
           );
-        } else {
+        }  if(previousValue <nextValue && previous is AsyncData) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('You are given ${nextValue - previousValue} coin')),
           );

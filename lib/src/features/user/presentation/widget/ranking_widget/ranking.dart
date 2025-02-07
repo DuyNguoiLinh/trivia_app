@@ -14,7 +14,7 @@ class Ranking extends ConsumerStatefulWidget {
   }
 }
 
-class _RankingState extends ConsumerState<Ranking> {
+class _RankingState extends ConsumerState<Ranking>  with AutomaticKeepAliveClientMixin {
   final PagingController<int, UserEntity> _pagingController =
       PagingController(firstPageKey: 0);
 
@@ -71,4 +71,8 @@ class _RankingState extends ConsumerState<Ranking> {
     _pagingController.dispose();
     super.dispose();
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive =>true;
 }

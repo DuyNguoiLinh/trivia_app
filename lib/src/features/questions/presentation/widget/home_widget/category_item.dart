@@ -24,10 +24,8 @@ class CategoryItem extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: OutlinedButton(
           style: OutlinedButton.styleFrom(
-            backgroundColor: isPickOption ? Colors.blueAccent : Colors.white,
-            foregroundColor: isPickOption
-                ? Colors.white
-                : Colors.blueAccent.withOpacity(0.8),
+            backgroundColor: Colors.blueGrey.withOpacity(0.1) ,
+            foregroundColor:  Colors.white,
             side: const BorderSide(width: 2.0, color: Colors.blueAccent),
             padding: const EdgeInsets.symmetric(vertical: 20),
             shape: RoundedRectangleBorder(

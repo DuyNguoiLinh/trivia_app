@@ -51,6 +51,8 @@ class AsyncUserNotifier extends AsyncNotifier<UserEntity?> {
     _subscription = _userRepository.watchInfoUser(_uid).listen(
             (user) {
               coinGlobal = user.coin ;
+              userNameGlobal= user.userName;
+              avatarUrlGlobal= user.avatarUrl ;
           state = AsyncValue.data(user);
         }, onError: (err,stackTr){
           state= AsyncValue.error(err,stackTr);

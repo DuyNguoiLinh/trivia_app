@@ -14,7 +14,7 @@ class Home extends ConsumerWidget {
     final asyncUserName =ref.watch(userProvider);
     final userInfo=asyncUserName.valueOrNull;
 
-    if(userInfo != null) {
+    // if(userInfo != null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -62,9 +62,9 @@ class Home extends ConsumerWidget {
           const Expanded(child: ListCategory())
         ],
       );
-    } else {
-      return const Center(child: CircularProgressIndicator(),);
-    }
+    // } else {
+    //   return const Center(child: CircularProgressIndicator(),);
+    // }
   }
 
 }
